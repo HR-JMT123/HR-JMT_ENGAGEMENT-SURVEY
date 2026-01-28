@@ -354,34 +354,33 @@
     .password-group { position: relative; }
     .password-toggle { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6c757d; }
       
-    .hidden-score-user { display: none !important; }
-
-    .floating-score-box {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(255, 255, 255, 0.95);
-      border: 2px solid var(--primary);
-      border-radius: 16px;
-      padding: 10px 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 100px;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
+    /* =========================================
+       SCORE BOX STYLE (NEW STATIC & COMPACT)
+       ========================================= */
+    .static-score-box {
+        position: relative; /* ยกเลิก Fixed Position */
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-left: 5px solid var(--primary); /* แถบสีด้านซ้าย */
+        border-radius: 12px; /* มุมมนน้อยกว่าการ์ดปกตินิดหน่อย */
+        margin-bottom: 15px; /* เว้นระยะห่างจากปุ่ม */
+        padding: 10px 15px; /* Compact padding เพื่อให้ดูแบน */
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        transition: all 0.3s ease;
     }
-    .floating-score-box.hidden { transform: translateY(150%); opacity: 0; }
-      
-    .floating-label { font-size: 0.7rem; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
-    .floating-value { font-size: 1.8rem; font-weight: 800; color: var(--primary); line-height: 1; }
+
+    /* ซ่อนเมื่อไม่ใช่หน้าทำแบบสอบถาม */
+    .static-score-box.hidden {
+        display: none !important;
+    }
 
     @media print {
        .no-print { display: none !important; }
        .report-header-dash { padding: 0; margin-bottom: 1rem; box-shadow: none; }
-       .floating-score-box { display: none !important; }
+       .static-score-box { display: none !important; }
     }
   </style>
 </head>
@@ -415,14 +414,6 @@
               <button type="button" class="btn btn-outline-secondary rounded-pill flex-fill" onclick="closeConfirmBox()">ยกเลิก</button>
               <button type="button" class="btn btn-danger rounded-pill flex-fill" onclick="processRealSubmit()">ยืนยันส่ง</button>
           </div>
-      </div>
-  </div>
-
-  <div id="floatingScore" class="floating-score-box hidden">
-      <div class="floating-label">คะแนนรวม</div>
-      <div class="floating-value" id="liveScoreDisplay">0</div>
-      <div class="progress mt-1 w-100" style="height:4px; border-radius:2px;">
-         <div class="progress-bar" id="progressBar" style="width:0%"></div>
       </div>
   </div>
 
@@ -540,12 +531,6 @@
            
           <div id="questionsContainer"></div>
 
-        <div class="hidden-score-user">
-             <div class="small text-muted fw-bold">คะแนนรวม</div>
-             <span id="scoreNum">0</span><span id="percentText">(0%)</span>
-             <div id="scoreResult">รอผล</div>
-        </div>
-
         <div class="modern-card">
             <div class="card-header-clean"><i class="bi bi-chat-text-fill text-danger fs-5"></i> ข้อเสนอแนะอื่นๆ (ทั่วไป)</div>
             <div class="card-body-clean">
@@ -553,6 +538,23 @@
             </div>
         </div>
 
+        <div id="floatingScore" class="static-score-box hidden">
+             <div class="d-flex justify-content-between align-items-center">
+                 <div class="d-flex align-items-center gap-2">
+                     <span class="badge bg-danger rounded-pill">คะแนนรวม</span>
+                     <span class="fw-bold text-primary fs-4" id="liveScoreDisplay">0</span>
+                     <span class="text-muted small">คะแนน</span>
+                 </div>
+                 <div class="text-end">
+                     <span id="scoreResult" class="fw-bold small" style="display:none">รอผล</span>
+                     <span id="percentText" class="small text-muted fw-bold" style="font-size: 1.1rem;">(0%)</span>
+                 </div>
+             </div>
+             <div class="progress mt-2" style="height: 6px;">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+             </div>
+             <span id="scoreNum" style="display:none">0</span>
+        </div>
         <div class="btn-main-container">
            <button type="submit" class="btn-main" id="submitBtn">ยืนยันผลการสำรวจ</button>
         </div>
@@ -875,7 +877,15 @@
         // Update Hidden Fields
         document.getElementById('scoreNum').innerText = totalScore; 
         document.getElementById('percentText').innerText = `(${percent}%)`; 
-          
+        
+        // Update Logic Color Text Result
+        const scoreResult = document.getElementById('scoreResult');
+        if(percent>=80) { scoreResult.innerText = "ดีเยี่ยม"; scoreResult.className="fw-bold text-success"; }
+        else if(percent>=75) { scoreResult.innerText = "ดี"; scoreResult.className="fw-bold text-primary"; }
+        else if(percent>=65) { scoreResult.innerText = "เฝ้าระวัง"; scoreResult.className="fw-bold text-warning"; }
+        else if(percent>=55) { scoreResult.innerText = "เสี่ยง"; scoreResult.className="fw-bold text-secondary"; }
+        else { scoreResult.innerText = "วิกฤต"; scoreResult.className="fw-bold text-danger"; }
+
         // Update Floating Score Box (No Percent)
         document.getElementById('liveScoreDisplay').innerText = totalScore;
           
