@@ -378,7 +378,7 @@
     }
 
     /* =========================================
-       CUSTOM DROPDOWN FOR MULTI-SELECT (แก้ไขตามสั่ง)
+       CUSTOM DROPDOWN FOR MULTI-SELECT
        ========================================= */
     .dropdown-menu-scrollable {
         max-height: 250px;
@@ -544,8 +544,8 @@
                       <div class="d-flex flex-wrap gap-2 small fw-bold">
                           <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2">ดีเยี่ยม (ผูกพันสูง) ≥ 80%</span>
                           <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2">ดี (ผูกพัน) 75-79%</span>
-                          <span class="badge bg-warning bg-opacity-10 text-dark border border-warning px-3 py-2">เฝ้าระวัง 65-74%</span>
-                          <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-3 py-2">เสี่ยง 55-64%</span>
+                          <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-3 py-2">เฝ้าระวัง 65-74%</span>
+                          <span class="badge bg-warning bg-opacity-10 text-dark border border-warning px-3 py-2">เสี่ยง 55-64%</span>
                           <span class="badge bg-danger bg-opacity-10 text-danger border border-danger px-3 py-2">วิกฤต < 55%</span>
                       </div>
                   </div>
@@ -619,8 +619,17 @@
                     <label class="form-label small text-muted fw-bold">ตำแหน่ง</label>
                     <div id="filterPositionContainer" class="dropdown"></div>
                 </div>
-
+                
                 <div class="col-md-1"><button class="btn btn-danger w-100 rounded-pill fw-bold" onclick="applyFilters()"><i class="bi bi-search"></i></button></div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                   <div class="form-check form-switch d-flex align-items-center gap-2 border p-2 rounded-pill bg-light" style="width: fit-content; padding-right: 20px !important;">
+                       <input class="form-check-input ms-1" type="checkbox" id="uniqueFilterToggle" checked onchange="applyFilters()">
+                       <label class="form-check-label small fw-bold" for="uniqueFilterToggle">นับเฉพาะคะแนนสูงสุด (Unique User)</label>
+                   </div>
+                   <div class="small text-muted mt-1 ms-1">* หากเปิดใช้งาน ระบบจะเลือกเฉพาะรายการล่าสุดที่คะแนนสูงสุดของพนักงานแต่ละคน</div>
+                </div>
             </div>
          </div>
 
@@ -644,7 +653,15 @@
                 </div>
             </div>
          </div>
-         
+
+         <div class="row g-3 mb-4">
+             <div class="col-12">
+                 <div class="stat-card">
+                     <h5 class="fw-bold mb-3">สรุปกลุ่มความผูกพัน (Engagement Group Analysis)</h5>
+                     <div style="height: 300px;"><canvas id="riskGroupChart"></canvas></div>
+                 </div>
+             </div>
+         </div>
          <div class="row g-3 mb-4">
              <div class="col-12">
                  <div class="stat-card">
@@ -679,8 +696,8 @@
             <ul class="list-group list-group-flush small">
                 <li class="list-group-item d-flex justify-content-between"><span>ดีเยี่ยม (Excellent)</span><span class="badge bg-success">≥ 80%</span></li>
                 <li class="list-group-item d-flex justify-content-between"><span>ดี (Good)</span><span class="badge bg-primary">75-79%</span></li>
-                <li class="list-group-item d-flex justify-content-between"><span>เฝ้าระวัง (Watchlist)</span><span class="badge bg-warning text-dark">65-74%</span></li>
-                <li class="list-group-item d-flex justify-content-between"><span>เสี่ยง (Risk)</span><span class="badge bg-secondary">55-64%</span></li>
+                <li class="list-group-item d-flex justify-content-between"><span>เฝ้าระวัง (Watchlist)</span><span class="badge bg-secondary">65-74%</span></li>
+                <li class="list-group-item d-flex justify-content-between"><span>เสี่ยง (Risk)</span><span class="badge bg-warning text-dark">55-64%</span></li>
                 <li class="list-group-item d-flex justify-content-between"><span>วิกฤต (Critical)</span><span class="badge bg-danger">< 55%</span></li>
             </ul>
         </div>
@@ -730,6 +747,7 @@
     let trendChartInstance = null;
     let gradeChartInstance = null;
     let branchChartInstance = null;
+    let riskGroupChartInstance = null; // New Chart Instance
     let dataTableInstance = null;
     let searchTimer;
     let currentFilteredData = [];
@@ -737,14 +755,24 @@
     // --- On Load ---
     document.addEventListener('DOMContentLoaded', () => {
         renderQuestions();
-        // ข้อ 1: กำหนดค่าวันที่ปัจจุบันเสมอเมื่อโหลด
-        document.getElementById('inspectDate').valueAsDate = new Date();
-        const date = new Date();
-        const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-        document.getElementById('filterStartDate').valueAsDate = firstDay;
-        document.getElementById('filterEndDate').valueAsDate = date;
+        
+        // --- ส่วนแก้ไขวันที่เริ่มต้น: บังคับเป็น 1 มกราคม ปีปัจจุบัน ถึง วันนี้ ---
+        const now = new Date();
+        const year = now.getFullYear(); 
+        
+        const todayStr = now.toISOString().split('T')[0];
+        const firstDayOfYearStr = `${year}-01-01`;
 
-        // Show floating score on load if in survey view
+        document.getElementById('inspectDate').value = todayStr;
+        document.getElementById('filterStartDate').value = firstDayOfYearStr; 
+        document.getElementById('filterEndDate').value = todayStr;        
+
+        // --- ส่วนแก้ไข Unique User: บังคับให้ติ๊กถูกเป็น Default ---
+        const uniqueToggle = document.getElementById('uniqueFilterToggle');
+        if(uniqueToggle) {
+            uniqueToggle.checked = true;
+        }
+
         toggleFloatingScore(true);
 
         document.getElementById('searchKey').addEventListener('input', function(e) {
@@ -782,7 +810,6 @@
                 document.getElementById('department').value = res.department;
                 document.getElementById('startDate').value = res.startDate; 
                  
-                // ย้ำอีกครั้งเผื่อกรณีเปลี่ยนหน้า
                 document.getElementById('inspectDate').valueAsDate = new Date();
 
                 document.getElementById('searchStatusBox').style.display = 'flex';
@@ -867,7 +894,6 @@
            if(res.success){
               showGenericAlert('สำเร็จ!', 'บันทึกข้อมูลเรียบร้อยแล้ว', 'success');
               document.forms['mainForm'].reset();
-              // Reset Date Auto
               document.getElementById('inspectDate').valueAsDate = new Date();
               document.getElementById('searchStatusBox').style.display='none';
               document.getElementById('employeeInfoCard').style.display='none';
@@ -904,32 +930,35 @@
 
     function clearHighlight(id) { document.getElementById(`row_${id}`)?.classList.remove('missing-alert'); }
       
+    // UPDATED: Logic สีและเกรดใน Function Calc
     function calc(){ 
         let checkedInputs = document.querySelectorAll('.score-radio:checked'); 
         let totalScore = 0; 
         checkedInputs.forEach(r => totalScore += parseInt(r.value)); 
         const percent = totalScore; 
           
-        // Update Hidden Fields
         document.getElementById('scoreNum').innerText = totalScore; 
         document.getElementById('percentText').innerText = `(${percent}%)`; 
           
-        // Update Logic Color Text Result
         const scoreResult = document.getElementById('scoreResult');
+        // Logic ใหม่: Excellent(Green), Good(Blue), Watchlist(Grey), Risk(Yellow), Critical(Red)
         if(percent>=80) { scoreResult.innerText = "ดีเยี่ยม"; scoreResult.className="fw-bold text-success"; }
         else if(percent>=75) { scoreResult.innerText = "ดี"; scoreResult.className="fw-bold text-primary"; }
-        else if(percent>=65) { scoreResult.innerText = "เฝ้าระวัง"; scoreResult.className="fw-bold text-warning"; }
-        else if(percent>=55) { scoreResult.innerText = "เสี่ยง"; scoreResult.className="fw-bold text-secondary"; }
+        else if(percent>=65) { scoreResult.innerText = "เฝ้าระวัง"; scoreResult.className="fw-bold text-secondary"; } // Grey
+        else if(percent>=55) { scoreResult.innerText = "เสี่ยง"; scoreResult.className="fw-bold text-warning"; } // Yellow
         else { scoreResult.innerText = "วิกฤต"; scoreResult.className="fw-bold text-danger"; }
 
-        // Update Floating Score Box (No Percent)
         document.getElementById('liveScoreDisplay').innerText = totalScore;
           
         const progressBar = document.getElementById('progressBar'); 
         progressBar.style.width = percent + '%'; 
-        // Logic สีและเกรด...
-        let bg = 'bg-secondary';
-        if(percent>=80) bg='bg-success'; else if(percent>=75) bg='bg-primary'; else if(percent>=65) bg='bg-warning'; else if(percent>=55) bg='bg-secondary'; else bg='bg-danger';
+        
+        let bg = 'bg-danger'; // Default Red
+        if(percent>=80) bg='bg-success'; 
+        else if(percent>=75) bg='bg-primary'; 
+        else if(percent>=65) bg='bg-secondary'; // Grey
+        else if(percent>=55) bg='bg-warning'; // Yellow
+        
         progressBar.className = `progress-bar ${bg}`;
     }
 
@@ -941,7 +970,6 @@
             showLoading(false);
             if(response.success) {
                 allReportData = response.data;
-                // [NEW] เก็บค่าจำนวนพนักงานทั้งหมดจาก Server
                 allBranchTotals = response.branchTotals || {}; 
                 initFilters();
                 applyFilters(); 
@@ -949,12 +977,11 @@
         } catch (err) { showLoading(false); alert('Error: ' + err); }
     }
 
-    // แก้ไขจุดที่ 3: ฟังก์ชัน initFilters สร้าง Dropdown แบบ Multi-select + Search + Select All
     function initFilters() {
         const renderMultiSelect = (containerId, data) => {
             const container = document.getElementById(containerId);
             const uniqueId = containerId + '_Dropdown';
-            
+             
             let html = `
                 <button class="btn btn-white custom-dropdown-btn w-100 rounded-pill" type="button" id="${uniqueId}" data-bs-toggle="dropdown" aria-expanded="false">
                     ทั้งหมด
@@ -969,7 +996,7 @@
                     </div>
                     <div class="list-container">
             `;
-            
+             
             data.forEach((d, idx) => {
                 const itemId = `${containerId}_item_${idx}`;
                 html += `
@@ -981,13 +1008,12 @@
                     </div>
                 `;
             });
-            
+             
             html += `</div></div>`;
             container.innerHTML = html;
-            
-            // ป้องกัน Dropdown ปิดเมื่อคลิกข้างใน
+             
             container.addEventListener('click', function(e) {
-                 e.stopPropagation();
+                  e.stopPropagation();
             });
         };
 
@@ -999,8 +1025,7 @@
         renderMultiSelect('filterBranchContainer', branches);
         renderMultiSelect('filterPositionContainer', positions);
     }
-    
-    // ฟังก์ชันเสริมสำหรับ Multi-select logic
+     
     function filterDropdownList(input) {
         const filter = input.value.toLowerCase();
         const items = input.closest('.dropdown-menu').querySelectorAll('.dropdown-item-text');
@@ -1049,27 +1074,43 @@
         return Array.from(checked).map(cb => cb.value);
     }
 
-    // แก้ไขจุดที่ 4: applyFilters รองรับ Multi-select
     function applyFilters() { 
         const start = document.getElementById('filterStartDate').value; 
         const end = document.getElementById('filterEndDate').value; 
-        
+          
         const selectedDepts = getSelectedValues('filterDeptContainer');
         const selectedBranches = getSelectedValues('filterBranchContainer');
         const selectedPositions = getSelectedValues('filterPositionContainer');
 
-        const filtered = allReportData.filter(item => { 
+        const uniqueToggle = document.getElementById('uniqueFilterToggle').checked;
+
+        let filtered = allReportData.filter(item => { 
             let itemDate = item.inspectDate; 
             let inRange = (!start || itemDate >= start) && (!end || itemDate <= end);
             
-            // เช็คว่าค่าของ item อยู่ในลิสต์ที่เลือกหรือไม่
             const deptMatch = selectedDepts.includes(item.department);
             const branchMatch = selectedBranches.includes(item.branch);
             const posMatch = selectedPositions.includes(item.position);
 
             return inRange && deptMatch && branchMatch && posMatch;
         }); 
-        currentFilteredData = filtered; // Store for chart interactions
+
+        if(uniqueToggle) {
+             const uniqueMap = new Map();
+             filtered.forEach(item => {
+                 if(!uniqueMap.has(item.empId)) {
+                     uniqueMap.set(item.empId, item);
+                 } else {
+                     const existing = uniqueMap.get(item.empId);
+                     if(item.score > existing.score) {
+                         uniqueMap.set(item.empId, item);
+                     }
+                 }
+             });
+             filtered = Array.from(uniqueMap.values());
+        }
+
+        currentFilteredData = filtered; 
         renderDashboard(filtered); 
     }
 
@@ -1088,20 +1129,58 @@
         renderCharts(data); 
     }
 
+    // ---------------------------------------------
+    // ฟังก์ชันช่วยเลือกสีตามความหมาย (เพิ่มใหม่)
+    // ---------------------------------------------
+    function getSeverityColor(text) {
+        if (!text) return '#cbd5e1'; // สีเทาอ่อน (Unknown)
+        const t = text.toLowerCase();
+        
+        // 1. Excellent (สีเขียว)
+        if (t.includes('excellent') || t.includes('ดีเยี่ยม') || t.includes('great')) return '#22c55e';
+        
+        // 2. Good (สีฟ้า)
+        if (t.includes('good') || t.includes('ดี')) return '#3b82f6';
+        
+        // 3. Watchlist (สีเทาเข้ม) - ตามเกณฑ์คะแนน 65-74%
+        if (t.includes('watchlist') || t.includes('เฝ้าระวัง') || t.includes('improve')) return '#64748b';
+        
+        // 4. Risk (สีเหลือง)
+        if (t.includes('risk') || t.includes('เสี่ยง')) return '#eab308';
+        
+        // 5. Critical (สีแดง)
+        if (t.includes('critical') || t.includes('วิกฤต') || t.includes('urgent')) return '#ef4444';
+        
+        return '#cbd5e1'; // Default
+    }
+
     function renderCharts(data) { 
-        // 1. Grade Pie Chart [UPDATED: Click Event logic for Average Score & Percent]
+        // -----------------------------------------
+        // 1. แก้ไข Grade Pie Chart (ให้สีตรงกับชื่อเกรด)
+        // -----------------------------------------
         const grades = {}; 
-        data.forEach(d => { const g = d.grade || 'Unknown'; grades[g] = (grades[g] || 0) + 1; }); 
+        data.forEach(d => { 
+            const g = d.grade || 'Unknown'; 
+            grades[g] = (grades[g] || 0) + 1; 
+        }); 
+        
+        const gradeLabels = Object.keys(grades);
+        const gradeValues = Object.values(grades);
+        
+        // **หัวใจสำคัญ: สร้าง Array สี ให้ตรงกับชื่อ Label ของ Pie Chart นั้นๆ**
+        const dynamicColors = gradeLabels.map(label => getSeverityColor(label));
+
         const ctxGrade = document.getElementById('gradeChart').getContext('2d'); 
         if(gradeChartInstance) gradeChartInstance.destroy(); 
         gradeChartInstance = new Chart(ctxGrade, { 
             type: 'doughnut', 
             data: { 
-                labels: Object.keys(grades), 
+                labels: gradeLabels, 
                 datasets: [{ 
-                    data: Object.values(grades), 
-                    backgroundColor: ['#22c55e', '#eab308', '#ef4444', '#3b82f6', '#64748b'],
-                    borderWidth: 2, borderColor: '#ffffff'
+                    data: gradeValues, 
+                    backgroundColor: dynamicColors, // ใช้สีที่ Map มาถูกต้องแล้ว
+                    borderWidth: 2, 
+                    borderColor: '#ffffff'
                 }] 
             }, 
             options: { 
@@ -1109,37 +1188,17 @@
                 plugins: { 
                     legend: { 
                         display: true, 
-                        position: 'right',
+                        position: 'right', 
                         labels: { boxWidth: 12, font: { size: 10 } }
-                    },
+                    }, 
                     tooltip: { enabled: true }
-                },
-                // [NEW Requirement 3] On Click Handler for Pie Chart
-                onClick: (evt, elements) => {
-                    if (elements.length > 0) {
-                        const index = elements[0].index;
-                        const label = gradeChartInstance.data.labels[index];
-                        const count = gradeChartInstance.data.datasets[0].data[index];
-                        
-                        // Calculate stats for this grade from currentFilteredData
-                        const groupData = currentFilteredData.filter(d => (d.grade || 'Unknown') === label);
-                        const groupAvgPercent = groupData.length ? (groupData.reduce((a,b)=>a+b.percent,0)/groupData.length).toFixed(1) : 0;
-                        const groupAvgScore = groupData.length ? (groupData.reduce((a,b)=>a+b.score,0)/groupData.length).toFixed(2) : 0;
-                        const totalCount = currentFilteredData.length;
-                        const ratio = ((count/totalCount)*100).toFixed(1);
-
-                        // Show detailed alert with Score and Percent
-                        showGenericAlert(
-                            `รายละเอียด: ${label}`,
-                            `จำนวน: ${count} คน (${ratio}%)\n\nคะแนนเฉลี่ย: ${groupAvgScore}\nเปอร์เซ็นต์เฉลี่ย: ${groupAvgPercent}%`,
-                            'info'
-                        );
-                    }
                 }
             } 
         }); 
 
-        // 2. Trend Chart [UPDATED: Show Data Labels on top of line]
+        // -----------------------------------------
+        // 2. Trend Chart
+        // -----------------------------------------
         const sortedData = [...data].sort((a,b) => new Date(a.inspectDate) - new Date(b.inspectDate));
         const monthlyData = {};
         sortedData.forEach(d => {
@@ -1162,7 +1221,7 @@
         if(trendChartInstance) trendChartInstance.destroy(); 
         trendChartInstance = new Chart(ctxTrend, { 
             type: 'line', 
-            plugins: [ChartDataLabels], // Enable Plugin
+            plugins: [ChartDataLabels], 
             data: { 
                 labels: trendLabels, 
                 datasets: [{ 
@@ -1184,7 +1243,6 @@
                 scales: { y: { beginAtZero: true, max: 120 } }, 
                 plugins: { 
                     legend: { display: true },
-                    // [NEW Requirement 2] Data Labels Configuration
                     datalabels: {
                         display: true,
                         align: 'top',
@@ -1207,7 +1265,75 @@
             } 
         });
 
-        // 3. Branch Performance
+        // -----------------------------------------
+        // 3. Risk Group Analysis
+        // -----------------------------------------
+        let gExcellent = 0, gGood = 0, gWatchlist = 0, gRisk = 0, gCritical = 0;  
+        data.forEach(d => {
+            const p = d.percent;
+            if (p >= 80) gExcellent++;
+            else if (p >= 75) gGood++;
+            else if (p >= 65) gWatchlist++;
+            else if (p >= 55) gRisk++;     
+            else gCritical++;
+        });
+
+        const totalFiltered = data.length || 1; 
+        const ctxRisk = document.getElementById('riskGroupChart').getContext('2d');
+        if (riskGroupChartInstance) riskGroupChartInstance.destroy();
+
+        riskGroupChartInstance = new Chart(ctxRisk, {
+            type: 'bar',
+            options: {
+                maintainAspectRatio: false,
+                layout: { padding: { top: 30 } },
+                scales: {
+                    y: { beginAtZero: true, grid: { display: false }, display: false },
+                    x: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false }, 
+                    datalabels: {
+                        anchor: 'end', align: 'end', color: '#334155',
+                        font: { weight: 'bold', size: 12 },
+                        formatter: (value) => {
+                            if(value === 0) return '';
+                            const percentage = ((value / totalFiltered) * 100).toFixed(1);
+                            return `${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels],
+            data: {
+                labels: [
+                    '🟢 ดีเยี่ยม\n(Excellent)', 
+                    '🔵 ดี\n(Good)', 
+                    '⚪ เฝ้าระวัง\n(Watchlist)', 
+                    '🟡 เสี่ยง\n(Risk)', 
+                    '🔴 วิกฤต\n(Critical)' 
+                ],
+                datasets: [{
+                    label: 'จำนวนคน',
+                    data: [gExcellent, gGood, gWatchlist, gRisk, gCritical],
+                    // ใช้รหัสสีเดียวกับ getSeverityColor
+                    backgroundColor: [
+                        '#22c55e', // Green
+                        '#3b82f6', // Blue
+                        '#64748b', // Grey (Watchlist)
+                        '#eab308', // Yellow
+                        '#ef4444'  // Red
+                    ],
+                    borderWidth: 0,
+                    borderRadius: 8,
+                    barPercentage: 0.6 
+                }]
+            }
+        });
+
+        // -----------------------------------------
+        // 4. Branch Performance
+        // -----------------------------------------
         const branchData = {};
         data.forEach(d => {
             const b = d.branch || 'Unknown';
@@ -1219,11 +1345,9 @@
         const bCounts = bLabels.map(l => branchData[l].count);
         const bAvgPercents = bLabels.map(l => (branchData[l].sumPercent / branchData[l].count).toFixed(1));
 
-        const dynamicColors = bLabels.map((_, i) => `hsl(${i * 360 / bLabels.length}, 70%, 60%)`);
-
         const ctxBranch = document.getElementById('branchChart').getContext('2d');
         if(branchChartInstance) branchChartInstance.destroy(); 
-        
+         
         branchChartInstance = new Chart(ctxBranch, {
             type: 'bar',
             plugins: [ChartDataLabels], 
@@ -1234,19 +1358,18 @@
                         type: 'line',
                         label: 'คะแนนเฉลี่ย (%)',
                         data: bAvgPercents,
-                        borderColor: '#334155',
+                        borderColor: '#b91c1c',
                         borderWidth: 2,
-                        borderDash: [5, 5],
                         tension: 0.3,
                         yAxisID: 'y',
                         pointStyle: 'circle',
-                        pointRadius: 6,
+                        pointRadius: 4,
                         pointBackgroundColor: '#fff',
-                        pointBorderColor: '#334155',
+                        pointBorderColor: '#b91c1c',
                         datalabels: {
                             align: 'top',
                             anchor: 'end',
-                            backgroundColor: '#334155',
+                            backgroundColor: '#b91c1c',
                             color: 'white',
                             borderRadius: 4,
                             font: { size: 10, weight: 'bold' },
@@ -1257,16 +1380,15 @@
                         type: 'bar',
                         label: 'จำนวนคน',
                         data: bCounts,
-                        backgroundColor: dynamicColors,
+                        backgroundColor: '#cbd5e1', // สีเทาอ่อน เพื่อให้กราฟเส้นเด่น
+                        hoverBackgroundColor: '#94a3b8',
                         yAxisID: 'y1',
-                        borderRadius: 6,
-                        barPercentage: 0.6,
+                        borderRadius: 4,
+                        barPercentage: 0.5,
                         datalabels: {
-                            align: 'center',
-                            anchor: 'center',
-                            color: '#fff', 
-                            font: { weight: 'bold', size: 14 },
-                            formatter: (value) => value > 0 ? value + ' คน' : '' 
+                            align: 'center', anchor: 'center', color: '#334155', 
+                            font: { weight: 'bold', size: 11 },
+                            formatter: (value) => value > 0 ? value : '' 
                         }
                     }
                 ]
@@ -1279,31 +1401,10 @@
                 },
                 plugins: {
                     legend: { display: true },
-                    // ------------------------------------------------
-                    // [EDITED POINT] ส่วนที่แก้ไข Tooltip ของกราฟแท่ง
-                    // ------------------------------------------------
                     tooltip: {
-                        callbacks: {
-                            // ปรับข้อความ Label (บรรทัดที่ 2: ทำแบบสำรวจ ...)
-                            label: function(context) {
-                                // ถ้าเป็น Dataset กราฟแท่ง (Dataset Index 1 หรือเช็ค type='bar')
-                                if (context.dataset.type === 'bar') {
-                                    return `ทำแบบสำรวจ ${context.parsed.y} คน`;
-                                }
-                                // ถ้าเป็นกราฟเส้น
-                                return `${context.dataset.label}: ${context.parsed.y}%`;
-                            },
-                            // เพิ่มบรรทัดถัดไป (บรรทัดที่ 3: จำนวนพนักงานทั้งหมด ...)
-                            afterBody: function(tooltipItems) {
-                                // ดึงชื่อสาขาที่กำลัง Hover
-                                const branchName = tooltipItems[0].label;
-                                // ดึงจำนวนทั้งหมดจากตัวแปร global
-                                const totalEmp = allBranchTotals[branchName] || 0;
-                                return `จำนวนพนักงานทั้งหมด ${totalEmp} คน`;
-                            }
-                        }
-                    }
-                    // ------------------------------------------------
+                        mode: 'index',
+                        intersect: false
+                    } 
                 }
             }
         });
@@ -1389,10 +1490,15 @@
     function closeConfirmBox() { document.getElementById('confirmOverlay').classList.remove('active'); }
       
     function showManual(){ new bootstrap.Modal(document.getElementById('manualModal')).show(); }
+    
+    // UPDATED: Helper for table badges to match new logic slightly better
     function getBadgeClass(grade) { 
+        // Logic นี้ยังคงไว้คล้ายเดิมได้ แต่ถ้า Grade ที่ส่งมาจาก Google Sheet เปลี่ยน อาจต้องแก้ที่ Google Script ด้วย
+        // แต่ในที่นี้เราเน้น Visual HTML/JS เป็นหลัก
         if(grade.includes('Good') || grade.includes('Excellent')) return 'badge-grade-good'; 
-        if(grade.includes('Improve') || grade.includes('Watchlist')) return 'badge-grade-improve'; 
-        return 'badge-grade-urgent'; 
+        if(grade.includes('Improve') || grade.includes('Watchlist')) return 'bg-secondary text-white'; // Grey for Watchlist
+        if(grade.includes('Risk')) return 'bg-warning text-dark'; // Yellow for Risk
+        return 'badge-grade-urgent'; // Red for Critical
     }
 
     function exportXLSX() {
@@ -1418,4 +1524,3 @@
   </script>
 </body>
 </html>
-
