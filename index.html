@@ -1156,19 +1156,33 @@
 
     function renderCharts(data) { 
         // -----------------------------------------
-        // 1. แก้ไข Grade Pie Chart (ให้สีตรงกับชื่อเกรด)
+        // 1. แก้ไข Grade Pie Chart (Fix: Force Order)
         // -----------------------------------------
-        const grades = {}; 
-        data.forEach(d => { 
-            const g = d.grade || 'Unknown'; 
-            grades[g] = (grades[g] || 0) + 1; 
-        }); 
         
-        const gradeLabels = Object.keys(grades);
-        const gradeValues = Object.values(grades);
+        // เตรียมตัวแปรนับจำนวนตามกลุ่ม (Fixed Categories)
+        let countExc = 0, countGood = 0, countWatch = 0, countRisk = 0, countCrit = 0;
+
+        data.forEach(d => {
+            const t = (d.grade || '').toLowerCase();
+            if (t.includes('excellent') || t.includes('ดีเยี่ยม')) countExc++;
+            else if (t.includes('good') || t.includes('ดี')) countGood++;
+            else if (t.includes('watchlist') || t.includes('เฝ้าระวัง')) countWatch++;
+            else if (t.includes('risk') || t.includes('เสี่ยง')) countRisk++;
+            else countCrit++; // else if (t.includes('critical'))
+        });
+
+        // สร้าง Array ข้อมูลโดยเรียงลำดับคงที่ (Fixed Order)
+        // ลำดับ: ดีเยี่ยม -> ดี -> เฝ้าระวัง -> เสี่ยง -> วิกฤต
+        const gradeLabels = [];
+        const gradeValues = [];
+        const gradeColors = [];
         
-        // **หัวใจสำคัญ: สร้าง Array สี ให้ตรงกับชื่อ Label ของ Pie Chart นั้นๆ**
-        const dynamicColors = gradeLabels.map(label => getSeverityColor(label));
+        // Push ข้อมูลตามลำดับ
+        if (countExc > 0) { gradeLabels.push('ดีเยี่ยม (Excellent)'); gradeValues.push(countExc); gradeColors.push('#22c55e'); }
+        if (countGood > 0) { gradeLabels.push('ดี (Good)'); gradeValues.push(countGood); gradeColors.push('#3b82f6'); }
+        if (countWatch > 0) { gradeLabels.push('เฝ้าระวัง (Watchlist)'); gradeValues.push(countWatch); gradeColors.push('#64748b'); }
+        if (countRisk > 0) { gradeLabels.push('เสี่ยง (Risk)'); gradeValues.push(countRisk); gradeColors.push('#eab308'); }
+        if (countCrit > 0) { gradeLabels.push('วิกฤต (Critical)'); gradeValues.push(countCrit); gradeColors.push('#ef4444'); }
 
         const ctxGrade = document.getElementById('gradeChart').getContext('2d'); 
         if(gradeChartInstance) gradeChartInstance.destroy(); 
@@ -1178,7 +1192,7 @@
                 labels: gradeLabels, 
                 datasets: [{ 
                     data: gradeValues, 
-                    backgroundColor: dynamicColors, // ใช้สีที่ Map มาถูกต้องแล้ว
+                    backgroundColor: gradeColors, // ใช้สีที่ Fix ตามลำดับแล้ว
                     borderWidth: 2, 
                     borderColor: '#ffffff'
                 }] 
