@@ -553,7 +553,7 @@
               </div>
             </div>
           </div>
-           
+            
           <div id="questionsContainer"></div>
 
         <div class="modern-card">
@@ -603,24 +603,37 @@
          </div>
 
          <div class="card border-0 shadow-sm rounded-4 mb-4 p-3 no-print">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-2"><label class="form-label small text-muted fw-bold">วันที่เริ่มต้น</label><input type="date" class="form-control rounded-pill" id="filterStartDate"></div>
-                <div class="col-md-2"><label class="form-label small text-muted fw-bold">วันที่สิ้นสุด</label><input type="date" class="form-control rounded-pill" id="filterEndDate"></div>
-                
-                <div class="col-md-3">
-                    <label class="form-label small text-muted fw-bold">แผนก</label>
-                    <div id="filterDeptContainer" class="dropdown"></div>
+            <div class="row g-3 align-items-end mb-2">
+                 <div class="col-md-2"><label class="form-label small text-muted fw-bold">วันที่เริ่มต้น</label><input type="date" class="form-control rounded-pill" id="filterStartDate"></div>
+                 <div class="col-md-2"><label class="form-label small text-muted fw-bold">วันที่สิ้นสุด</label><input type="date" class="form-control rounded-pill" id="filterEndDate"></div>
+                 <div class="col-md-2">
+                     <label class="form-label small text-muted fw-bold">รหัสพนักงาน</label>
+                     <input type="text" class="form-control rounded-pill" id="filterEmpId" placeholder="ระบุรหัส...">
+                 </div>
+                 <div class="col-md-3">
+                     <label class="form-label small text-muted fw-bold">ชื่อ-นามสกุล</label>
+                     <input type="text" class="form-control rounded-pill" id="filterName" placeholder="ระบุชื่อ...">
+                 </div>
+                 <div class="col-md-3">
+                    <label class="form-label small text-muted fw-bold">สังกัด</label>
+                    <div id="filterAffiliationContainer" class="dropdown"></div>
                 </div>
-                <div class="col-md-2">
+            </div>
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                     <label class="form-label small text-muted fw-bold">แผนก</label>
+                     <div id="filterDeptContainer" class="dropdown"></div>
+                 </div>
+                <div class="col-md-3">
                     <label class="form-label small text-muted fw-bold">สาขา</label>
                     <div id="filterBranchContainer" class="dropdown"></div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label class="form-label small text-muted fw-bold">ตำแหน่ง</label>
                     <div id="filterPositionContainer" class="dropdown"></div>
                 </div>
                 
-                <div class="col-md-1"><button class="btn btn-danger w-100 rounded-pill fw-bold" onclick="applyFilters()"><i class="bi bi-search"></i></button></div>
+                <div class="col-md-3"><button class="btn btn-danger w-100 rounded-pill fw-bold" onclick="applyFilters()"><i class="bi bi-search me-2"></i>กรองข้อมูล</button></div>
             </div>
             <div class="row mt-3">
                 <div class="col-12">
@@ -1017,13 +1030,18 @@
             });
         };
 
+        // Get unique values for dropdowns
         const depts = [...new Set(allReportData.map(d => d.department))].filter(Boolean).sort();
         const branches = [...new Set(allReportData.map(d => d.branch))].filter(Boolean).sort();
         const positions = [...new Set(allReportData.map(d => d.position))].filter(Boolean).sort();
+        
+        // **ส่วนที่เพิ่ม: ดึงข้อมูล Affiliation มาทำ Dropdown**
+        const affiliations = [...new Set(allReportData.map(d => d.affiliation))].filter(Boolean).sort();
 
         renderMultiSelect('filterDeptContainer', depts);
         renderMultiSelect('filterBranchContainer', branches);
         renderMultiSelect('filterPositionContainer', positions);
+        renderMultiSelect('filterAffiliationContainer', affiliations); // แสดงผล Dropdown สังกัด
     }
      
     function filterDropdownList(input) {
@@ -1077,7 +1095,13 @@
     function applyFilters() { 
         const start = document.getElementById('filterStartDate').value; 
         const end = document.getElementById('filterEndDate').value; 
-          
+        
+        // **ส่วนที่เพิ่ม: รับค่า Search Key และ Affiliation**
+        const searchId = document.getElementById('filterEmpId').value.toLowerCase().trim();
+        const searchName = document.getElementById('filterName').value.toLowerCase().trim();
+        
+        const selectedAffiliations = getSelectedValues('filterAffiliationContainer');
+
         const selectedDepts = getSelectedValues('filterDeptContainer');
         const selectedBranches = getSelectedValues('filterBranchContainer');
         const selectedPositions = getSelectedValues('filterPositionContainer');
@@ -1091,8 +1115,15 @@
             const deptMatch = selectedDepts.includes(item.department);
             const branchMatch = selectedBranches.includes(item.branch);
             const posMatch = selectedPositions.includes(item.position);
+            
+            // **ส่วนที่เพิ่ม: Logic กรองชื่อ/รหัส และ สังกัด**
+            const affMatch = selectedAffiliations.includes(item.affiliation);
+            
+            // กรองแยกกัน: ถ้าระบุชื่อ ต้องตรงกับชื่อ, ถ้าระบุรหัส ต้องตรงกับรหัส
+            const nameMatch = item.name.toLowerCase().includes(searchName);
+            const idMatch = item.empId.toLowerCase().includes(searchId);
 
-            return inRange && deptMatch && branchMatch && posMatch;
+            return inRange && deptMatch && branchMatch && posMatch && affMatch && nameMatch && idMatch;
         }); 
 
         if(uniqueToggle) {
