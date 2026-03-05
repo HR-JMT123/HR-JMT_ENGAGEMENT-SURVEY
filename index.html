@@ -670,6 +670,15 @@
          <div class="row g-3 mb-4">
              <div class="col-12">
                  <div class="stat-card">
+                     <h5 class="fw-bold mb-3">คะแนนสัดส่วนแต่ละหมวดใหญ่ (Category Scores)</h5>
+                     <div style="height: 350px;"><canvas id="categoryChart"></canvas></div>
+                 </div>
+             </div>
+         </div>
+
+         <div class="row g-3 mb-4">
+             <div class="col-12">
+                 <div class="stat-card">
                      <h5 class="fw-bold mb-3">สรุปกลุ่มความผูกพัน (Engagement Group Analysis)</h5>
                      <div style="height: 300px;"><canvas id="riskGroupChart"></canvas></div>
                  </div>
@@ -760,7 +769,8 @@
     let trendChartInstance = null;
     let gradeChartInstance = null;
     let branchChartInstance = null;
-    let riskGroupChartInstance = null; // New Chart Instance
+    let riskGroupChartInstance = null; 
+    let categoryChartInstance = null; // เพิ่ม Instance ของ Category Chart
     let dataTableInstance = null;
     let searchTimer;
     let currentFilteredData = [];
@@ -1450,6 +1460,97 @@
                         mode: 'index',
                         intersect: false
                     } 
+                }
+            }
+        });
+
+        // -----------------------------------------
+        // 5. Category Analysis (คะแนนสัดส่วนแต่ละหมวดใหญ่)
+        // -----------------------------------------
+        const catLabels = [
+            '1. Work & Role',
+            '2. Leadership',
+            '3. Career & Growth',
+            '4. Compensation & Welfare',
+            '5. Environment & Culture',
+            '6. Communication & Direction'
+        ];
+        
+        // ตัวแปรเก็บผลรวมและจำนวน
+        let catSums = [0, 0, 0, 0, 0, 0];
+        let catCounts = [0, 0, 0, 0, 0, 0];
+
+        data.forEach(d => {
+            // สมมติฐาน: ระบบมีการคืนค่า d.scores กลับมาตอนดึง Report (เป็น Object หรือ JSON String)
+            if (d.scores) {
+                let sObj = typeof d.scores === 'string' ? JSON.parse(d.scores) : d.scores;
+                for (let key in sObj) {
+                    // map prefix ให้ตรงกับ category ID ที่เจนในหน้า survey
+                    if (key.startsWith('s_cat1_')) { catSums[0] += Number(sObj[key]); catCounts[0]++; }
+                    else if (key.startsWith('s_cat2_')) { catSums[1] += Number(sObj[key]); catCounts[1]++; }
+                    else if (key.startsWith('s_cat3_')) { catSums[2] += Number(sObj[key]); catCounts[2]++; }
+                    else if (key.startsWith('s_cat4_')) { catSums[3] += Number(sObj[key]); catCounts[3]++; }
+                    else if (key.startsWith('s_cat5_')) { catSums[4] += Number(sObj[key]); catCounts[4]++; }
+                    else if (key.startsWith('s_cat6_')) { catSums[5] += Number(sObj[key]); catCounts[5]++; }
+                }
+            }
+        });
+
+        // แปลงเป็นเปอร์เซ็นต์ (คะแนนเต็มข้อละ 5)
+        let catAvgPercent = catSums.map((sum, i) => {
+            if (catCounts[i] === 0) return 0;
+            let avgScore = sum / catCounts[i]; 
+            return ((avgScore / 5) * 100).toFixed(1); 
+        });
+
+        const ctxCat = document.getElementById('categoryChart').getContext('2d');
+        if (categoryChartInstance) categoryChartInstance.destroy();
+
+        categoryChartInstance = new Chart(ctxCat, {
+            type: 'bar',
+            plugins: [ChartDataLabels],
+            data: {
+                labels: catLabels,
+                datasets: [{
+                    label: 'คะแนนเฉลี่ยหมวดหมู่ (%)',
+                    data: catAvgPercent,
+                    // ใช้พาเลตต์สีที่หลากหลายให้ดูแยกหมวดหมู่ได้ชัดเจน
+                    backgroundColor: [
+                        '#3b82f6', // Blue
+                        '#10b981', // Emerald
+                        '#f59e0b', // Amber
+                        '#ef4444', // Red
+                        '#8b5cf6', // Purple
+                        '#14b8a6'  // Teal
+                    ],
+                    borderRadius: 6,
+                    borderWidth: 0,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                indexAxis: 'y', // กราฟแท่งแนวนอน (ดีที่สุดสำหรับ Labels ยาวๆ)
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: 'คะแนนเฉลี่ย (%)', font: { weight: 'bold' } }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { font: { weight: 'bold' } }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    datalabels: {
+                        align: 'end',
+                        anchor: 'end',
+                        color: '#334155',
+                        font: { weight: 'bold', size: 12 },
+                        formatter: (value) => value > 0 ? value + '%' : 'ไม่มีข้อมูล'
+                    }
                 }
             }
         });
