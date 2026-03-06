@@ -674,8 +674,16 @@
          <div class="row g-3 mb-4">
              <div class="col-12">
                  <div class="stat-card">
-                     <h5 class="fw-bold mb-3">คะแนนสัดส่วนแต่ละหมวดใหญ่ (Category Scores)</h5>
+                     <h5 class="fw-bold mb-3">คะแนนสัดส่วนแต่ละหมวดใหญ่ (Category Scores) <small class="text-muted fw-normal" style="font-size: 0.8rem;">(คลิกที่แท่งกราฟเพื่อดูรายข้อ)</small></h5>
                      <div style="height: 350px;"><canvas id="categoryChart"></canvas></div>
+                     
+                     <div id="subCategoryContainer" style="display: none; margin-top: 30px; border-top: 1px dashed #cbd5e1; padding-top: 20px;">
+                         <div class="d-flex justify-content-between align-items-center mb-3">
+                             <h6 class="fw-bold text-primary m-0" id="subCategoryTitle">คะแนนรายข้อ</h6>
+                             <button class="btn btn-sm btn-outline-secondary rounded-pill" onclick="closeSubCategory()"><i class="bi bi-x"></i> ปิด</button>
+                         </div>
+                         <div style="height: 300px;"><canvas id="subCategoryChart"></canvas></div>
+                     </div>
                  </div>
              </div>
          </div>
@@ -774,7 +782,8 @@
     let gradeChartInstance = null;
     let branchChartInstance = null;
     let riskGroupChartInstance = null; 
-    let categoryChartInstance = null; // เพิ่ม Instance ของ Category Chart
+    let categoryChartInstance = null;
+    let subCategoryChartInstance = null; // ตัวแปรสำหรับกราฟย่อยที่เพิ่มใหม่
     let dataTableInstance = null;
     let searchTimer;
     let currentFilteredData = [];
@@ -957,7 +966,6 @@
 
     function clearHighlight(id) { document.getElementById(`row_${id}`)?.classList.remove('missing-alert'); }
       
-    // UPDATED: Logic สีและเกรดใน Function Calc
     function calc(){ 
         let checkedInputs = document.querySelectorAll('.score-radio:checked'); 
         let totalScore = 0; 
@@ -1171,37 +1179,23 @@
         renderCharts(data); 
     }
 
-    // ---------------------------------------------
-    // ฟังก์ชันช่วยเลือกสีตามความหมาย (เพิ่มใหม่)
-    // ---------------------------------------------
     function getSeverityColor(text) {
-        if (!text) return '#cbd5e1'; // สีเทาอ่อน (Unknown)
+        if (!text) return '#cbd5e1'; 
         const t = text.toLowerCase();
         
-        // 1. Excellent (สีเขียว)
         if (t.includes('excellent') || t.includes('ดีเยี่ยม') || t.includes('great')) return '#22c55e';
-        
-        // 2. Good (สีฟ้า)
         if (t.includes('good') || t.includes('ดี')) return '#3b82f6';
-        
-        // 3. Watchlist (สีเทาเข้ม) - ตามเกณฑ์คะแนน 65-74%
         if (t.includes('watchlist') || t.includes('เฝ้าระวัง') || t.includes('improve')) return '#64748b';
-        
-        // 4. Risk (สีเหลือง)
         if (t.includes('risk') || t.includes('เสี่ยง')) return '#eab308';
-        
-        // 5. Critical (สีแดง)
         if (t.includes('critical') || t.includes('วิกฤต') || t.includes('urgent')) return '#ef4444';
         
-        return '#cbd5e1'; // Default
+        return '#cbd5e1'; 
     }
 
     function renderCharts(data) { 
         // -----------------------------------------
-        // 1. แก้ไข Grade Pie Chart (Fix: Force Order)
+        // 1. Grade Pie Chart
         // -----------------------------------------
-        
-        // เตรียมตัวแปรนับจำนวนตามกลุ่ม (Fixed Categories)
         let countExc = 0, countGood = 0, countWatch = 0, countRisk = 0, countCrit = 0;
 
         data.forEach(d => {
@@ -1210,16 +1204,13 @@
             else if (t.includes('good') || t.includes('ดี')) countGood++;
             else if (t.includes('watchlist') || t.includes('เฝ้าระวัง')) countWatch++;
             else if (t.includes('risk') || t.includes('เสี่ยง')) countRisk++;
-            else countCrit++; // else if (t.includes('critical'))
+            else countCrit++; 
         });
 
-        // สร้าง Array ข้อมูลโดยเรียงลำดับคงที่ (Fixed Order)
-        // ลำดับ: ดีเยี่ยม -> ดี -> เฝ้าระวัง -> เสี่ยง -> วิกฤต
         const gradeLabels = [];
         const gradeValues = [];
         const gradeColors = [];
         
-        // Push ข้อมูลตามลำดับ
         if (countExc > 0) { gradeLabels.push('ดีเยี่ยม (Excellent)'); gradeValues.push(countExc); gradeColors.push('#22c55e'); }
         if (countGood > 0) { gradeLabels.push('ดี (Good)'); gradeValues.push(countGood); gradeColors.push('#3b82f6'); }
         if (countWatch > 0) { gradeLabels.push('เฝ้าระวัง (Watchlist)'); gradeValues.push(countWatch); gradeColors.push('#64748b'); }
@@ -1234,7 +1225,7 @@
                 labels: gradeLabels, 
                 datasets: [{ 
                     data: gradeValues, 
-                    backgroundColor: gradeColors, // ใช้สีที่ Fix ตามลำดับแล้ว
+                    backgroundColor: gradeColors, 
                     borderWidth: 2, 
                     borderColor: '#ffffff'
                 }] 
@@ -1242,11 +1233,7 @@
             options: { 
                 maintainAspectRatio: false, 
                 plugins: { 
-                    legend: { 
-                        display: true, 
-                        position: 'right', 
-                        labels: { boxWidth: 12, font: { size: 10 } }
-                    }, 
+                    legend: { display: true, position: 'right', labels: { boxWidth: 12, font: { size: 10 } } }, 
                     tooltip: { enabled: true }
                 }
             } 
@@ -1300,21 +1287,12 @@
                 plugins: { 
                     legend: { display: true },
                     datalabels: {
-                        display: true,
-                        align: 'top',
-                        anchor: 'start',
-                        color: '#b91c1c',
-                        backgroundColor: 'white',
-                        borderRadius: 4,
-                        font: { weight: 'bold' },
+                        display: true, align: 'top', anchor: 'start', color: '#b91c1c', backgroundColor: 'white', borderRadius: 4, font: { weight: 'bold' },
                         formatter: (value) => value + '%'
                     },
                     tooltip: {
                         callbacks: {
-                            afterLabel: function(context) {
-                                const count = trendCounts[context.dataIndex];
-                                return `จำนวนผู้ทำ: ${count} คน`;
-                            }
+                            afterLabel: function(context) { return `จำนวนผู้ทำ: ${trendCounts[context.dataIndex]} คน`; }
                         }
                     } 
                 } 
@@ -1350,8 +1328,7 @@
                 plugins: {
                     legend: { display: false }, 
                     datalabels: {
-                        anchor: 'end', align: 'end', color: '#334155',
-                        font: { weight: 'bold', size: 12 },
+                        anchor: 'end', align: 'end', color: '#334155', font: { weight: 'bold', size: 12 },
                         formatter: (value) => {
                             if(value === 0) return '';
                             const percentage = ((value / totalFiltered) * 100).toFixed(1);
@@ -1362,27 +1339,12 @@
             },
             plugins: [ChartDataLabels],
             data: {
-                labels: [
-                    '🟢 ดีเยี่ยม\n(Excellent)', 
-                    '🔵 ดี\n(Good)', 
-                    '⚪ เฝ้าระวัง\n(Watchlist)', 
-                    '🟡 เสี่ยง\n(Risk)', 
-                    '🔴 วิกฤต\n(Critical)' 
-                ],
+                labels: [ '🟢 ดีเยี่ยม\n(Excellent)', '🔵 ดี\n(Good)', '⚪ เฝ้าระวัง\n(Watchlist)', '🟡 เสี่ยง\n(Risk)', '🔴 วิกฤต\n(Critical)' ],
                 datasets: [{
                     label: 'จำนวนคน',
                     data: [gExcellent, gGood, gWatchlist, gRisk, gCritical],
-                    // ใช้รหัสสีเดียวกับ getSeverityColor
-                    backgroundColor: [
-                        '#22c55e', // Green
-                        '#3b82f6', // Blue
-                        '#64748b', // Grey (Watchlist)
-                        '#eab308', // Yellow
-                        '#ef4444'  // Red
-                    ],
-                    borderWidth: 0,
-                    borderRadius: 8,
-                    barPercentage: 0.6 
+                    backgroundColor: [ '#22c55e', '#3b82f6', '#64748b', '#eab308', '#ef4444' ],
+                    borderWidth: 0, borderRadius: 8, barPercentage: 0.6 
                 }]
             }
         });
@@ -1411,41 +1373,12 @@
                 labels: bLabels,
                 datasets: [
                     {
-                        type: 'line',
-                        label: 'คะแนนเฉลี่ย (%)',
-                        data: bAvgPercents,
-                        borderColor: '#b91c1c',
-                        borderWidth: 2,
-                        tension: 0.3,
-                        yAxisID: 'y',
-                        pointStyle: 'circle',
-                        pointRadius: 4,
-                        pointBackgroundColor: '#fff',
-                        pointBorderColor: '#b91c1c',
-                        datalabels: {
-                            align: 'top',
-                            anchor: 'end',
-                            backgroundColor: '#b91c1c',
-                            color: 'white',
-                            borderRadius: 4,
-                            font: { size: 10, weight: 'bold' },
-                            formatter: (value) => value + '%'
-                        }
+                        type: 'line', label: 'คะแนนเฉลี่ย (%)', data: bAvgPercents, borderColor: '#b91c1c', borderWidth: 2, tension: 0.3, yAxisID: 'y', pointStyle: 'circle', pointRadius: 4, pointBackgroundColor: '#fff', pointBorderColor: '#b91c1c',
+                        datalabels: { align: 'top', anchor: 'end', backgroundColor: '#b91c1c', color: 'white', borderRadius: 4, font: { size: 10, weight: 'bold' }, formatter: (value) => value + '%' }
                     },
                     {
-                        type: 'bar',
-                        label: 'จำนวนคน',
-                        data: bCounts,
-                        backgroundColor: '#cbd5e1', // สีเทาอ่อน เพื่อให้กราฟเส้นเด่น
-                        hoverBackgroundColor: '#94a3b8',
-                        yAxisID: 'y1',
-                        borderRadius: 4,
-                        barPercentage: 0.5,
-                        datalabels: {
-                            align: 'center', anchor: 'center', color: '#334155', 
-                            font: { weight: 'bold', size: 11 },
-                            formatter: (value) => value > 0 ? value : '' 
-                        }
+                        type: 'bar', label: 'จำนวนคน', data: bCounts, backgroundColor: '#cbd5e1', hoverBackgroundColor: '#94a3b8', yAxisID: 'y1', borderRadius: 4, barPercentage: 0.5,
+                        datalabels: { align: 'center', anchor: 'center', color: '#334155', font: { weight: 'bold', size: 11 }, formatter: (value) => value > 0 ? value : '' }
                     }
                 ]
             },
@@ -1457,16 +1390,13 @@
                 },
                 plugins: {
                     legend: { display: true },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false
-                    } 
+                    tooltip: { mode: 'index', intersect: false } 
                 }
             }
         });
 
         // -----------------------------------------
-        // 5. Category Analysis (คะแนนสัดส่วนแต่ละหมวดใหญ่)
+        // 5. Category Analysis (คะแนนสัดส่วนแต่ละหมวดใหญ่ และรายข้อ)
         // -----------------------------------------
         const catLabels = [
             '1. Work & Role (งานและบทบาท)',
@@ -1480,32 +1410,65 @@
         // ตัวแปรเก็บผลรวมและจำนวน
         let catSums = [0, 0, 0, 0, 0, 0];
         let catCounts = [0, 0, 0, 0, 0, 0];
+        
+        // --- ส่วนที่เพิ่มใหม่: เตรียมตัวแปรเก็บคะแนนรายข้อ ---
+        let itemSums = {};
+        let itemCounts = {};
+        categories.forEach(cat => {
+            cat.items.forEach((item, idx) => {
+                let key = `s_${cat.id}_${idx+1}`;
+                itemSums[key] = 0;
+                itemCounts[key] = 0;
+            });
+        });
 
         data.forEach(d => {
-            // สมมติฐาน: ระบบมีการคืนค่า d.scores กลับมาตอนดึง Report (เป็น Object หรือ JSON String)
             if (d.scores) {
                 let sObj = typeof d.scores === 'string' ? JSON.parse(d.scores) : d.scores;
                 for (let key in sObj) {
-                    // map prefix ให้ตรงกับ category ID ที่เจนในหน้า survey
-                    if (key.startsWith('s_cat1_')) { catSums[0] += Number(sObj[key]); catCounts[0]++; }
-                    else if (key.startsWith('s_cat2_')) { catSums[1] += Number(sObj[key]); catCounts[1]++; }
-                    else if (key.startsWith('s_cat3_')) { catSums[2] += Number(sObj[key]); catCounts[2]++; }
-                    else if (key.startsWith('s_cat4_')) { catSums[3] += Number(sObj[key]); catCounts[3]++; }
-                    else if (key.startsWith('s_cat5_')) { catSums[4] += Number(sObj[key]); catCounts[4]++; }
-                    else if (key.startsWith('s_cat6_')) { catSums[5] += Number(sObj[key]); catCounts[5]++; }
+                    let scoreVal = Number(sObj[key]);
+                    
+                    if (key.startsWith('s_cat1_')) { catSums[0] += scoreVal; catCounts[0]++; }
+                    else if (key.startsWith('s_cat2_')) { catSums[1] += scoreVal; catCounts[1]++; }
+                    else if (key.startsWith('s_cat3_')) { catSums[2] += scoreVal; catCounts[2]++; }
+                    else if (key.startsWith('s_cat4_')) { catSums[3] += scoreVal; catCounts[3]++; }
+                    else if (key.startsWith('s_cat5_')) { catSums[4] += scoreVal; catCounts[4]++; }
+                    else if (key.startsWith('s_cat6_')) { catSums[5] += scoreVal; catCounts[5]++; }
+                    
+                    // บวกคะแนนรายข้อเพื่อเตรียมใช้เวลากด Drill-down
+                    if (itemSums[key] !== undefined) {
+                        itemSums[key] += scoreVal;
+                        itemCounts[key]++;
+                    }
                 }
             }
         });
 
-        // แปลงเป็นเปอร์เซ็นต์ (คะแนนเต็มข้อละ 5)
+        // แปลงหมวดใหญ่เป็นเปอร์เซ็นต์
         let catAvgPercent = catSums.map((sum, i) => {
             if (catCounts[i] === 0) return 0;
             let avgScore = sum / catCounts[i]; 
             return ((avgScore / 5) * 100).toFixed(1); 
         });
 
+        // คำนวณเปอร์เซ็นต์รายข้อเตรียมไว้
+        let itemAverages = {};
+        categories.forEach(cat => {
+            itemAverages[cat.id] = [];
+            cat.items.forEach((item, idx) => {
+                let key = `s_${cat.id}_${idx+1}`;
+                let sum = itemSums[key] || 0;
+                let count = itemCounts[key] || 0;
+                let avg = count === 0 ? 0 : ((sum / count) / 5) * 100;
+                itemAverages[cat.id].push(avg.toFixed(1));
+            });
+        });
+
         const ctxCat = document.getElementById('categoryChart').getContext('2d');
         if (categoryChartInstance) categoryChartInstance.destroy();
+
+        // ปิดกราฟย่อยไว้ก่อนถ้ายังไม่ได้คลิก
+        closeSubCategory();
 
         categoryChartInstance = new Chart(ctxCat, {
             type: 'bar',
@@ -1515,47 +1478,98 @@
                 datasets: [{
                     label: 'คะแนนเฉลี่ยหมวดหมู่ (%)',
                     data: catAvgPercent,
-                    // ใช้พาเลตต์สีที่หลากหลายให้ดูแยกหมวดหมู่ได้ชัดเจน
-                    backgroundColor: [
-                        '#3b82f6', // Blue
-                        '#10b981', // Emerald
-                        '#f59e0b', // Amber
-                        '#ef4444', // Red
-                        '#8b5cf6', // Purple
-                        '#14b8a6'  // Teal
-                    ],
+                    backgroundColor: [ '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6' ],
                     borderRadius: 6,
                     borderWidth: 0,
                     barPercentage: 0.6
                 }]
             },
             options: {
-                indexAxis: 'y', // กราฟแท่งแนวนอน (ดีที่สุดสำหรับ Labels ยาวๆ)
+                indexAxis: 'y',
                 maintainAspectRatio: false,
                 scales: {
-                    x: {
-                        beginAtZero: true,
-                        max: 100,
-                        title: { display: true, text: 'คะแนนเฉลี่ย (%)', font: { weight: 'bold' } }
-                    },
-                    y: {
-                        grid: { display: false },
-                        ticks: { font: { weight: 'bold' } }
-                    }
+                    x: { beginAtZero: true, max: 100, title: { display: true, text: 'คะแนนเฉลี่ย (%)', font: { weight: 'bold' } } },
+                    y: { grid: { display: false }, ticks: { font: { weight: 'bold' } } }
                 },
                 plugins: {
                     legend: { display: false },
+                    datalabels: { align: 'end', anchor: 'end', color: '#334155', font: { weight: 'bold', size: 12 }, formatter: (value) => value > 0 ? value + '%' : 'ไม่มีข้อมูล' }
+                },
+                // ฟังก์ชันเพิ่มใหม่ให้กด Click และเปลี่ยนเมาส์
+                onClick: (e, activeElements) => {
+                    if (activeElements.length > 0) {
+                        const index = activeElements[0].index;
+                        const catInfo = categories[index];
+                        renderSubCategoryChart(catInfo, itemAverages[catInfo.id]);
+                    }
+                },
+                onHover: (event, chartElement) => {
+                    event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+                }
+            }
+        });
+    }
+
+    // --- ส่วนเพิ่มใหม่: ฟังก์ชันแสดงกราฟย่อย (รายข้อ) ---
+    function renderSubCategoryChart(catInfo, avgData) {
+        document.getElementById('subCategoryContainer').style.display = 'block';
+        document.getElementById('subCategoryTitle').innerText = 'คะแนนรายข้อ: ' + catInfo.title;
+        
+        // เลื่อนหน้าจอลงมาที่กราฟย่อยแบบนุ่มนวล
+        document.getElementById('subCategoryContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        const ctxSub = document.getElementById('subCategoryChart').getContext('2d');
+        if (subCategoryChartInstance) subCategoryChartInstance.destroy();
+
+        // ตัดข้อความที่ยาวเกินไปให้แสดงเป็น ... เพื่อไม่ให้กราฟเละ
+        const shortLabels = catInfo.items.map(txt => txt.length > 40 ? txt.substring(0, 40) + '...' : txt);
+
+        subCategoryChartInstance = new Chart(ctxSub, {
+            type: 'bar',
+            plugins: [ChartDataLabels],
+            data: {
+                labels: shortLabels,
+                datasets: [{
+                    label: 'คะแนนเฉลี่ยรายข้อ (%)',
+                    data: avgData,
+                    backgroundColor: '#60a5fa', // สีฟ้าอ่อน
+                    borderRadius: 4,
+                    barPercentage: 0.5
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                maintainAspectRatio: false,
+                scales: {
+                    x: { beginAtZero: true, max: 100, title: { display: true, text: 'คะแนนเฉลี่ย (%)' } },
+                    y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                // แสดงชื่อเต็มๆ ใน Tooltip เวลาเอาเมาส์ไปชี้
+                                return catInfo.items[context[0].dataIndex];
+                            }
+                        }
+                    },
                     datalabels: {
                         align: 'end',
                         anchor: 'end',
                         color: '#334155',
-                        font: { weight: 'bold', size: 12 },
-                        formatter: (value) => value > 0 ? value + '%' : 'ไม่มีข้อมูล'
+                        font: { weight: 'bold', size: 11 },
+                        formatter: (value) => value > 0 ? value + '%' : '0%'
                     }
                 }
             }
         });
     }
+
+    function closeSubCategory() {
+        document.getElementById('subCategoryContainer').style.display = 'none';
+    }
+    // ------------------------------------------------
 
     // --- UI Utilities ---
     function openReportLogin(){ 
@@ -1571,14 +1585,12 @@
         else { input.type = "password"; icon.classList.replace("bi-eye", "bi-eye-slash"); } 
     }
 
-    // *** ฟังก์ชันเช็ครหัสผ่าน พร้อม Pop-up Animation ***
     function checkPassword(){ 
         const pass = document.getElementById('hrPassword').value; 
         if(pass === 'HRJMT123'){ 
             bootstrap.Modal.getInstance(document.getElementById('passwordModal')).hide(); 
             switchToDashboard(); 
         } else { 
-            // เรียกใช้ Alert แบบเด้งดึ๋ง
             showGenericAlert('รหัสผ่านไม่ถูกต้อง', 'กรุณาตรวจสอบรหัสผ่านและลองใหม่อีกครั้ง', 'error');
             document.getElementById('hrPassword').value = ''; 
         } 
@@ -1586,14 +1598,14 @@
 
     function switchToDashboard() { 
         document.getElementById('view-survey').classList.remove('active');
-        toggleFloatingScore(false); // Hide floating score
+        toggleFloatingScore(false); 
         setTimeout(() => { document.getElementById('view-dashboard').classList.add('active'); fetchReportData(); }, 300); 
     }
     function switchToSurvey() { 
         document.getElementById('view-dashboard').classList.remove('active'); 
         setTimeout(() => { 
             document.getElementById('view-survey').classList.add('active'); 
-            toggleFloatingScore(true); // Show floating score
+            toggleFloatingScore(true); 
         }, 300); 
     }
       
@@ -1602,7 +1614,6 @@
         document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; 
     }
 
-    // *** Custom Alert Logic ***
     function showGenericAlert(title, text, type='success'){ 
         const box = document.getElementById('customAlertOverlay'); 
         const iconEl = document.getElementById('alertIcon'); 
@@ -1611,7 +1622,7 @@
         document.getElementById('alertTitle').innerText = title; 
         document.getElementById('alertText').innerText = text; 
           
-        box.classList.add('active'); // Trigger CSS Animation
+        box.classList.add('active'); 
           
         iconEl.className = 'status-circle'; 
         if(type === 'success'){ 
@@ -1638,14 +1649,11 @@
       
     function showManual(){ new bootstrap.Modal(document.getElementById('manualModal')).show(); }
     
-    // UPDATED: Helper for table badges to match new logic slightly better
     function getBadgeClass(grade) { 
-        // Logic นี้ยังคงไว้คล้ายเดิมได้ แต่ถ้า Grade ที่ส่งมาจาก Google Sheet เปลี่ยน อาจต้องแก้ที่ Google Script ด้วย
-        // แต่ในที่นี้เราเน้น Visual HTML/JS เป็นหลัก
         if(grade.includes('Good') || grade.includes('Excellent')) return 'badge-grade-good'; 
-        if(grade.includes('Improve') || grade.includes('Watchlist')) return 'bg-secondary text-white'; // Grey for Watchlist
-        if(grade.includes('Risk')) return 'bg-warning text-dark'; // Yellow for Risk
-        return 'badge-grade-urgent'; // Red for Critical
+        if(grade.includes('Improve') || grade.includes('Watchlist')) return 'bg-secondary text-white'; 
+        if(grade.includes('Risk')) return 'bg-warning text-dark'; 
+        return 'badge-grade-urgent'; 
     }
 
     function exportXLSX() {
