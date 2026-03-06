@@ -358,13 +358,13 @@
        SCORE BOX STYLE (NEW STATIC & COMPACT)
        ========================================= */
     .static-score-box {
-        position: relative; /* ยกเลิก Fixed Position */
+        position: relative; 
         background: #ffffff;
         border: 1px solid #e2e8f0;
-        border-left: 5px solid var(--primary); /* แถบสีด้านซ้าย */
-        border-radius: 12px; /* มุมมนน้อยกว่าการ์ดปกตินิดหน่อย */
-        margin-bottom: 15px; /* เว้นระยะห่างจากปุ่ม */
-        padding: 10px 15px; /* Compact padding เพื่อให้ดูแบน */
+        border-left: 5px solid var(--primary); 
+        border-radius: 12px; 
+        margin-bottom: 15px; 
+        padding: 10px 15px; 
         box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         display: flex;
         flex-direction: column;
@@ -618,13 +618,13 @@
                     <label class="form-label small text-muted fw-bold">สังกัด</label>
                     <div id="filterAffiliationContainer" class="dropdown"></div>
                 </div>
-            </div>
+                </div>
             <div class="row g-3 align-items-end">
-                <div class="col-md-3">
+                <div class="col-md-2">
                      <label class="form-label small text-muted fw-bold">แผนก</label>
                      <div id="filterDeptContainer" class="dropdown"></div>
                  </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label small text-muted fw-bold">สาขา</label>
                     <div id="filterBranchContainer" class="dropdown"></div>
                 </div>
@@ -632,8 +632,12 @@
                     <label class="form-label small text-muted fw-bold">ตำแหน่ง</label>
                     <div id="filterPositionContainer" class="dropdown"></div>
                 </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted fw-bold">สถานะทำงาน</label>
+                    <div id="filterStatusContainer" class="dropdown"></div>
+                </div>
                 
-                <div class="col-md-3"><button class="btn btn-danger w-100 rounded-pill fw-bold" onclick="applyFilters()"><i class="bi bi-search me-2"></i>กรองข้อมูล</button></div>
+                <div class="col-md-2"><button class="btn btn-danger w-100 rounded-pill fw-bold" onclick="applyFilters()"><i class="bi bi-search me-2"></i>กรองข้อมูล</button></div>
             </div>
             <div class="row mt-3">
                 <div class="col-12">
@@ -734,7 +738,7 @@
 
   <script>
     // ** ใส่ API URL ของคุณตรงนี้ **
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwJDpA8iJzn2gn44wj_PjfOtYZ8inBhnQ56gTnAJ32WPJNmZrAyEcOG8bYUhuT1h4lp-w/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwA_sZmQDVrIaIlYr14Ufvj0LkYfI9l1gLUDbz-pO4eWGxO-m8jfFAHblCwpJ0Ov8xZZg/exec'; 
 
     async function runApi(action, payload = {}) {
         return new Promise((resolve, reject) => {
@@ -1044,14 +1048,14 @@
         const depts = [...new Set(allReportData.map(d => d.department))].filter(Boolean).sort();
         const branches = [...new Set(allReportData.map(d => d.branch))].filter(Boolean).sort();
         const positions = [...new Set(allReportData.map(d => d.position))].filter(Boolean).sort();
-        
-        // **ส่วนที่เพิ่ม: ดึงข้อมูล Affiliation มาทำ Dropdown**
         const affiliations = [...new Set(allReportData.map(d => d.affiliation))].filter(Boolean).sort();
+        const statuses = [...new Set(allReportData.map(d => d.statusEmployee))].filter(Boolean).sort();
 
         renderMultiSelect('filterDeptContainer', depts);
         renderMultiSelect('filterBranchContainer', branches);
         renderMultiSelect('filterPositionContainer', positions);
-        renderMultiSelect('filterAffiliationContainer', affiliations); // แสดงผล Dropdown สังกัด
+        renderMultiSelect('filterAffiliationContainer', affiliations); 
+        renderMultiSelect('filterStatusContainer', statuses);
     }
      
     function filterDropdownList(input) {
@@ -1106,15 +1110,14 @@
         const start = document.getElementById('filterStartDate').value; 
         const end = document.getElementById('filterEndDate').value; 
         
-        // **ส่วนที่เพิ่ม: รับค่า Search Key และ Affiliation**
         const searchId = document.getElementById('filterEmpId').value.toLowerCase().trim();
         const searchName = document.getElementById('filterName').value.toLowerCase().trim();
         
         const selectedAffiliations = getSelectedValues('filterAffiliationContainer');
-
         const selectedDepts = getSelectedValues('filterDeptContainer');
         const selectedBranches = getSelectedValues('filterBranchContainer');
         const selectedPositions = getSelectedValues('filterPositionContainer');
+        const selectedStatuses = getSelectedValues('filterStatusContainer');
 
         const uniqueToggle = document.getElementById('uniqueFilterToggle').checked;
 
@@ -1125,15 +1128,13 @@
             const deptMatch = selectedDepts.includes(item.department);
             const branchMatch = selectedBranches.includes(item.branch);
             const posMatch = selectedPositions.includes(item.position);
-            
-            // **ส่วนที่เพิ่ม: Logic กรองชื่อ/รหัส และ สังกัด**
             const affMatch = selectedAffiliations.includes(item.affiliation);
+            const statusMatch = selectedStatuses.includes(item.statusEmployee);
             
-            // กรองแยกกัน: ถ้าระบุชื่อ ต้องตรงกับชื่อ, ถ้าระบุรหัส ต้องตรงกับรหัส
             const nameMatch = item.name.toLowerCase().includes(searchName);
             const idMatch = item.empId.toLowerCase().includes(searchId);
 
-            return inRange && deptMatch && branchMatch && posMatch && affMatch && nameMatch && idMatch;
+            return inRange && deptMatch && branchMatch && posMatch && affMatch && statusMatch && nameMatch && idMatch;
         }); 
 
         if(uniqueToggle) {
@@ -1657,6 +1658,7 @@
             "แผนก": row.department,
             "สาขา": row.branch,
             "สังกัด": row.affiliation,
+            "สถานะทำงาน": row.statusEmployee,
             "คะแนนรวม": row.score,
             "เปอร์เซ็นต์": row.percent + "%",
             "เกรด": row.grade,
@@ -1670,5 +1672,3 @@
   </script>
 </body>
 </html>
-
-
