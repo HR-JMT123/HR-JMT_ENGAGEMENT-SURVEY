@@ -69,32 +69,11 @@
     .main-container { max-width: 700px; padding: 0 15px; margin: -2rem auto 0 auto; position: relative; z-index: 10; }
 
     /* =========================================
-       NEW BACKGROUND FOR HOME VIEW (Vector City)
+       HOME VIEW BACKGROUND (PLAIN WHITE)
        ========================================= */
     #view-home {
-        background: linear-gradient(to bottom, #e0f2fe 0%, #f1f5f9 100%);
+        background-color: #ffffff; /* ปรับพื้นหลังเป็นสีขาวล้วน */
         min-height: 100vh;
-        position: relative;
-    }
-    #view-home::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 55vh;
-        /* รูปจำลองตึก ถนน รถไฟฟ้า และเมือง Vector */
-        background: url('https://img.freepik.com/free-vector/urban-landscape-with-high-skyscrapers-subway-monorail-bridge_107791-3269.jpg') bottom center no-repeat;
-        background-size: cover;
-        opacity: 0.9;
-        z-index: 1;
-        pointer-events: none;
-    }
-    /* ให้กล่องเมนูและส่วน Header ลอยอยู่บนสุด ไม่โดนภาพพื้นหลังบัง */
-    #view-home .header-wrapper, 
-    #view-home .main-container {
-        position: relative;
-        z-index: 10; 
     }
 
     .modern-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 1.2rem; border: 1px solid rgba(255,255,255,0.8); overflow: hidden; }
@@ -273,7 +252,7 @@
                 </div>
             </div>
         </div>
-        </div>
+    </div>
   </div>
 
   <div id="view-survey" class="view-section survey-padding">
@@ -567,7 +546,7 @@
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxVojqY5vCVvswoVOgiMa8nHcWI44Gh7amSnmgp6zSFRg9frZ43__VS4LeOQxbiWA-86w/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx6zyhbTpwugQVWJs8CQcE9MZV7_7uUCsOxQcXa7e3DB8-bt6Kv3yWHtUJ3IKKXFJeh/exec'; 
 
     async function runApi(action, payload = {}) {
         return new Promise((resolve, reject) => {
