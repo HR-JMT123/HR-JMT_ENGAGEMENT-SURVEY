@@ -118,9 +118,11 @@
     .table-card { background: white; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-sm); overflow: hidden; }
     .table thead th { background-color: #f8fafc; font-weight: 600; font-size: 0.9rem; color: #64748b; border-bottom: 2px solid #e2e8f0; }
     
-    /* Active Tab */
-    .tab-btn { opacity: 0.5; transition: 0.3s; border-bottom: 3px solid transparent; border-radius: 0; }
-    .tab-btn.active { opacity: 1; font-weight: bold; border-color: var(--primary); color: var(--primary); }
+    /* Tab Switcher Styling (ปรับปรุงใหม่ตามรูปภาพ) */
+    .dashboard-tab-container { display: flex; border-bottom: 2px solid #e2e8f0; margin-top: 15px; }
+    .tab-btn { flex: 1; background: transparent; border: none; padding: 12px 15px; font-weight: 600; color: #64748b; font-size: 1.1rem; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+    .tab-btn:hover { color: var(--primary); opacity: 0.8; }
+    .tab-btn.active { color: var(--primary); font-weight: bold; border-bottom: 3px solid var(--primary); }
 
     .static-score-box { position: relative; background: #ffffff; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); border-radius: 12px; margin-bottom: 15px; padding: 10px 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: center; transition: all 0.3s ease; }
     .static-score-box.hidden { display: none !important; }
@@ -403,7 +405,7 @@
   <div id="view-dashboard" class="view-section">
       <div class="dashboard-container">
           <div class="report-header-dash flex-column align-items-stretch no-print">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="fw-bold m-0 text-danger"><i class="bi bi-bar-chart-fill me-2"></i>Executive Dashboard</h2>
                     <p class="m-0 text-muted">รายงานผลการสำรวจ (Real-time)</p>
@@ -415,9 +417,9 @@
                 </div>
             </div>
             
-            <div class="d-flex gap-2 border-bottom pb-2">
-                <button class="btn tab-btn active flex-fill fs-5" id="tabBtnEng" onclick="switchDashTab('eng')">Engagement</button>
-                <button class="btn tab-btn flex-fill fs-5" id="tabBtnWel" onclick="switchDashTab('wel')">Welfare</button>
+            <div class="dashboard-tab-container">
+                <button class="tab-btn active" id="tabBtnEng" onclick="switchDashTab('eng')">Engagement</button>
+                <button class="tab-btn" id="tabBtnWel" onclick="switchDashTab('wel')">Welfare</button>
             </div>
           </div>
 
@@ -502,7 +504,7 @@
                 </div>
               </div>
           </div>
-      </div>
+          </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -511,7 +513,7 @@
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwB1z0NKwnhQQm-XjJFFViDxIWrLzGnW24eJfbND__79SN0T67Rl3JHWFk8GJtoVo_y3w/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzM1YG_9SI47eWRkVa8DlCQ2K4g-KuMEIOfzgLquu5HGJeTJzBtX_HT1KjQfCrnggkieg/exec'; 
 
     async function runApi(action, payload = {}) {
         return new Promise((resolve, reject) => {
@@ -592,7 +594,6 @@
     });
 
     // --- Core Action ---
-    // (Search, Calc, Submit functions... Same as previous working code)
     function openSurvey(type) {
         if(!surveyConfig[type]) { showGenericAlert('ปิดปรับปรุง', 'แบบสำรวจนี้ถูกปิดใช้งานชั่วคราว', 'warning'); return; }
         currentSurveyType = type;
@@ -737,10 +738,15 @@
 
     function switchDashTab(tab) {
         activeDashTab = tab;
-        document.getElementById('tabBtnEng').className = tab === 'eng' ? 'btn tab-btn active flex-fill fs-5' : 'btn tab-btn flex-fill fs-5';
-        document.getElementById('tabBtnWel').className = tab === 'wel' ? 'btn tab-btn active flex-fill fs-5' : 'btn tab-btn flex-fill fs-5';
+        // เปลี่ยนคลาสปุ่มตาม UI ที่ออกแบบไว้
+        document.getElementById('tabBtnEng').className = tab === 'eng' ? 'tab-btn active' : 'tab-btn';
+        document.getElementById('tabBtnWel').className = tab === 'wel' ? 'tab-btn active' : 'tab-btn';
+        
+        // แยก Container ออกจากกันอย่างเด็ดขาด
         document.getElementById('dashEngContent').style.display = tab === 'eng' ? 'block' : 'none';
         document.getElementById('dashWelContent').style.display = tab === 'wel' ? 'block' : 'none';
+        
+        // เรียก Render กราฟใหม่เพื่อป้องกันกราฟเบี้ยวจากการ display:none
         applyFilters(); 
     }
 
@@ -763,7 +769,6 @@
             container.innerHTML = html + `</div></div>`;
             container.addEventListener('click', e => e.stopPropagation());
         };
-        // Use combined unique values from both sets for filters
         let combined = [...allReportData, ...allWelfareData];
         const depts = [...new Set(combined.map(d => d.department))].filter(Boolean).sort();
         const branches = [...new Set(combined.map(d => d.branch))].filter(Boolean).sort();
@@ -794,9 +799,8 @@
                 res.forEach(item => {
                     if(!map.has(item.empId)) map.set(item.empId, item);
                     else {
-                        // For Engagement: Keep highest score. For Welfare: Keep latest.
                         if(item.score !== undefined) { if(item.score > map.get(item.empId).score) map.set(item.empId, item); }
-                        else { map.set(item.empId, item); } // Assumes naturally sorted by latest row if we just overwrite
+                        else { map.set(item.empId, item); } 
                     }
                 });
                 res = Array.from(map.values());
@@ -830,21 +834,18 @@
     }
     
     function renderEngCharts(data) {
-        // 1. Grade Chart
-        let counts = [0,0,0,0,0]; // Exc, Good, Watch, Risk, Crit
+        let counts = [0,0,0,0,0]; 
         data.forEach(d => { let t=(d.grade||'').toLowerCase(); if(t.includes('exc')||t.includes('ดีเยี่ยม')) counts[0]++; else if(t.includes('good')||t.includes('ดี')) counts[1]++; else if(t.includes('watch')||t.includes('เฝ้า')) counts[2]++; else if(t.includes('risk')||t.includes('เสี่ยง')) counts[3]++; else counts[4]++; });
         let gLabels = ['ดีเยี่ยม','ดี','เฝ้าระวัง','เสี่ยง','วิกฤต'], gCols = ['#22c55e','#3b82f6','#64748b','#eab308','#ef4444'], finalL=[], finalD=[], finalC=[];
         counts.forEach((c,i)=>{ if(c>0){ finalL.push(gLabels[i]); finalD.push(c); finalC.push(gCols[i]); }});
         if(gradeChartInstance) gradeChartInstance.destroy(); 
         gradeChartInstance = new Chart(document.getElementById('gradeChart'), { type: 'doughnut', data: { labels: finalL, datasets: [{ data: finalD, backgroundColor: finalC }] }, options: { maintainAspectRatio: false, plugins: { legend: { position: 'right', labels:{boxWidth:10, font:{size:10}}} } } });
 
-        // 2. Trend
         const mData = {}; [...data].sort((a,b)=>new Date(a.inspectDate)-new Date(b.inspectDate)).forEach(d=>{ let k = new Date(d.inspectDate).toLocaleString('th-TH',{month:'short',year:'2-digit'}); if(!mData[k]) mData[k]={sum:0,c:0}; mData[k].sum+=d.percent; mData[k].c++; });
         let tL=Object.keys(mData), tV=tL.map(k=>(mData[k].sum/mData[k].c).toFixed(2));
         if(trendChartInstance) trendChartInstance.destroy();
         trendChartInstance = new Chart(document.getElementById('trendChart'), { type:'line', plugins:[ChartDataLabels], data:{labels:tL, datasets:[{label:'คะแนน (%)', data:tV, borderColor:'#b91c1c', backgroundColor:'rgba(185,28,28,0.1)', fill:true, tension:0.4}]}, options:{maintainAspectRatio:false, plugins:{datalabels:{align:'top', formatter:v=>v+'%'}}} });
 
-        // 3. Category
         let catSums=[0,0,0,0,0,0], catC=[0,0,0,0,0,0], itemSums={}, itemC={};
         categories.forEach(c=>c.items.forEach((it,i)=>{ itemSums[`s_${c.id}_${i+1}`]=0; itemC[`s_${c.id}_${i+1}`]=0; }));
         data.forEach(d=>{ if(d.scores){ for(let k in d.scores){ let v=Number(d.scores[k]); if(k.includes('cat1')) {catSums[0]+=v; catC[0]++;} else if(k.includes('cat2')) {catSums[1]+=v; catC[1]++;} else if(k.includes('cat3')) {catSums[2]+=v; catC[2]++;} else if(k.includes('cat4')) {catSums[3]+=v; catC[3]++;} else if(k.includes('cat5')) {catSums[4]+=v; catC[4]++;} else if(k.includes('cat6')) {catSums[5]+=v; catC[5]++;} if(itemSums[k]!==undefined){itemSums[k]+=v; itemC[k]++;} } } });
@@ -853,11 +854,9 @@
         if(categoryChartInstance) categoryChartInstance.destroy(); closeSubCategory();
         categoryChartInstance = new Chart(document.getElementById('categoryChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:['Work&Role','Leadership','Career&Growth','Compensation','Environment','Communication'], datasets:[{data:catAvg, backgroundColor:['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#14b8a6']}]}, options:{indexAxis:'y', maintainAspectRatio:false, plugins:{legend:{display:false}, datalabels:{align:'end',anchor:'end',formatter:v=>v+'%'}}, onClick:(e,act)=>{ if(act.length>0){ let idx=act[0].index; renderSubCategoryChart(categories[idx], window.itemAverages[categories[idx].id]); } }} });
 
-        // 4. Risk
         if(riskGroupChartInstance) riskGroupChartInstance.destroy();
         riskGroupChartInstance = new Chart(document.getElementById('riskGroupChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:['ดีเยี่ยม','ดี','เฝ้าระวัง','เสี่ยง','วิกฤต'], datasets:[{data:counts, backgroundColor:['#22c55e','#3b82f6','#64748b','#eab308','#ef4444']}]}, options:{maintainAspectRatio:false, plugins:{legend:{display:false}, datalabels:{anchor:'end',align:'end'}}} });
 
-        // 5. Branch
         let bD={}; data.forEach(d=>{ let b=d.branch||'Unknown'; if(!bD[b]) bD[b]={s:0,c:0}; bD[b].s+=d.percent; bD[b].c++; });
         let bL=Object.keys(bD), bC=bL.map(l=>bD[l].c), bA=bL.map(l=>(bD[l].s/bD[l].c).toFixed(1));
         if(branchChartInstance) branchChartInstance.destroy();
@@ -879,7 +878,6 @@
         tbody.innerHTML = data.map(r => `<tr><td>${r.inspectDate}</td><td><div class="fw-bold">${r.name}</div><div class="small text-muted">${r.empId}</div></td><td>${r.branch || '-'}</td><td>${r.w_aware}</td><td>${r.w_inc_aware}</td><td><span class="badge bg-info text-dark">ระดับ ${r.w_inc_sat}</span></td></tr>`).join(''); 
         welfareTableInstance = $('#welfareTable').DataTable({ language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/th.json" }, order: [[0, 'desc']], pageLength: 5 }); 
 
-        // Charts
         let tops = {}; let chans = {}; let incSats = {'5':0,'4':0,'3':0,'2':0,'1':0};
         data.forEach(d => {
             if(d.w_top) d.w_top.split(', ').forEach(t => { if(t) tops[t] = (tops[t]||0)+1; });
@@ -887,16 +885,13 @@
             if(d.w_inc_sat) incSats[d.w_inc_sat] = (incSats[d.w_inc_sat]||0)+1;
         });
 
-        // Top 5 Chart
         let topSorted = Object.entries(tops).sort((a,b)=>b[1]-a[1]).slice(0,5);
         if(welTopChartInst) welTopChartInst.destroy();
         welTopChartInst = new Chart(document.getElementById('welTopChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:topSorted.map(x=>x[0].split('.')[0]), datasets:[{data:topSorted.map(x=>x[1]), backgroundColor:'#0284c7'}]}, options:{indexAxis:'y', maintainAspectRatio:false, plugins:{legend:{display:false},datalabels:{align:'end',anchor:'end'}}} });
 
-        // Channel Chart
         if(welChannelChartInst) welChannelChartInst.destroy();
         welChannelChartInst = new Chart(document.getElementById('welChannelChart'), { type:'doughnut', data:{labels:Object.keys(chans), datasets:[{data:Object.values(chans), backgroundColor:['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6']}]}, options:{maintainAspectRatio:false, plugins:{legend:{position:'bottom'}}} });
 
-        // Incentive Satisfaction Chart
         if(welIncSatChartInst) welIncSatChartInst.destroy();
         welIncSatChartInst = new Chart(document.getElementById('welIncSatChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:['5(มากสุด)','4','3','2','1(น้อยสุด)'], datasets:[{data:[incSats['5'],incSats['4'],incSats['3'],incSats['2'],incSats['1']], backgroundColor:'#eab308'}]}, options:{maintainAspectRatio:false, plugins:{legend:{display:false},datalabels:{align:'top',anchor:'end'}}} });
     }
