@@ -203,17 +203,41 @@
            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body p-4">
+           <button class="btn btn-outline-primary w-100 rounded-pill shadow-sm fw-bold mb-4" onclick="openWelfareConfigModal()">
+               <i class="bi bi-list-check me-2"></i>จัดการรายการสวัสดิการ
+           </button>
+           <hr class="text-muted mb-4">
+
            <div class="form-check form-switch mb-3 fs-5 d-flex align-items-center justify-content-between">
              <label class="form-check-label fw-bold m-0" for="toggleEngConfig">Engagement Survey</label>
              <input class="form-check-input m-0" type="checkbox" id="toggleEngConfig" style="transform: scale(1.3);">
            </div>
-           <hr class="text-muted">
            <div class="form-check form-switch mb-4 fs-5 d-flex align-items-center justify-content-between">
              <label class="form-check-label fw-bold m-0" for="toggleWelConfig">Welfare Survey</label>
              <input class="form-check-input m-0" type="checkbox" id="toggleWelConfig" style="transform: scale(1.3);">
            </div>
            <button class="btn btn-primary w-100 rounded-pill shadow-sm fw-bold" onclick="saveConfig()">
              <i class="bi bi-save me-2"></i>บันทึกการตั้งค่า
+           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="welfareConfigModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header border-0 pb-0">
+           <h5 class="modal-title fw-bold text-primary"><i class="bi bi-list-check me-2"></i>จัดการรายการสวัสดิการ</h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4 bg-light">
+           <div id="welfareConfigListContainer" class="d-flex flex-column gap-2 mb-3"></div>
+           <button class="btn btn-sm btn-outline-success w-100 rounded-pill fw-bold mb-3" onclick="addWelfareConfigRow()">
+             <i class="bi bi-plus-circle me-1"></i>เพิ่มรายการ
+           </button>
+           <button class="btn btn-primary w-100 rounded-pill shadow-sm fw-bold" onclick="saveWelfareConfig()">
+             <i class="bi bi-save me-2"></i>บันทึกรายการสวัสดิการ
            </button>
         </div>
       </div>
@@ -353,7 +377,7 @@
                 <div class="card-header-clean"><i class="bi bi-megaphone-fill text-warning"></i> ส่วนที่ 1: การรับรู้สวัสดิการ</div>
                 <div class="card-body-clean" id="welfarePart1">
                     <div class="audit-row border-0">
-                        <div class="audit-title text-primary">1. ท่านเคยทราบหรือไม่ว่าบริษัทมีสวัสดิการข้างต้นครบทั้ง 15 รายการ? <span class="text-danger">*</span></div>
+                        <div class="audit-title text-primary">1. ท่านเคยทราบหรือไม่ว่าบริษัทมีสวัสดิการข้างต้นครบทั้งหมด? <span class="text-danger">*</span></div>
                         <div class="custom-radio-group row g-2">
                             <div class="col-12"><input type="radio" name="w_aware" id="aw1" value="ทราบทั้งหมด" class="d-none" onchange="clearError(this)"><label for="aw1">ทราบทั้งหมด</label></div>
                             <div class="col-12"><input type="radio" name="w_aware" id="aw2" value="ทราบเพียงบางอย่าง" class="d-none" onchange="clearError(this)"><label for="aw2">ทราบเพียงบางอย่าง</label></div>
@@ -381,7 +405,8 @@
                     </div>
                 </div>
             </div>
-            <div class="modern-card" style="border: 2px solid #b91c1c;">
+            
+            <div class="modern-card" style="border: 2px solid #b91c1c; display:none;" id="welfarePart3Container">
                 <div class="card-header-clean bg-danger text-white"><i class="bi bi-cash-coin"></i> หมวดเบี้ยขยัน (Incentive) - เฉพาะสายงานเร่งรัดหนี้สิน</div>
                 <div class="card-body-clean bg-white" id="welfarePart3">
                     <div class="alert alert-warning small"><i class="bi bi-exclamation-triangle-fill"></i> กรุณาตอบข้อมูลด้านล่าง หากท่านปฏิบัติงานในสายงานที่มีเบี้ยขยัน</div>
@@ -551,14 +576,14 @@
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxKMTXz9aPQnJCKlmP5_ZIpcY7T4gXUiZeAsXfoDo4KucrK2TLGsErdc7fzZWT7JE4bQA/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyabBOmMcxcnMKO4pbj_vX_YJ1uThfGC9JHEJlzRGGgHEJgZswJ6WbPtsX0dqgn2g_a1A/exec'; 
 
     async function runApi(action, payload = {}) {
         return new Promise((resolve, reject) => {
             if (typeof google !== 'undefined' && google.script && google.script.run) {
                 let arg = payload;
                 if (action === 'searchEmployee') arg = payload.keyword;
-                else if (action === 'processForm' || action === 'processWelfareForm' || action === 'updateSurveyConfig') arg = payload.data;
+                else if (action === 'processForm' || action === 'processWelfareForm' || action === 'updateSurveyConfig' || action === 'updateWelfareItems') arg = payload.data;
                 google.script.run
                     .withSuccessHandler(res => resolve(res))
                     .withFailureHandler(err => reject(err))
@@ -583,37 +608,24 @@
       { id: 'cat6', title: '6. Communication', items: ['18. เข้าใจเป้าหมายองค์กร','19. ได้รับข้อมูลชัดเจน','20. ความเห็นถูกรับฟัง']}
     ];
 
-    const welfareItemsList = [
-      { n:"1. ตรวจสุขภาพประจำปี", d:"ตามหลักเกณฑ์บริษัท" }, { n:"2. ประกันกลุ่ม", d:"ตามเงื่อนไขของทางบริษัทฯ" },
-      { n:"3. เงิน/กระเช้าเยี่ยมไข้", d:"อายุงาน 3 เดือนขึ้นไป และแอดมิท 2 วันขึ้นไป" }, { n:"4. กองทุนสำรองเลี้ยงชีพ", d:"พนักงานประจำที่พ้นทดลองงาน 1 ปี" },
-      { n:"5. สวัสดิการกู้ซื้อบ้าน (ธอส.)", d:"พนง.ประจำ หรือสัญญาจ้าง 1 ปีขึ้นไป" }, { n:"6. สวัสดิการกู้ยืมเงินกรณีฉุกเฉิน", d:"พนักงานอายุงาน 5 ปีขึ้นไป" },
-      { n:"7. เบิกเงินล่วงหน้า (ป๋า Advance)", d:"พนักงานอายุงาน 6 เดือนขึ้นไป" }, { n:"8. เงิน/ของขวัญคลอดบุตร", d:"พนักงานอายุงาน 3 เดือนขึ้นไป" },
-      { n:"9. ทุนการศึกษาบุตรพนักงาน", d:"ตามหลักเกณฑ์บริษัท" }, { n:"10. เงินช่วยเหลือฌาปนกิจ", d:"พนักงาน/ครอบครัว (อายุงาน 1 ปีขึ้นไป)" },
-      { n:"11. ชุดยูนิฟอร์มพนักงาน", d:"พนักงานอายุงาน 3 เดือน" }, { n:"12. สวัสดิการในเครือเจมาร์ท", d:"ส่วนลดและสิทธิพิเศษพนักงาน" },
-      { n:"13. สวัสดิการส่วนลดจากพาร์ทเนอร์", d:"โครงการ 7-Eleven" }, { n:"14. สวัสดิการอาหารเบรคทุกเดือน", d:"สำหรับสำนักงานใหญ่" },
-      { n:"15. JMT Fitness", d:"สำหรับพนักงานอายุงาน 1 ปีขึ้นไป" }
-    ];
-      
+    let welfareItemsList = [];
     let surveyConfig = { engagement: true, welfare: true };
     let currentSurveyType = ''; 
     let activeDashTab = 'eng';
     let searchTimer;
 
-    // Report Variables
     let allReportData = [];
     let allWelfareData = [];
     let allBranchTotals = {}; 
     let currentFilteredData = [];
     let currentFilteredWelfareData = [];
 
-    // Chart Instances
     let trendChartInstance, gradeChartInstance, branchChartInstance, riskGroupChartInstance, categoryChartInstance, subCategoryChartInstance;
     let dataTableInstance, welfareTableInstance;
     let welTopChartInst, welChannelChartInst, welIncSatChartInst;
 
-    // --- On Load ---
     document.addEventListener('DOMContentLoaded', () => {
-        renderQuestions(); renderWelfareShowcase();
+        renderQuestions();
         document.getElementById('inspectDate').valueAsDate = new Date();
 
         const now = new Date();
@@ -625,9 +637,15 @@
         showLoading(true, 'กำลังเตรียมระบบ...');
         runApi('getSurveyConfig').then(res => {
             showLoading(false);
-            if(res.success && res.config) {
-                surveyConfig = res.config;
-                updateHomeCardStatus();
+            if(res.success) {
+                if(res.config) {
+                    surveyConfig = res.config;
+                    updateHomeCardStatus();
+                }
+                if(res.welfareItems) {
+                    welfareItemsList = res.welfareItems;
+                    renderWelfareShowcase();
+                }
             }
             document.getElementById('view-home').classList.add('active');
         }).catch(e => { showLoading(false); document.getElementById('view-home').classList.add('active'); });
@@ -644,7 +662,6 @@
         else { cWel.classList.remove('disabled'); cWel.querySelector('p').innerText = 'แบบสำรวจสวัสดิการและการรับรู้'; }
     }
 
-    // --- Core Action ---
     function openSurvey(type) {
         if(!surveyConfig[type]) { showGenericAlert('ปิดปรับปรุง', 'แบบสำรวจนี้ถูกปิดใช้งานชั่วคราว', 'warning'); return; }
         currentSurveyType = type;
@@ -653,6 +670,7 @@
         document.forms['mainForm'].reset();
         document.getElementById('employeeInfoCard').style.display = 'none';
         document.getElementById('searchStatusBox').style.display = 'none';
+        document.getElementById('welfarePart3Container').style.display = 'none'; // ซ่อนตอนเริ่มเสมอ
         document.getElementById('inspectDate').valueAsDate = new Date();
         document.querySelectorAll('.missing-alert').forEach(el => el.classList.remove('missing-alert'));
         document.getElementById('searchKey').value = '';
@@ -671,6 +689,7 @@
             toggleFloatingScore(false);
         }
     }
+    
     function goHome() { document.getElementById('view-survey').classList.remove('active'); document.getElementById('view-dashboard').classList.remove('active'); document.getElementById('view-home').classList.add('active'); }
     function toggleFloatingScore(show) { const el = document.getElementById('floatingScore'); if(show) el.classList.remove('hidden'); else el.classList.add('hidden'); }
     function clearError(el) { if(el) el.classList.remove('missing-alert'); }
@@ -691,6 +710,7 @@
         }); 
         c.innerHTML = h; 
     }
+    
     function renderWelfareShowcase() {
         const c = document.getElementById('welfareShowcase');
         let html = '<div class="row g-2">';
@@ -702,6 +722,7 @@
         welfareItemsList.forEach((item, idx) => { chHtm += `<div class="col-12 col-md-6"><input type="checkbox" name="w_top" value="${item.n}" id="wtop_${idx}" class="d-none" onchange="checkWelfareTopLimit(this)"><label for="wtop_${idx}">${item.n}</label></div>`; });
         tb.innerHTML = chHtm;
     }
+    
     function checkWelfareTopLimit(cb) {
         if(document.querySelectorAll('input[name="w_top"]:checked').length > 3) { cb.checked = false; showGenericAlert('เตือน', 'เลือกได้สูงสุด 3 ข้อครับ', 'warning'); }
         clearError(cb.closest('.audit-row'));
@@ -715,9 +736,31 @@
             const res = await runApi('searchEmployee', { keyword: key });
             showLoading(false);
             if(res.found) {
-                document.getElementById('empId').value = res.empId; document.getElementById('inspector').value = res.name; document.getElementById('affiliation').value = res.affiliation; document.getElementById('branch').value = res.branch; document.getElementById('position').value = res.position; document.getElementById('department').value = res.department; document.getElementById('startDate').value = res.startDate; 
+                document.getElementById('empId').value = res.empId; 
+                document.getElementById('inspector').value = res.name; 
+                document.getElementById('affiliation').value = res.affiliation; 
+                document.getElementById('branch').value = res.branch; 
+                document.getElementById('position').value = res.position; 
+                document.getElementById('department').value = res.department; 
+                document.getElementById('startDate').value = res.startDate; 
                 document.getElementById('inspectDate').valueAsDate = new Date();
-                document.getElementById('searchStatusBox').style.display = 'flex'; document.getElementById('foundNameText').innerText = `พบข้อมูลคุณ: ${res.name}`; document.getElementById('employeeInfoCard').style.display = 'block'; document.querySelector('.search-card').classList.remove('missing-alert');
+                
+                document.getElementById('searchStatusBox').style.display = 'flex'; 
+                document.getElementById('foundNameText').innerText = `พบข้อมูลคุณ: ${res.name}`; 
+                document.getElementById('employeeInfoCard').style.display = 'block'; 
+                document.querySelector('.search-card').classList.remove('missing-alert');
+
+                // ตรวจสอบเงื่อนไข แผนกที่มีคำว่า "ซื้อหนี้" หรือ "รับจ้าง" เพื่อแสดงหมวดเบี้ยขยัน
+                let dept = res.department || '';
+                if(dept.includes('ซื้อหนี้') || dept.includes('รับจ้าง')) {
+                    document.getElementById('welfarePart3Container').style.display = 'block';
+                } else {
+                    document.getElementById('welfarePart3Container').style.display = 'none';
+                    // Clear inputs just in case
+                    document.querySelectorAll('input[name^="w_inc_"]').forEach(el => el.checked = false);
+                    document.getElementById('w_inc_sug').value = '';
+                }
+
             } else showGenericAlert('ไม่พบข้อมูล', 'ไม่พบรหัสพนักงานนี้ในระบบ', 'error');
         } catch (err) { showLoading(false); showGenericAlert('Error', err, 'error'); }
     }
@@ -744,7 +787,21 @@
             categories.forEach(cat => { cat.items.forEach((it, idx) => { const id = `${cat.id}_${idx+1}`; if(!document.querySelector(`input[name="s_${id}"]:checked`)){ missingCount++; const row = document.getElementById(`row_${id}`); row.classList.add('missing-alert'); if(!firstMissing) firstMissing = row; } }); }); 
             if(missingCount > 0) { showGenericAlert('ข้อมูลไม่ครบ', `ขาด ${missingCount} ข้อ`, 'warning'); if(firstMissing) firstMissing.scrollIntoView({behavior: "smooth", block: "center"}); return; }
         } else {
-            const chkNodes = [ { q: document.querySelector('input[name="w_aware"]:checked'), div: document.getElementById('welfarePart1').children[0] }, { q: document.querySelector('input[name="w_channel"]:checked'), div: document.getElementById('welfarePart1').children[1] }, { q: document.querySelectorAll('input[name="w_top"]:checked').length > 0, div: document.getElementById('welfarePart2').children[0] }, { q: document.querySelector('input[name="w_inc_aware"]:checked'), div: document.getElementById('welfarePart3').children[1] }, { q: document.querySelector('input[name="w_inc_und"]:checked'), div: document.getElementById('welfarePart3').children[2] }, { q: document.querySelector('input[name="w_inc_sat"]:checked'), div: document.getElementById('welfarePart3').children[3] } ];
+            let dept = document.getElementById('department').value || '';
+            let isIncEligible = dept.includes('ซื้อหนี้') || dept.includes('รับจ้าง');
+
+            const chkNodes = [ 
+                { q: document.querySelector('input[name="w_aware"]:checked'), div: document.getElementById('welfarePart1').children[0] }, 
+                { q: document.querySelector('input[name="w_channel"]:checked'), div: document.getElementById('welfarePart1').children[1] }, 
+                { q: document.querySelectorAll('input[name="w_top"]:checked').length > 0, div: document.getElementById('welfarePart2').children[0] } 
+            ];
+            
+            if (isIncEligible) {
+                chkNodes.push({ q: document.querySelector('input[name="w_inc_aware"]:checked'), div: document.getElementById('welfarePart3').children[1] });
+                chkNodes.push({ q: document.querySelector('input[name="w_inc_und"]:checked'), div: document.getElementById('welfarePart3').children[2] });
+                chkNodes.push({ q: document.querySelector('input[name="w_inc_sat"]:checked'), div: document.getElementById('welfarePart3').children[3] });
+            }
+
             chkNodes.forEach(node => { if(!node.q) { missingCount++; node.div.classList.add('missing-alert'); if(!firstMissing) firstMissing = node.div; } });
             if(missingCount > 0) { showGenericAlert('ข้อมูลไม่ครบ', 'กรุณาตอบข้อที่มี * ให้ครบ', 'warning'); if(firstMissing) firstMissing.scrollIntoView({behavior: "smooth", block: "center"}); return; }
         }
@@ -761,7 +818,18 @@
            const generalNote = document.getElementById('note_improvement').value.trim(); if(generalNote) catSuggestions += `[General]: ${generalNote}`;
            payload.totalScore = parseFloat(document.getElementById('scoreNum').innerText); payload.percent = document.getElementById('percentText').innerText.replace(/[()%]/g,''); payload.scores = scores; payload.note_improvement = catSuggestions; actionApi = 'processForm';
        } else {
-           payload.w_aware = document.querySelector('input[name="w_aware"]:checked').value; payload.w_channel = document.querySelector('input[name="w_channel"]:checked').value; payload.w_top = Array.from(document.querySelectorAll('input[name="w_top"]:checked')).map(el => el.value); payload.w_inc_aware = document.querySelector('input[name="w_inc_aware"]:checked').value; payload.w_inc_und = document.querySelector('input[name="w_inc_und"]:checked').value; payload.w_inc_sat = document.querySelector('input[name="w_inc_sat"]:checked').value; payload.w_inc_sug = document.getElementById('w_inc_sug').value.trim(); actionApi = 'processWelfareForm';
+           let w_inc_aware = document.querySelector('input[name="w_inc_aware"]:checked') ? document.querySelector('input[name="w_inc_aware"]:checked').value : '';
+           let w_inc_und = document.querySelector('input[name="w_inc_und"]:checked') ? document.querySelector('input[name="w_inc_und"]:checked').value : '';
+           let w_inc_sat = document.querySelector('input[name="w_inc_sat"]:checked') ? document.querySelector('input[name="w_inc_sat"]:checked').value : '';
+
+           payload.w_aware = document.querySelector('input[name="w_aware"]:checked').value; 
+           payload.w_channel = document.querySelector('input[name="w_channel"]:checked').value; 
+           payload.w_top = Array.from(document.querySelectorAll('input[name="w_top"]:checked')).map(el => el.value); 
+           payload.w_inc_aware = w_inc_aware; 
+           payload.w_inc_und = w_inc_und; 
+           payload.w_inc_sat = w_inc_sat; 
+           payload.w_inc_sug = document.getElementById('w_inc_sug').value.trim(); 
+           actionApi = 'processWelfareForm';
        }
        try {
            const res = await runApi(actionApi, { data: payload }); showLoading(false);
@@ -787,14 +855,12 @@
         if(pass === 'HRJMT123'){ bootstrap.Modal.getInstance(document.getElementById('passwordModal')).hide(); document.getElementById('view-home').classList.remove('active'); setTimeout(() => { document.getElementById('view-dashboard').classList.add('active'); fetchReportData(); }, 300); } else { showGenericAlert('รหัสผ่านไม่ถูกต้อง', 'ลองใหม่อีกครั้ง', 'error'); document.getElementById('hrPassword').value = ''; } 
     }
 
-    // เปิด Modal สำหรับตั้งค่า (HR เท่านั้น)
     function openConfigModal() {
         document.getElementById('toggleEngConfig').checked = surveyConfig.engagement;
         document.getElementById('toggleWelConfig').checked = surveyConfig.welfare;
         new bootstrap.Modal(document.getElementById('configModal')).show();
     }
 
-    // บันทึกการตั้งค่าลง Google Sheet
     async function saveConfig() {
         const engStatus = document.getElementById('toggleEngConfig').checked;
         const welStatus = document.getElementById('toggleWelConfig').checked;
@@ -810,6 +876,66 @@
                 surveyConfig.welfare = welStatus;
                 updateHomeCardStatus();
                 showGenericAlert('สำเร็จ', 'บันทึกการตั้งค่าเรียบร้อยแล้ว', 'success');
+            } else {
+                showGenericAlert('ผิดพลาด', res.message, 'error');
+            }
+        } catch(e) {
+            showLoading(false);
+            showGenericAlert('Error', e.toString(), 'error');
+        }
+    }
+
+    // เปิด Modal จัดการรายการสวัสดิการ
+    function openWelfareConfigModal() {
+        bootstrap.Modal.getInstance(document.getElementById('configModal')).hide();
+        renderWelfareConfigRows();
+        new bootstrap.Modal(document.getElementById('welfareConfigModal')).show();
+    }
+
+    function renderWelfareConfigRows() {
+        const container = document.getElementById('welfareConfigListContainer');
+        container.innerHTML = '';
+        welfareItemsList.forEach(item => {
+            container.insertAdjacentHTML('beforeend', getWelfareConfigRowHtml(item.n, item.d));
+        });
+    }
+
+    function getWelfareConfigRowHtml(name = '', desc = '') {
+        return `
+        <div class="card border-0 shadow-sm welfare-config-row">
+            <div class="card-body p-2 d-flex gap-2 align-items-center">
+                <div class="flex-grow-1">
+                    <input type="text" class="form-control form-control-sm mb-1 wf-cfg-name" placeholder="ชื่อสวัสดิการ" value="${name}">
+                    <input type="text" class="form-control form-control-sm text-muted wf-cfg-desc" placeholder="รายละเอียดเพิ่มเติม" value="${desc}">
+                </div>
+                <button class="btn btn-sm btn-outline-danger" onclick="this.closest('.welfare-config-row').remove()"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>`;
+    }
+
+    function addWelfareConfigRow() {
+        document.getElementById('welfareConfigListContainer').insertAdjacentHTML('beforeend', getWelfareConfigRowHtml());
+    }
+
+    async function saveWelfareConfig() {
+        const rows = document.querySelectorAll('.welfare-config-row');
+        let newItems = [];
+        rows.forEach(row => {
+            let n = row.querySelector('.wf-cfg-name').value.trim();
+            let d = row.querySelector('.wf-cfg-desc').value.trim();
+            if(n) newItems.push({ n: n, d: d });
+        });
+
+        bootstrap.Modal.getInstance(document.getElementById('welfareConfigModal')).hide();
+        showLoading(true, 'กำลังบันทึกรายการสวัสดิการ...');
+        
+        try {
+            const res = await runApi('updateWelfareItems', { data: newItems });
+            showLoading(false);
+            if(res.success) {
+                welfareItemsList = newItems;
+                renderWelfareShowcase(); 
+                showGenericAlert('สำเร็จ', 'อัปเดตรายการสวัสดิการเรียบร้อยแล้ว', 'success');
             } else {
                 showGenericAlert('ผิดพลาด', res.message, 'error');
             }
@@ -956,7 +1082,6 @@
         if (welfareTableInstance) welfareTableInstance.destroy(); 
         const tbody = document.getElementById('welTableBody'); 
         
-        // แก้ไขให้ตารางแสดงข้อมูลทั้งหมด ไม่ใช่แค่บางช่อง
         tbody.innerHTML = data.map(r => `<tr>
             <td>${r.inspectDate}</td>
             <td><div class="fw-bold">${r.name}</div><div class="small text-muted">${r.empId}</div></td>
@@ -979,7 +1104,6 @@
             if(d.w_inc_sat) incSats[d.w_inc_sat] = (incSats[d.w_inc_sat]||0)+1;
         });
 
-        // กราฟ 5 อันดับแรก แก้ไขให้แสดงชื่อแบบเต็ม (ตัดยาว 35 ตัวอักษร)
         let topSorted = Object.entries(tops).sort((a,b)=>b[1]-a[1]).slice(0,5);
         if(welTopChartInst) welTopChartInst.destroy();
         welTopChartInst = new Chart(document.getElementById('welTopChart'), { 
@@ -995,7 +1119,7 @@
                 plugins:{
                     legend:{display:false},
                     datalabels:{align:'end',anchor:'end'},
-                    tooltip: { callbacks: { title: function(ctx) { return topSorted[ctx[0].dataIndex][0]; } } } // Hover ดูชื่อเต็มได้
+                    tooltip: { callbacks: { title: function(ctx) { return topSorted[ctx[0].dataIndex][0]; } } } 
                 }
             } 
         });
