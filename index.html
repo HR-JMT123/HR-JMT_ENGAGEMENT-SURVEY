@@ -68,13 +68,7 @@
     .app-title { font-size: 1.5rem; font-weight: 800; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .main-container { max-width: 700px; padding: 0 15px; margin: -2rem auto 0 auto; position: relative; z-index: 10; }
 
-    /* =========================================
-       HOME VIEW BACKGROUND (PLAIN WHITE)
-       ========================================= */
-    #view-home {
-        background-color: #ffffff; /* ปรับพื้นหลังเป็นสีขาวล้วน */
-        min-height: 100vh;
-    }
+    #view-home { background-color: #ffffff; min-height: 100vh; }
 
     .modern-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 1.2rem; border: 1px solid rgba(255,255,255,0.8); overflow: hidden; }
     .search-card { background: white; border-radius: 24px; padding: 25px 20px; box-shadow: var(--shadow-lg); margin-bottom: 20px; border: 1px solid rgba(185, 28, 28, 0.1); position: relative; overflow: hidden; }
@@ -530,8 +524,19 @@
               <div class="table-card mt-4">
                 <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-table"></i> รายการข้อมูล Welfare</h5>
                 <div class="table-responsive">
-                   <table id="welfareTable" class="table table-hover align-middle w-100">
-                     <thead><tr><th>วันที่</th><th>ชื่อพนักงาน</th><th>สาขา</th><th>รับรู้(สวัสดิการ)</th><th>รับรู้(เบี้ยขยัน)</th><th>พึงพอใจเบี้ยขยัน</th></tr></thead>
+                   <table id="welfareTable" class="table table-hover align-middle w-100" style="white-space: nowrap;">
+                     <thead><tr>
+                        <th>วันที่</th>
+                        <th>ชื่อพนักงาน</th>
+                        <th>สาขา</th>
+                        <th>รับรู้(สวัสดิการ)</th>
+                        <th>ช่องทางข่าวสาร</th>
+                        <th>สวัสดิการที่ชอบ (Top3)</th>
+                        <th>รับรู้(เบี้ยขยัน)</th>
+                        <th>เข้าใจเกณฑ์</th>
+                        <th>พึงพอใจเบี้ยขยัน</th>
+                        <th>ข้อเสนอแนะ</th>
+                     </tr></thead>
                      <tbody id="welTableBody"></tbody>
                    </table>
                 </div>
@@ -546,7 +551,7 @@
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbx6zyhbTpwugQVWJs8CQcE9MZV7_7uUCsOxQcXa7e3DB8-bt6Kv3yWHtUJ3IKKXFJeh/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwA_sZmQDVrIaIlYr14Ufvj0LkYfI9l1gLUDbz-pO4eWGxO-m8jfFAHblCwpJ0Ov8xZZg/exec'; 
 
     async function runApi(action, payload = {}) {
         return new Promise((resolve, reject) => {
@@ -950,7 +955,21 @@
         document.getElementById('valWelCount').innerText = data.length;
         if (welfareTableInstance) welfareTableInstance.destroy(); 
         const tbody = document.getElementById('welTableBody'); 
-        tbody.innerHTML = data.map(r => `<tr><td>${r.inspectDate}</td><td><div class="fw-bold">${r.name}</div><div class="small text-muted">${r.empId}</div></td><td>${r.branch || '-'}</td><td>${r.w_aware}</td><td>${r.w_inc_aware}</td><td><span class="badge bg-info text-dark">ระดับ ${r.w_inc_sat}</span></td></tr>`).join(''); 
+        
+        // แก้ไขให้ตารางแสดงข้อมูลทั้งหมด ไม่ใช่แค่บางช่อง
+        tbody.innerHTML = data.map(r => `<tr>
+            <td>${r.inspectDate}</td>
+            <td><div class="fw-bold">${r.name}</div><div class="small text-muted">${r.empId}</div></td>
+            <td>${r.branch || '-'}</td>
+            <td>${r.w_aware || '-'}</td>
+            <td>${r.w_channel || '-'}</td>
+            <td><span class="d-inline-block text-truncate" style="max-width: 150px;" title="${r.w_top || '-'}">${r.w_top || '-'}</span></td>
+            <td>${r.w_inc_aware || '-'}</td>
+            <td>ระดับ ${r.w_inc_und || '-'}</td>
+            <td><span class="badge bg-info text-dark">ระดับ ${r.w_inc_sat || '-'}</span></td>
+            <td><span class="d-inline-block text-truncate" style="max-width: 150px;" title="${r.w_inc_sug || '-'}">${r.w_inc_sug || '-'}</span></td>
+        </tr>`).join(''); 
+        
         welfareTableInstance = $('#welfareTable').DataTable({ language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/th.json" }, order: [[0, 'desc']], pageLength: 5 }); 
 
         let tops = {}; let chans = {}; let incSats = {'5':0,'4':0,'3':0,'2':0,'1':0};
@@ -960,9 +979,26 @@
             if(d.w_inc_sat) incSats[d.w_inc_sat] = (incSats[d.w_inc_sat]||0)+1;
         });
 
+        // กราฟ 5 อันดับแรก แก้ไขให้แสดงชื่อแบบเต็ม (ตัดยาว 35 ตัวอักษร)
         let topSorted = Object.entries(tops).sort((a,b)=>b[1]-a[1]).slice(0,5);
         if(welTopChartInst) welTopChartInst.destroy();
-        welTopChartInst = new Chart(document.getElementById('welTopChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:topSorted.map(x=>x[0].split('.')[0]), datasets:[{data:topSorted.map(x=>x[1]), backgroundColor:'#0284c7'}]}, options:{indexAxis:'y', maintainAspectRatio:false, plugins:{legend:{display:false},datalabels:{align:'end',anchor:'end'}}} });
+        welTopChartInst = new Chart(document.getElementById('welTopChart'), { 
+            type:'bar', 
+            plugins:[ChartDataLabels], 
+            data:{
+                labels: topSorted.map(x => x[0].length > 35 ? x[0].substring(0, 35) + '...' : x[0]), 
+                datasets:[{data:topSorted.map(x=>x[1]), backgroundColor:'#0284c7'}]
+            }, 
+            options:{
+                indexAxis:'y', 
+                maintainAspectRatio:false, 
+                plugins:{
+                    legend:{display:false},
+                    datalabels:{align:'end',anchor:'end'},
+                    tooltip: { callbacks: { title: function(ctx) { return topSorted[ctx[0].dataIndex][0]; } } } // Hover ดูชื่อเต็มได้
+                }
+            } 
+        });
 
         if(welChannelChartInst) welChannelChartInst.destroy();
         welChannelChartInst = new Chart(document.getElementById('welChannelChart'), { type:'doughnut', data:{labels:Object.keys(chans), datasets:[{data:Object.values(chans), backgroundColor:['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6']}]}, options:{maintainAspectRatio:false, plugins:{legend:{position:'bottom'}}} });
