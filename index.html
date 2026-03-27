@@ -465,6 +465,7 @@
                     <button class="btn btn-outline-secondary fw-bold shadow-sm" onclick="goHome()"><i class="bi bi-house-door-fill"></i> หน้าแรก</button>
                     <button class="btn btn-warning fw-bold shadow-sm text-dark" onclick="openConfigModal()"><i class="bi bi-gear-fill"></i> ตั้งค่า</button>
                     <button class="btn btn-primary fw-bold shadow-sm" onclick="fetchReportData()"><i class="bi bi-arrow-clockwise"></i> อัปเดต</button>
+                    <button class="btn btn-success fw-bold shadow-sm" onclick="exportExcel()"><i class="bi bi-file-earmark-excel-fill"></i> Excel</button>
                     <button class="btn btn-dark fw-bold shadow-sm" onclick="window.print()"><i class="bi bi-printer-fill"></i> Print</button>
                 </div>
             </div>
@@ -576,7 +577,7 @@
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyabBOmMcxcnMKO4pbj_vX_YJ1uThfGC9JHEJlzRGGgHEJgZswJ6WbPtsX0dqgn2g_a1A/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwjBcKkid5S2Xm5uvp41RjjFKjK6oR--b3Ib94MkSsui2GXyAx_oBimtxab6PjpuJxPTQ/exec'; 
 
     async function runApi(action, payload = {}) {
         return new Promise((resolve, reject) => {
@@ -670,7 +671,7 @@
         document.forms['mainForm'].reset();
         document.getElementById('employeeInfoCard').style.display = 'none';
         document.getElementById('searchStatusBox').style.display = 'none';
-        document.getElementById('welfarePart3Container').style.display = 'none'; // ซ่อนตอนเริ่มเสมอ
+        document.getElementById('welfarePart3Container').style.display = 'none'; 
         document.getElementById('inspectDate').valueAsDate = new Date();
         document.querySelectorAll('.missing-alert').forEach(el => el.classList.remove('missing-alert'));
         document.getElementById('searchKey').value = '';
@@ -750,13 +751,11 @@
                 document.getElementById('employeeInfoCard').style.display = 'block'; 
                 document.querySelector('.search-card').classList.remove('missing-alert');
 
-                // ตรวจสอบเงื่อนไข แผนกที่มีคำว่า "ซื้อหนี้" หรือ "รับจ้าง" เพื่อแสดงหมวดเบี้ยขยัน
                 let dept = res.department || '';
                 if(dept.includes('ซื้อหนี้') || dept.includes('รับจ้าง')) {
                     document.getElementById('welfarePart3Container').style.display = 'block';
                 } else {
                     document.getElementById('welfarePart3Container').style.display = 'none';
-                    // Clear inputs just in case
                     document.querySelectorAll('input[name^="w_inc_"]').forEach(el => el.checked = false);
                     document.getElementById('w_inc_sug').value = '';
                 }
@@ -885,7 +884,6 @@
         }
     }
 
-    // เปิด Modal จัดการรายการสวัสดิการ
     function openWelfareConfigModal() {
         bootstrap.Modal.getInstance(document.getElementById('configModal')).hide();
         renderWelfareConfigRows();
@@ -1131,6 +1129,73 @@
         welIncSatChartInst = new Chart(document.getElementById('welIncSatChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:['5(มากสุด)','4','3','2','1(น้อยสุด)'], datasets:[{data:[incSats['5'],incSats['4'],incSats['3'],incSats['2'],incSats['1']], backgroundColor:'#eab308'}]}, options:{maintainAspectRatio:false, plugins:{legend:{display:false},datalabels:{align:'top',anchor:'end'}}} });
     }
 
+    // --- ฟังก์ชัน EXCEL ที่เพิ่มใหม่ (ดึงข้อมูลทุกคอลัมน์ตาม Tab ปัจจุบัน) ---
+    function exportExcel() {
+        if (activeDashTab === 'eng') {
+            if(currentFilteredData.length === 0) { showGenericAlert('ไม่พบข้อมูล', 'ไม่มีข้อมูลสำหรับ Export', 'warning'); return; }
+            const dataToExport = currentFilteredData.map(row => ({
+                "วันที่ประเมิน": row.inspectDate,
+                "รหัสพนักงาน": row.empId,
+                "ชื่อ-นามสกุล": row.name,
+                "ตำแหน่ง": row.position,
+                "แผนก": row.department,
+                "สังกัด": row.affiliation,
+                "สาขา": row.branch,
+                "สถานะทำงาน": row.statusEmployee,
+                "คะแนนรวม": row.score,
+                "เปอร์เซ็นต์": row.percent + "%",
+                "เกรด": row.grade,
+                "ข้อเสนอแนะ": row.suggestion,
+                "1. งานที่ทำชัดเจน เข้าใจเป้าหมาย (KPI)": row.scores.s_cat1_1, 
+                "2. ปริมาณงานเหมาะสม": row.scores.s_cat1_2, 
+                "3. งานมีความหมาย": row.scores.s_cat1_3, 
+                "4. รู้สึกภูมิใจในงาน": row.scores.s_cat1_4,
+                "5. หัวหน้างานรับฟัง": row.scores.s_cat2_1, 
+                "6. ให้คำแนะนำ / Coaching": row.scores.s_cat2_2, 
+                "7. ตัดสินยุติธรรม": row.scores.s_cat2_3, 
+                "8. ดูแลทีมจริง": row.scores.s_cat2_4,
+                "9. เห็นโอกาสเติบโต": row.scores.s_cat3_1, 
+                "10. ได้พัฒนาทักษะ": row.scores.s_cat3_2, 
+                "11. มี Career Path": row.scores.s_cat3_3,
+                "12. เงินเดือนเหมาะสม": row.scores.s_cat4_1, 
+                "13. สวัสดิการตอบโจทย์": row.scores.s_cat4_2, 
+                "14. รู้สึกว่าบริษัทดูแล": row.scores.s_cat4_3,
+                "15. บรรยากาศดี": row.scores.s_cat5_1, 
+                "16. เพื่อนร่วมงานช่วยเหลือ": row.scores.s_cat5_2, 
+                "17. วัฒนธรรมตรงค่านิยม": row.scores.s_cat5_3,
+                "18. เข้าใจเป้าหมายและทิศทางขององค์กร": row.scores.s_cat6_1, 
+                "19. ได้รับข้อมูลข่าวสารที่ชัดเจน ทันเวลา": row.scores.s_cat6_2, 
+                "20. รู้สึกว่าความเห็นของพนักงานถูกรับฟัง": row.scores.s_cat6_3
+            }));
+            const ws = XLSX.utils.json_to_sheet(dataToExport);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Engagement");
+            XLSX.writeFile(wb, "Engagement_Survey_Report.xlsx");
+        } else if (activeDashTab === 'wel') {
+            if(currentFilteredWelfareData.length === 0) { showGenericAlert('ไม่พบข้อมูล', 'ไม่มีข้อมูลสำหรับ Export', 'warning'); return; }
+            const dataToExport = currentFilteredWelfareData.map(row => ({
+                "วันที่ประเมิน": row.inspectDate,
+                "รหัสพนักงาน": row.empId,
+                "ชื่อ-นามสกุล": row.name,
+                "ตำแหน่ง": row.position,
+                "แผนก": row.department,
+                "สังกัด": row.affiliation,
+                "สาขา": row.branch,
+                "สถานะทำงาน": row.statusEmployee,
+                "การรับรู้สวัสดิการภาพรวม": row.w_aware,
+                "ช่องทางรับข่าวสารหลัก": row.w_channel,
+                "สวัสดิการที่ประทับใจ (Top 3)": row.w_top,
+                "การรับรู้เบี้ยขยัน": row.w_inc_aware,
+                "ความเข้าใจเกณฑ์เบี้ยขยัน (1-5)": row.w_inc_und,
+                "ความพึงพอใจอัตราเบี้ยขยัน (1-5)": row.w_inc_sat,
+                "ข้อเสนอแนะเบี้ยขยัน": row.w_inc_sug
+            }));
+            const ws = XLSX.utils.json_to_sheet(dataToExport);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Welfare");
+            XLSX.writeFile(wb, "Welfare_Survey_Report.xlsx");
+        }
+    }
   </script>
 </body>
 </html>
