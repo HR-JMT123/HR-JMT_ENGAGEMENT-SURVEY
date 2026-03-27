@@ -118,11 +118,11 @@
     .table-card { background: white; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-sm); overflow: hidden; }
     .table thead th { background-color: #f8fafc; font-weight: 600; font-size: 0.9rem; color: #64748b; border-bottom: 2px solid #e2e8f0; }
     
-    /* Tab Switcher Styling (ปรับปรุงใหม่ตามรูปภาพ) */
-    .dashboard-tab-container { display: flex; border-bottom: 2px solid #e2e8f0; margin-top: 15px; }
-    .tab-btn { flex: 1; background: transparent; border: none; padding: 12px 15px; font-weight: 600; color: #64748b; font-size: 1.1rem; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
-    .tab-btn:hover { color: var(--primary); opacity: 0.8; }
-    .tab-btn.active { color: var(--primary); font-weight: bold; border-bottom: 3px solid var(--primary); }
+    /* Tab Switcher Styling (ปรับให้เส้นสีแดงเหมือนรูปภาพ) */
+    .dashboard-tab-container { display: flex; border-bottom: 1px solid #dee2e6; margin-top: 15px; width: 100%; }
+    .tab-btn { flex: 1; background: transparent; border: none; padding: 12px 15px; font-weight: 600; color: #6c757d; font-size: 1rem; border-bottom: 3px solid transparent; transition: all 0.3s ease; text-align: center; outline: none; }
+    .tab-btn:hover { color: var(--primary); }
+    .tab-btn.active { color: var(--primary); font-weight: 700; border-bottom: 3px solid var(--primary); }
 
     .static-score-box { position: relative; background: #ffffff; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); border-radius: 12px; margin-bottom: 15px; padding: 10px 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: center; transition: all 0.3s ease; }
     .static-score-box.hidden { display: none !important; }
@@ -513,19 +513,24 @@
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwJTEkVcmE0OdfKyLB1Z5fz7gigz10NvJME6wDBmL3k01TcRt7-vm6siyXPdoFRcFgi1g/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzvsPKXKIQ46cdk0q1bgc1alAghKCFLS3d-eBTA01QtGXyLKsGFX8Jb1n80THX9DC5akA/exec'; 
 
     async function runApi(action, payload = {}) {
         return new Promise((resolve, reject) => {
             if (typeof google !== 'undefined' && google.script && google.script.run) {
+                // สำหรับรันตรงใน Apps Script 
+                let arg = payload;
+                if (action === 'searchEmployee') arg = payload.keyword;
+                else if (action === 'processForm' || action === 'processWelfareForm') arg = payload.data;
                 google.script.run
                     .withSuccessHandler(res => resolve(res))
                     .withFailureHandler(err => reject(err))
-                    [action](action === 'processForm' || action === 'processWelfareForm' ? payload : (payload.keyword || payload));
+                    [action](arg);
             } else {
+                // สำหรับรันผ่าน GitHub Pages (External fetch)
                 if(API_URL.includes('XXXX')) { alert('กรุณาใส่ API URL ใน Code'); reject('API URL Missing'); return; }
                 const body = { action: action, ...payload };
-                fetch(API_URL, { method: 'POST', body: JSON.stringify(body) })
+                fetch(API_URL, { method: 'POST', body: JSON.stringify(body), redirect: 'follow' })
                 .then(response => response.json())
                 .then(data => resolve(data))
                 .catch(error => { console.error('API Error:', error); reject(error); });
@@ -738,15 +743,12 @@
 
     function switchDashTab(tab) {
         activeDashTab = tab;
-        // เปลี่ยนคลาสปุ่มตาม UI ที่ออกแบบไว้
         document.getElementById('tabBtnEng').className = tab === 'eng' ? 'tab-btn active' : 'tab-btn';
         document.getElementById('tabBtnWel').className = tab === 'wel' ? 'tab-btn active' : 'tab-btn';
         
-        // แยก Container ออกจากกันอย่างเด็ดขาด
         document.getElementById('dashEngContent').style.display = tab === 'eng' ? 'block' : 'none';
         document.getElementById('dashWelContent').style.display = tab === 'wel' ? 'block' : 'none';
         
-        // เรียก Render กราฟใหม่เพื่อป้องกันกราฟเบี้ยวจากการ display:none
         applyFilters(); 
     }
 
