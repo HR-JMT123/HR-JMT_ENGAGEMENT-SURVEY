@@ -42,21 +42,9 @@
     /* =========================================
        ANIMATIONS & TRANSITIONS
        ========================================= */
-    .view-section { 
-      display: none; 
-      opacity: 0; 
-      transition: opacity 0.4s ease-in-out; 
-    }
-    .view-section.active { 
-      display: block; 
-      opacity: 1; 
-      animation: fadeIn 0.5s ease-out;
-    }
-      
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .view-section { display: none; opacity: 0; transition: opacity 0.4s ease-in-out; }
+    .view-section.active { display: block; opacity: 1; animation: fadeIn 0.5s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* =========================================
        CUSTOM BUTTONS & CARDS
@@ -65,151 +53,87 @@
     .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); filter: brightness(105%); }
     .btn:active { transform: translateY(0) scale(0.98); box-shadow: none; }
 
-    .btn-main { 
-      width: 100%; padding: 14px; border-radius: 16px; border: none; 
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); 
-      color: white; font-weight: 700; font-size: 1rem; box-shadow: 0 5px 15px rgba(185, 28, 28, 0.3); 
-    }
+    .btn-main { width: 100%; padding: 14px; border-radius: 16px; border: none; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; font-weight: 700; font-size: 1rem; box-shadow: 0 5px 15px rgba(185, 28, 28, 0.3); }
       
-    .header-icon-btn { 
-      background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); 
-      color: white; border-radius: 12px; width: 55px; height: 55px; 
-      display: flex; flex-direction: column; align-items: center; justify-content: center; 
-      cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem; backdrop-filter: blur(4px);
-    }
-    .header-icon-btn:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-3px) rotate(3deg); }
-      
-    /* SURVEY SELECTION CARDS (HOME) */
-    .survey-select-card {
-        background: white; border-radius: 24px; padding: 40px 20px;
-        text-align: center; border: 2px solid transparent; box-shadow: var(--shadow-lg);
-        cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        position: relative; overflow: hidden;
-    }
+    .survey-select-card { background: white; border-radius: 24px; padding: 40px 20px; text-align: center; border: 2px solid transparent; box-shadow: var(--shadow-lg); cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden; }
     .survey-select-card:hover { border-color: var(--primary-light); transform: translateY(-8px); box-shadow: 0 25px 30px -5px rgba(185,28,28,0.15); }
     .survey-select-card.disabled { opacity: 0.6; cursor: not-allowed; filter: grayscale(100%); pointer-events: none; }
     .survey-icon-wrap { width: 80px; height: 80px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-bottom: 20px; }
     .icon-eng { background: #fee2e2; color: #b91c1c; }
     .icon-wel { background: #e0f2fe; color: #0284c7; }
 
-    /* =========================================
-       LAYOUT COMPONENTS
-       ========================================= */
     .survey-padding { padding-bottom: 80px; }
-      
-    .header-wrapper { 
-      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); 
-      padding: 1.5rem 1rem 3rem 1rem; border-radius: 0 0 30px 30px; 
-      box-shadow: var(--shadow-md); color: white; position: relative; overflow: hidden;
-    }
-    .header-wrapper::after {
-      content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px;
-      background: rgba(255,255,255,0.05); border-radius: 50%; pointer-events: none;
-    }
-
+    .header-wrapper { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); padding: 1.5rem 1rem 3rem 1rem; border-radius: 0 0 30px 30px; box-shadow: var(--shadow-md); color: white; position: relative; overflow: hidden; }
+    .header-wrapper::after { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%; pointer-events: none; }
     .app-title { font-size: 1.5rem; font-weight: 800; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .header-btn-group { display: flex; gap: 8px; z-index: 2; position: relative; }
-      
     .main-container { max-width: 700px; padding: 0 15px; margin: -2rem auto 0 auto; position: relative; z-index: 10; }
-      
-    /* =========================================
-       CARDS & INPUTS
-       ========================================= */
-    .modern-card { 
-      background: var(--card-bg); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
-      margin-bottom: 1.2rem; border: 1px solid rgba(255,255,255,0.8); overflow: hidden; transition: transform 0.3s ease;
-    }
-    .search-card { 
-      background: white; border-radius: 24px; padding: 25px 20px; box-shadow: var(--shadow-lg); 
-      margin-bottom: 20px; border: 1px solid rgba(185, 28, 28, 0.1); position: relative; overflow: hidden; 
-    }
+
+    .modern-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 1.2rem; border: 1px solid rgba(255,255,255,0.8); overflow: hidden; }
+    .search-card { background: white; border-radius: 24px; padding: 25px 20px; box-shadow: var(--shadow-lg); margin-bottom: 20px; border: 1px solid rgba(185, 28, 28, 0.1); position: relative; overflow: hidden; }
     .search-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--primary); }
-      
     .custom-search-group { position: relative; display: flex; align-items: center; background: #f1f5f9; border-radius: 50px; padding: 5px 5px 5px 15px; border: 2px solid transparent; transition: all 0.3s; }
     .custom-search-group:focus-within { border-color: var(--primary-light); background: #fff; box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.1); }
-      
     .search-input { border: none; background: transparent; flex: 1; padding: 10px 0; outline: none; font-size: 1rem; color: var(--text-main); }
     .btn-search-icon { width: 42px; height: 42px; border-radius: 50%; border: none; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s; }
-    .btn-search-icon:hover { transform: rotate(90deg) scale(1.1); }
-      
     .card-header-clean { padding: 16px 20px; border-bottom: 1px solid #f1f5f9; font-weight: 700; color: var(--primary-dark); display: flex; gap: 10px; align-items: center; background: rgba(248,250,252,0.5); }
     .card-body-clean { padding: 20px; }
-      
-    /* =========================================
-       SURVEY QUESTIONS UI
-       ========================================= */
+
     .audit-row { padding: 16px 0; border-bottom: 1px solid #f1f5f9; border-radius: 8px; }
     .audit-title { font-weight: 600; margin-bottom: 12px; font-size: 0.95rem; line-height: 1.4; }
     .score-group { display: flex; gap: 4px; }
     .score-radio { display: none; }
-    .score-btn { 
-      flex: 1; text-align: center; padding: 8px 4px; border-radius: 8px; border: 1px solid #e2e8f0; 
-      background: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50px; transition: all 0.2s;
-    }
+    .score-btn { flex: 1; text-align: center; padding: 8px 4px; border-radius: 8px; border: 1px solid #e2e8f0; background: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50px; transition: all 0.2s; }
     .score-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
     .score-val { font-size: 1.1rem; font-weight: 700; line-height: 1; }
     .score-sub { font-size: 0.6rem; margin-top: 2px; opacity: 0.7; white-space: nowrap; }
-      
     .score-radio[value="1"]:checked + .score-btn { background: #fee2e2; color: #991b1b; border-color: #fca5a5; transform: scale(1.05); font-weight: bold; }
     .score-radio[value="2"]:checked + .score-btn { background: #fff1f2; color: #be123c; border-color: #fda4af; transform: scale(1.05); font-weight: bold; }
     .score-radio[value="3"]:checked + .score-btn { background: #fffbeb; color: #92400e; border-color: #fcd34d; transform: scale(1.05); font-weight: bold; }
     .score-radio[value="4"]:checked + .score-btn { background: #f0fdf4; color: #15803d; border-color: #86efac; transform: scale(1.05); font-weight: bold; }
     .score-radio[value="5"]:checked + .score-btn { background: #dcfce7; color: #14532d; border-color: #22c55e; transform: scale(1.05); font-weight: bold; }
 
-    /* Welfare specific Styles */
     .welfare-list-item { font-size: 0.85rem; padding: 8px; border-bottom: 1px dashed #e2e8f0; display: flex; align-items: start;}
     .welfare-list-item i { color: #0284c7; margin-right: 8px; margin-top: 2px;}
-    .custom-radio-group label { background: white; border: 1px solid #e2e8f0; padding: 10px 15px; border-radius: 12px; cursor: pointer; transition: 0.3s; display: block; font-size: 0.9rem;}
+    .custom-radio-group label, .custom-check-group label { background: white; border: 1px solid #e2e8f0; padding: 10px 15px; border-radius: 12px; cursor: pointer; transition: 0.3s; display: block; font-size: 0.9rem;}
     .custom-radio-group input[type="radio"]:checked + label { background: #e0f2fe; border-color: #38bdf8; font-weight: bold; color: #0284c7; }
-    .custom-check-group label { background: white; border: 1px solid #e2e8f0; padding: 10px 15px; border-radius: 12px; cursor: pointer; transition: 0.3s; display: block; font-size: 0.9rem;}
     .custom-check-group input[type="checkbox"]:checked + label { background: #dcfce7; border-color: #4ade80; font-weight: bold; color: #166534; }
       
     .missing-alert { background-color: #fff5f5; border: 2px solid #ef4444 !important; padding: 10px; animation: pulseAlert 1s infinite; }
-    @keyframes pulseAlert { 
-      0% { border-color: #ef4444; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 
-      70% { border-color: #fca5a5; box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 
-      100% { border-color: #ef4444; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } 
-    }
+    @keyframes pulseAlert { 0% { border-color: #ef4444; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { border-color: #fca5a5; box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { border-color: #ef4444; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
       
-    /* =========================================
-       CUSTOM ALERT & OVERLAY
-       ========================================= */
     .custom-alert-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10050; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; backdrop-filter: blur(4px); }
     .custom-alert-box { background: white; padding: 30px 25px; border-radius: 24px; text-align: center; width: 85%; max-width: 340px; position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); transform: scale(0.7); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .custom-alert-overlay.active { opacity: 1; visibility: visible; }
     .custom-alert-overlay.active .custom-alert-box { transform: scale(1); opacity: 1; }
-      
     .status-circle { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-size: 36px; }
-    .success-circle { background: #dcfce7; color: #166534; }
-    .error-circle { background: #fee2e2; color: #991b1b; }
-    .warning-circle { background: #fff7ed; color: #d97706; }
-    .info-circle { background: #e0f2fe; color: #0284c7; }
+    .success-circle { background: #dcfce7; color: #166534; } .error-circle { background: #fee2e2; color: #991b1b; } .warning-circle { background: #fff7ed; color: #d97706; }
 
-    /* Dashboard... */
+    /* Dashboard */
     .dashboard-container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-    .report-header-dash { background: white; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+    .report-header-dash { background: white; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 20px; }
     .stat-card { background: white; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.8); height: 100%; transition: transform 0.2s; position: relative; }
     .stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
     .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 10px; }
-    .bg-icon-red { background: #fee2e2; color: #b91c1c; }
-    .bg-icon-blue { background: #e0f2fe; color: #0284c7; }
-    .bg-icon-green { background: #dcfce7; color: #166534; }
+    .bg-icon-red { background: #fee2e2; color: #b91c1c; } .bg-icon-blue { background: #e0f2fe; color: #0284c7; } .bg-icon-green { background: #dcfce7; color: #166534; }
     .table-card { background: white; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-sm); overflow: hidden; }
     .table thead th { background-color: #f8fafc; font-weight: 600; font-size: 0.9rem; color: #64748b; border-bottom: 2px solid #e2e8f0; }
-      
+    
+    /* Active Tab */
+    .tab-btn { opacity: 0.5; transition: 0.3s; border-bottom: 3px solid transparent; border-radius: 0; }
+    .tab-btn.active { opacity: 1; font-weight: bold; border-color: var(--primary); color: var(--primary); }
+
     .static-score-box { position: relative; background: #ffffff; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); border-radius: 12px; margin-bottom: 15px; padding: 10px 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: center; transition: all 0.3s ease; }
     .static-score-box.hidden { display: none !important; }
 
-    /* Custom Dropdown */
     .dropdown-menu-scrollable { max-height: 250px; overflow-y: auto; min-width: 100%; padding: 10px; }
     .custom-dropdown-btn { text-align: left; background-color: white; border: 1px solid #dee2e6; color: #333; display: flex; justify-content: space-between; align-items: center; }
     .custom-dropdown-btn::after { margin-left: auto; }
 
-    @media print {
-       .no-print { display: none !important; }
-       .report-header-dash { padding: 0; margin-bottom: 1rem; box-shadow: none; }
-       .static-score-box { display: none !important; }
-    }
+    .badge-grade-good { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .badge-grade-improve { background-color: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+    .badge-grade-urgent { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+    @media print { .no-print { display: none !important; } .report-header-dash { padding: 0; margin-bottom: 1rem; box-shadow: none; } .static-score-box { display: none !important; } }
   </style>
 </head>
 <body>
@@ -291,7 +215,7 @@
         </div>
         <div class="text-center mt-4">
            <button class="btn btn-outline-secondary rounded-pill shadow-sm px-4" onclick="openReportLogin()">
-               <i class="bi bi-graph-up-arrow me-2"></i> ดูรายงาน Engagement Dashboard
+               <i class="bi bi-graph-up-arrow me-2"></i> ดูรายงาน Dashboard
            </button>
         </div>
     </div>
@@ -395,12 +319,8 @@
         <div id="welfareContent" style="display:none;">
             <div class="modern-card mb-4">
                 <div class="card-header-clean bg-primary text-white"><i class="bi bi-gift fs-5"></i> รายการสวัสดิการ (Showcase)</div>
-                <div class="card-body-clean">
-                    <div id="welfareShowcase">
-                        </div>
-                </div>
+                <div class="card-body-clean"><div id="welfareShowcase"></div></div>
             </div>
-
             <div class="modern-card">
                 <div class="card-header-clean"><i class="bi bi-megaphone-fill text-warning"></i> ส่วนที่ 1: การรับรู้สวัสดิการ</div>
                 <div class="card-body-clean" id="welfarePart1">
@@ -424,23 +344,19 @@
                     </div>
                 </div>
             </div>
-
             <div class="modern-card">
                 <div class="card-header-clean"><i class="bi bi-heart-fill text-danger"></i> ส่วนที่ 2: ความพึงพอใจสวัสดิการ</div>
                 <div class="card-body-clean" id="welfarePart2">
                     <div class="audit-row border-0">
                         <div class="audit-title text-primary">สวัสดิการปัจจุบันข้อใดที่ท่านประทับใจที่สุด? (เลือกได้สูงสุด 3 ข้อ) <span class="text-danger">*</span></div>
-                        <div class="custom-check-group row g-2" id="welfareTop3Boxes">
-                            </div>
+                        <div class="custom-check-group row g-2" id="welfareTop3Boxes"></div>
                     </div>
                 </div>
             </div>
-
             <div class="modern-card" style="border: 2px solid #b91c1c;">
                 <div class="card-header-clean bg-danger text-white"><i class="bi bi-cash-coin"></i> หมวดเบี้ยขยัน (Incentive) - เฉพาะสายงานเร่งรัดหนี้สิน</div>
                 <div class="card-body-clean bg-white" id="welfarePart3">
                     <div class="alert alert-warning small"><i class="bi bi-exclamation-triangle-fill"></i> กรุณาตอบข้อมูลด้านล่าง หากท่านปฏิบัติงานในสายงานที่มีเบี้ยขยัน</div>
-                    
                     <div class="audit-row border-0">
                         <div class="audit-title text-primary">1. ท่านเคยทราบหรือไม่ว่าบริษัทมีสวัสดิการเบี้ยขยัน? <span class="text-danger">*</span></div>
                         <div class="custom-radio-group row g-2">
@@ -449,38 +365,35 @@
                             <div class="col-12"><input type="radio" name="w_inc_aware" id="ia3" value="ไม่ทราบเลย" class="d-none" onchange="clearError(this)"><label for="ia3">ไม่ทราบเลย</label></div>
                         </div>
                     </div>
-
                     <div class="audit-row border-0 mt-3">
                         <div class="audit-title text-primary">2. การเข้าถึงข้อมูล: ท่านเข้าใจเกณฑ์การจ่าย "เบี้ยขยัน" ชัดเจนเพียงใด? <span class="text-danger">*</span></div>
                         <div class="custom-radio-group row g-2">
-                            <div class="col-12"><input type="radio" name="w_inc_und" id="iu5" value="5" class="d-none" onchange="clearError(this)"><label for="iu5"><b>5 คะแนน:</b> เข้าใจดีเยี่ยม (ทราบรายละเอียดครบถ้วน)</label></div>
-                            <div class="col-12"><input type="radio" name="w_inc_und" id="iu4" value="4" class="d-none" onchange="clearError(this)"><label for="iu4"><b>4 คะแนน:</b> เข้าใจดี (ทราบเกณฑ์ส่วนใหญ่และคำนวณเบื้องต้นได้)</label></div>
-                            <div class="col-12"><input type="radio" name="w_inc_und" id="iu3" value="3" class="d-none" onchange="clearError(this)"><label for="iu3"><b>3 คะแนน:</b> เข้าใจปานกลาง (พอทราบเงื่อนไขหลักๆ แต่บางอย่างไม่แน่ใจ)</label></div>
-                            <div class="col-12"><input type="radio" name="w_inc_und" id="iu2" value="2" class="d-none" onchange="clearError(this)"><label for="iu2"><b>2 คะแนน:</b> เข้าใจน้อย (ทราบว่ามีแต่ไม่ทราบเงื่อนไขที่ชัดเจน)</label></div>
+                            <div class="col-12"><input type="radio" name="w_inc_und" id="iu5" value="5" class="d-none" onchange="clearError(this)"><label for="iu5"><b>5 คะแนน:</b> เข้าใจดีเยี่ยม</label></div>
+                            <div class="col-12"><input type="radio" name="w_inc_und" id="iu4" value="4" class="d-none" onchange="clearError(this)"><label for="iu4"><b>4 คะแนน:</b> เข้าใจดี</label></div>
+                            <div class="col-12"><input type="radio" name="w_inc_und" id="iu3" value="3" class="d-none" onchange="clearError(this)"><label for="iu3"><b>3 คะแนน:</b> เข้าใจปานกลาง</label></div>
+                            <div class="col-12"><input type="radio" name="w_inc_und" id="iu2" value="2" class="d-none" onchange="clearError(this)"><label for="iu2"><b>2 คะแนน:</b> เข้าใจน้อย</label></div>
                             <div class="col-12"><input type="radio" name="w_inc_und" id="iu1" value="1" class="d-none" onchange="clearError(this)"><label for="iu1"><b>1 คะแนน:</b> ไม่เข้าใจเลย/ไม่เคยทราบ</label></div>
                         </div>
                     </div>
-
                     <div class="audit-row border-0 mt-3">
-                        <div class="audit-title text-primary">3. ความพึงพอใจ: อัตราเบี้ยขยันในปัจจุบันช่วยกระตุ้นให้อยากทำยอดมากน้อยเพียงใด? <span class="text-danger">*</span></div>
+                        <div class="audit-title text-primary">3. ความพึงพอใจ: อัตราเบี้ยขยันช่วยกระตุ้นให้อยากทำยอดมากน้อยเพียงใด? <span class="text-danger">*</span></div>
                         <div class="custom-radio-group row g-2">
-                            <div class="col-12"><input type="radio" name="w_inc_sat" id="is5" value="5" class="d-none" onchange="clearError(this)"><label for="is5"><b>5 คะแนน:</b> มากที่สุด (จูงใจสูงมาก กระตือรือร้นทุกเดือน)</label></div>
-                            <div class="col-12"><input type="radio" name="w_inc_sat" id="is4" value="4" class="d-none" onchange="clearError(this)"><label for="is4"><b>4 คะแนน:</b> มาก (เหมาะสมและเป็นปัจจัยหลักให้อยากทำยอด)</label></div>
-                            <div class="col-12"><input type="radio" name="w_inc_sat" id="is3" value="3" class="d-none" onchange="clearError(this)"><label for="is3"><b>3 คะแนน:</b> ปานกลาง (ยอมรับได้ กระตุ้นได้บางส่วน)</label></div>
-                            <div class="col-12"><input type="radio" name="w_inc_sat" id="is2" value="2" class="d-none" onchange="clearError(this)"><label for="is2"><b>2 คะแนน:</b> น้อย (ยังไม่ดึงดูดใจพอ)</label></div>
-                            <div class="col-12"><input type="radio" name="w_inc_sat" id="is1" value="1" class="d-none" onchange="clearError(this)"><label for="is1"><b>1 คะแนน:</b> น้อยที่สุด (ไม่มีผลต่อแรงจูงใจเลย)</label></div>
+                            <div class="col-12"><input type="radio" name="w_inc_sat" id="is5" value="5" class="d-none" onchange="clearError(this)"><label for="is5"><b>5 คะแนน:</b> มากที่สุด</label></div>
+                            <div class="col-12"><input type="radio" name="w_inc_sat" id="is4" value="4" class="d-none" onchange="clearError(this)"><label for="is4"><b>4 คะแนน:</b> มาก</label></div>
+                            <div class="col-12"><input type="radio" name="w_inc_sat" id="is3" value="3" class="d-none" onchange="clearError(this)"><label for="is3"><b>3 คะแนน:</b> ปานกลาง</label></div>
+                            <div class="col-12"><input type="radio" name="w_inc_sat" id="is2" value="2" class="d-none" onchange="clearError(this)"><label for="is2"><b>2 คะแนน:</b> น้อย</label></div>
+                            <div class="col-12"><input type="radio" name="w_inc_sat" id="is1" value="1" class="d-none" onchange="clearError(this)"><label for="is1"><b>1 คะแนน:</b> น้อยที่สุด</label></div>
                         </div>
                     </div>
-
                     <div class="audit-row border-0 mt-3">
                         <div class="audit-title text-primary">4. ข้อเสนอแนะ: สิ่งที่อยากให้ปรับปรุงในส่วนเบี้ยขยัน</div>
                         <textarea class="form-control bg-light" id="w_inc_sug" rows="2" placeholder="ระบุข้อเสนอแนะ..."></textarea>
                     </div>
-
                 </div>
             </div>
+        </div>
 
-        </div> <div class="btn-main-container mt-4">
+        <div class="btn-main-container mt-4">
            <button type="submit" class="btn-main shadow-lg" id="submitBtn">ยืนยันผลการสำรวจ</button>
         </div>
       </form>
@@ -489,42 +402,106 @@
 
   <div id="view-dashboard" class="view-section">
       <div class="dashboard-container">
-          <div class="report-header-dash no-print">
-            <div>
-               <h2 class="fw-bold m-0 text-danger"><i class="bi bi-bar-chart-fill me-2"></i>Engagement Dashboard</h2>
-               <p class="m-0 text-muted">รายงานผลการสำรวจความผูกพัน (Real-time)</p>
+          <div class="report-header-dash flex-column align-items-stretch no-print">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 class="fw-bold m-0 text-danger"><i class="bi bi-bar-chart-fill me-2"></i>Executive Dashboard</h2>
+                    <p class="m-0 text-muted">รายงานผลการสำรวจ (Real-time)</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary fw-bold shadow-sm" onclick="goHome()"><i class="bi bi-house-door-fill"></i> หน้าแรก</button>
+                    <button class="btn btn-primary fw-bold shadow-sm" onclick="fetchReportData()"><i class="bi bi-arrow-clockwise"></i> อัปเดต</button>
+                    <button class="btn btn-dark fw-bold shadow-sm" onclick="window.print()"><i class="bi bi-printer-fill"></i> Print</button>
+                </div>
             </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary fw-bold shadow-sm" onclick="goHome()"><i class="bi bi-house-door-fill"></i> หน้าแรก</button>
-                <button class="btn btn-primary fw-bold shadow-sm" onclick="fetchReportData()"><i class="bi bi-arrow-clockwise"></i> อัปเดต</button>
-                <button class="btn btn-dark fw-bold shadow-sm" onclick="window.print()"><i class="bi bi-printer-fill"></i> Print</button>
+            
+            <div class="d-flex gap-2 border-bottom pb-2">
+                <button class="btn tab-btn active flex-fill fs-5" id="tabBtnEng" onclick="switchDashTab('eng')">Engagement</button>
+                <button class="btn tab-btn flex-fill fs-5" id="tabBtnWel" onclick="switchDashTab('wel')">Welfare</button>
             </div>
           </div>
-          <div class="row g-3 mb-4">
-             <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-icon-blue"><i class="bi bi-people-fill"></i></div><div class="text-muted small">จำนวนผู้ทำแบบสำรวจ</div><div class="h2 fw-bold mb-0" id="valTotalCount">0</div></div></div>
-             <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-icon-red"><i class="bi bi-star-fill"></i></div><div class="text-muted small">คะแนนเฉลี่ยรวม</div><div class="h2 fw-bold mb-0" id="valAvgScore">0.00</div></div></div>
-             <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-icon-green"><i class="bi bi-percent"></i></div><div class="text-muted small">เปอร์เซ็นต์เฉลี่ย</div><div class="h2 fw-bold mb-0" id="valAvgPercent">0%</div></div></div>
-             <div class="col-md-3">
-                 <div class="stat-card p-2 d-flex flex-column align-items-center justify-content-center">
-                     <h6 class="fw-bold mb-2 small text-secondary">สัดส่วนคะแนน</h6>
-                     <div style="height: 120px; width: 100%;"><canvas id="gradeChart"></canvas></div>
+
+          <div class="card border-0 shadow-sm rounded-4 mb-4 p-3 no-print">
+            <div class="row g-3 align-items-end mb-2">
+                 <div class="col-md-2"><label class="form-label small text-muted fw-bold">วันที่เริ่มต้น</label><input type="date" class="form-control rounded-pill" id="filterStartDate"></div>
+                 <div class="col-md-2"><label class="form-label small text-muted fw-bold">วันที่สิ้นสุด</label><input type="date" class="form-control rounded-pill" id="filterEndDate"></div>
+                 <div class="col-md-2"><label class="form-label small text-muted fw-bold">รหัสพนักงาน</label><input type="text" class="form-control rounded-pill" id="filterEmpId" placeholder="ระบุรหัส..."></div>
+                 <div class="col-md-3"><label class="form-label small text-muted fw-bold">ชื่อ-นามสกุล</label><input type="text" class="form-control rounded-pill" id="filterName" placeholder="ระบุชื่อ..."></div>
+                 <div class="col-md-3"><label class="form-label small text-muted fw-bold">สังกัด</label><div id="filterAffiliationContainer" class="dropdown"></div></div>
+            </div>
+            <div class="row g-3 align-items-end">
+                <div class="col-md-2"><label class="form-label small text-muted fw-bold">แผนก</label><div id="filterDeptContainer" class="dropdown"></div></div>
+                <div class="col-md-2"><label class="form-label small text-muted fw-bold">สาขา</label><div id="filterBranchContainer" class="dropdown"></div></div>
+                <div class="col-md-3"><label class="form-label small text-muted fw-bold">ตำแหน่ง</label><div id="filterPositionContainer" class="dropdown"></div></div>
+                <div class="col-md-3"><label class="form-label small text-muted fw-bold">สถานะทำงาน</label><div id="filterStatusContainer" class="dropdown"></div></div>
+                <div class="col-md-2"><button class="btn btn-danger w-100 rounded-pill fw-bold" onclick="applyFilters()"><i class="bi bi-search me-2"></i>กรองข้อมูล</button></div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                   <div class="form-check form-switch d-flex align-items-center gap-2 border p-2 rounded-pill bg-light" style="width: fit-content; padding-right: 20px !important;">
+                       <input class="form-check-input ms-1" type="checkbox" id="uniqueFilterToggle" checked onchange="applyFilters()">
+                       <label class="form-check-label small fw-bold" for="uniqueFilterToggle">นับเฉพาะรายการล่าสุด (Unique User)</label>
+                   </div>
+                </div>
+            </div>
+          </div>
+
+          <div id="dashEngContent" style="display:block;">
+              <div class="row g-3 mb-4">
+                 <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-icon-blue"><i class="bi bi-people-fill"></i></div><div class="text-muted small">จำนวนผู้ทำแบบสำรวจ</div><div class="h2 fw-bold mb-0" id="valTotalCount">0</div></div></div>
+                 <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-icon-red"><i class="bi bi-star-fill"></i></div><div class="text-muted small">คะแนนเฉลี่ยรวม</div><div class="h2 fw-bold mb-0" id="valAvgScore">0.00</div></div></div>
+                 <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-icon-green"><i class="bi bi-percent"></i></div><div class="text-muted small">เปอร์เซ็นต์เฉลี่ย</div><div class="h2 fw-bold mb-0" id="valAvgPercent">0%</div></div></div>
+                 <div class="col-md-3">
+                     <div class="stat-card p-2 d-flex flex-column align-items-center justify-content-center">
+                         <h6 class="fw-bold mb-2 small text-secondary">สัดส่วนคะแนน</h6>
+                         <div style="height: 120px; width: 100%;"><canvas id="gradeChart"></canvas></div>
+                     </div>
                  </div>
-             </div>
+              </div>
+              <div class="row"><div class="col-12 stat-card mb-4"><h5 class="fw-bold mb-3">แนวโน้มรายเดือน (Trend)</h5><div style="height:300px;"><canvas id="trendChart"></canvas></div></div></div>
+              <div class="row"><div class="col-12 stat-card mb-4"><h5 class="fw-bold mb-3">คะแนนสัดส่วนแต่ละหมวดใหญ่ (Category)</h5><div style="height:300px;"><canvas id="categoryChart"></canvas></div>
+                 <div id="subCategoryContainer" style="display: none; margin-top: 30px; border-top: 1px dashed #cbd5e1; padding-top: 20px;">
+                     <div class="d-flex justify-content-between align-items-center mb-3">
+                         <h6 class="fw-bold text-primary m-0" id="subCategoryTitle">คะแนนรายข้อ</h6>
+                         <button class="btn btn-sm btn-outline-secondary rounded-pill" onclick="closeSubCategory()"><i class="bi bi-x"></i> ปิด</button>
+                     </div>
+                     <div style="height: 300px;"><canvas id="subCategoryChart"></canvas></div>
+                 </div>
+              </div></div>
+              <div class="row"><div class="col-12 stat-card mb-4"><h5 class="fw-bold mb-3">สรุปกลุ่มความผูกพัน (Risk Group)</h5><div style="height:300px;"><canvas id="riskGroupChart"></canvas></div></div></div>
+              <div class="row"><div class="col-12 stat-card mb-4"><h5 class="fw-bold mb-3">ผลการประเมินแยกตามสาขา (Branch)</h5><div style="height:300px;"><canvas id="branchChart"></canvas></div></div></div>
+              
+              <div class="table-card mt-4">
+                <h5 class="fw-bold mb-3 text-danger"><i class="bi bi-table"></i> รายการข้อมูล Engagement</h5>
+                <div class="table-responsive">
+                   <table id="dataTable" class="table table-hover align-middle w-100">
+                     <thead><tr><th>วันที่</th><th>ชื่อพนักงาน</th><th>สาขา</th><th>คะแนน</th><th>เกรด</th><th>ข้อเสนอแนะ</th></tr></thead>
+                     <tbody id="tableBody"></tbody>
+                   </table>
+                </div>
+              </div>
           </div>
-          <div class="row"><div class="col-12 stat-card mb-4"><div style="height:300px;"><canvas id="trendChart"></canvas></div></div></div>
-          <div class="row"><div class="col-12 stat-card mb-4"><div style="height:300px;"><canvas id="categoryChart"></canvas></div></div></div>
-          <div class="row"><div class="col-12 stat-card mb-4"><div style="height:300px;"><canvas id="riskGroupChart"></canvas></div></div></div>
-          <div class="row"><div class="col-12 stat-card mb-4"><div style="height:300px;"><canvas id="branchChart"></canvas></div></div></div>
-          
-          <div class="table-card mt-4">
-            <h5 class="fw-bold mb-3 text-danger"><i class="bi bi-table"></i> รายการข้อมูล Engagement</h5>
-            <div class="table-responsive">
-               <table id="dataTable" class="table table-hover align-middle w-100">
-                 <thead><tr><th>วันที่ประเมิน</th><th>ชื่อพนักงาน</th><th>สาขา</th><th>คะแนน</th><th>เกรด</th><th>ข้อเสนอแนะ</th></tr></thead>
-                 <tbody id="tableBody"></tbody>
-               </table>
-            </div>
-         </div>
+
+          <div id="dashWelContent" style="display:none;">
+              <div class="row g-3 mb-4">
+                 <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-icon-blue"><i class="bi bi-people-fill"></i></div><div class="text-muted small">ผู้ทำแบบสำรวจสวัสดิการ</div><div class="h2 fw-bold mb-0" id="valWelCount">0</div></div></div>
+                 <div class="col-md-9"><div class="stat-card"><h5 class="fw-bold mb-3">สวัสดิการที่ประทับใจที่สุด 5 อันดับแรก</h5><div style="height:200px;"><canvas id="welTopChart"></canvas></div></div></div>
+              </div>
+              <div class="row g-3 mb-4">
+                 <div class="col-md-6"><div class="stat-card"><h5 class="fw-bold mb-3">ช่องทางการรับข่าวสาร</h5><div style="height:300px;"><canvas id="welChannelChart"></canvas></div></div></div>
+                 <div class="col-md-6"><div class="stat-card"><h5 class="fw-bold mb-3">ความพึงพอใจเบี้ยขยัน (Incentive)</h5><div style="height:300px;"><canvas id="welIncSatChart"></canvas></div></div></div>
+              </div>
+
+              <div class="table-card mt-4">
+                <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-table"></i> รายการข้อมูล Welfare</h5>
+                <div class="table-responsive">
+                   <table id="welfareTable" class="table table-hover align-middle w-100">
+                     <thead><tr><th>วันที่</th><th>ชื่อพนักงาน</th><th>สาขา</th><th>รับรู้(สวัสดิการ)</th><th>รับรู้(เบี้ยขยัน)</th><th>พึงพอใจเบี้ยขยัน</th></tr></thead>
+                     <tbody id="welTableBody"></tbody>
+                   </table>
+                </div>
+              </div>
+          </div>
       </div>
   </div>
 
@@ -534,8 +511,7 @@
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
   <script>
-    // ** ใส่ API URL ของคุณตรงนี้ **
-    const API_URL = 'https://script.google.com/macros/s/AKfycbz8Wd_37M3vL4pNS18LecWY2QvVBo9RhY-_NTSZbDFkUV7g2oqdVmmyoO-XlfQK2SCsUQ/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwB1z0NKwnhQQm-XjJFFViDxIWrLzGnW24eJfbND__79SN0T67Rl3JHWFk8GJtoVo_y3w/exec'; 
 
     async function runApi(action, payload = {}) {
         return new Promise((resolve, reject) => {
@@ -545,7 +521,7 @@
                     .withFailureHandler(err => reject(err))
                     [action](action === 'processForm' || action === 'processWelfareForm' ? payload : (payload.keyword || payload));
             } else {
-                if(API_URL.includes('XXXX')) { alert('กรุณาใส่ API URL ใน Code ก่อนใช้งาน'); reject('API URL Missing'); return; }
+                if(API_URL.includes('XXXX')) { alert('กรุณาใส่ API URL ใน Code'); reject('API URL Missing'); return; }
                 const body = { action: action, ...payload };
                 fetch(API_URL, { method: 'POST', body: JSON.stringify(body) })
                 .then(response => response.json())
@@ -555,90 +531,73 @@
         });
     }
       
-    // ข้อมูล Engagement
     const categories = [
-      { id: 'cat1', title: '1. Work & Role (งานและบทบาท)', items: ['1. งานที่ทำชัดเจน เข้าใจเป้าหมาย (KPI)','2. ปริมาณงานเหมาะสม','3. งานมีความหมาย','4. รู้สึกภูมิใจในงาน']},
-      { id: 'cat2', title: '2. Leadership (ภาวะผู้นำ)', items: ['5. หัวหน้างานรับฟัง','6. ให้คำแนะนำ / Coaching','7. ตัดสินยุติธรรม','8. ดูแลทีมจริง']},
-      { id: 'cat3', title: '3. Career & Growth (ความก้าวหน้า)', items: ['9. เห็นโอกาสเติบโต','10. ได้พัฒนาทักษะ','11. มี Career Path']},
-      { id: 'cat4', title: '4. Compensation & Welfare (ผลตอบแทน)', items: ['12. เงินเดือนเหมาะสม','13. สวัสดิการตอบโจทย์','14. รู้สึกว่าบริษัทดูแล']},
-      { id: 'cat5', title: '5. Environment & Culture (บรรยากาศ)', items: ['15. บรรยากาศดี','16. เพื่อนร่วมงานช่วยเหลือ','17. วัฒนธรรมตรงค่านิยม']},
-      { id: 'cat6', title: '6. Communication & Direction (ทิศทาง)', items: ['18. เข้าใจเป้าหมายและทิศทางขององค์กร','19. ได้รับข้อมูลข่าวสารที่ชัดเจน ทันเวลา','20. รู้สึกว่าความเห็นของพนักงานถูกรับฟัง']}
+      { id: 'cat1', title: '1. Work & Role', items: ['1. งานที่ทำชัดเจน (KPI)','2. ปริมาณงานเหมาะสม','3. งานมีความหมาย','4. รู้สึกภูมิใจในงาน']},
+      { id: 'cat2', title: '2. Leadership', items: ['5. หัวหน้างานรับฟัง','6. ให้คำแนะนำ / Coaching','7. ตัดสินยุติธรรม','8. ดูแลทีมจริง']},
+      { id: 'cat3', title: '3. Career & Growth', items: ['9. เห็นโอกาสเติบโต','10. ได้พัฒนาทักษะ','11. มี Career Path']},
+      { id: 'cat4', title: '4. Compensation', items: ['12. เงินเดือนเหมาะสม','13. สวัสดิการตอบโจทย์','14. รู้สึกว่าบริษัทดูแล']},
+      { id: 'cat5', title: '5. Environment', items: ['15. บรรยากาศดี','16. เพื่อนร่วมงานช่วยเหลือ','17. วัฒนธรรมตรงค่านิยม']},
+      { id: 'cat6', title: '6. Communication', items: ['18. เข้าใจเป้าหมายองค์กร','19. ได้รับข้อมูลชัดเจน','20. ความเห็นถูกรับฟัง']}
     ];
 
-    // ข้อมูล Welfare Showcase
     const welfareItemsList = [
-      { n:"1. ตรวจสุขภาพประจำปี", d:"ตามหลักเกณฑ์บริษัท" },
-      { n:"2. ประกันกลุ่ม", d:"ตามเงื่อนไขของทางบริษัทฯ" },
-      { n:"3. เงิน/กระเช้าเยี่ยมไข้", d:"อายุงาน 3 เดือนขึ้นไป และแอดมิท 2 วันขึ้นไป" },
-      { n:"4. กองทุนสำรองเลี้ยงชีพ", d:"พนักงานประจำที่พ้นทดลองงาน 1 ปี" },
-      { n:"5. สวัสดิการกู้ซื้อบ้าน (ธอส.)", d:"พนง.ประจำ หรือสัญญาจ้าง 1 ปีขึ้นไป" },
-      { n:"6. สวัสดิการกู้ยืมเงินกรณีฉุกเฉิน", d:"พนักงานอายุงาน 5 ปีขึ้นไป" },
-      { n:"7. เบิกเงินล่วงหน้า (ป๋า Advance)", d:"พนักงานอายุงาน 6 เดือนขึ้นไป" },
-      { n:"8. เงิน/ของขวัญคลอดบุตร", d:"พนักงานอายุงาน 3 เดือนขึ้นไป" },
-      { n:"9. ทุนการศึกษาบุตรพนักงาน", d:"ตามหลักเกณฑ์บริษัท" },
-      { n:"10. เงินช่วยเหลือฌาปนกิจ", d:"พนักงาน/ครอบครัว (อายุงาน 1 ปีขึ้นไป)" },
-      { n:"11. ชุดยูนิฟอร์มพนักงาน", d:"พนักงานอายุงาน 3 เดือน" },
-      { n:"12. สวัสดิการในเครือเจมาร์ท", d:"ส่วนลดและสิทธิพิเศษพนักงาน" },
-      { n:"13. สวัสดิการส่วนลดจากพาร์ทเนอร์", d:"โครงการ 7-Eleven ที่เพิ่งเริ่มไป" },
-      { n:"14. สวัสดิการอาหารเบรคทุกเดือน", d:"สำหรับสำนักงานใหญ่" },
+      { n:"1. ตรวจสุขภาพประจำปี", d:"ตามหลักเกณฑ์บริษัท" }, { n:"2. ประกันกลุ่ม", d:"ตามเงื่อนไขของทางบริษัทฯ" },
+      { n:"3. เงิน/กระเช้าเยี่ยมไข้", d:"อายุงาน 3 เดือนขึ้นไป และแอดมิท 2 วันขึ้นไป" }, { n:"4. กองทุนสำรองเลี้ยงชีพ", d:"พนักงานประจำที่พ้นทดลองงาน 1 ปี" },
+      { n:"5. สวัสดิการกู้ซื้อบ้าน (ธอส.)", d:"พนง.ประจำ หรือสัญญาจ้าง 1 ปีขึ้นไป" }, { n:"6. สวัสดิการกู้ยืมเงินกรณีฉุกเฉิน", d:"พนักงานอายุงาน 5 ปีขึ้นไป" },
+      { n:"7. เบิกเงินล่วงหน้า (ป๋า Advance)", d:"พนักงานอายุงาน 6 เดือนขึ้นไป" }, { n:"8. เงิน/ของขวัญคลอดบุตร", d:"พนักงานอายุงาน 3 เดือนขึ้นไป" },
+      { n:"9. ทุนการศึกษาบุตรพนักงาน", d:"ตามหลักเกณฑ์บริษัท" }, { n:"10. เงินช่วยเหลือฌาปนกิจ", d:"พนักงาน/ครอบครัว (อายุงาน 1 ปีขึ้นไป)" },
+      { n:"11. ชุดยูนิฟอร์มพนักงาน", d:"พนักงานอายุงาน 3 เดือน" }, { n:"12. สวัสดิการในเครือเจมาร์ท", d:"ส่วนลดและสิทธิพิเศษพนักงาน" },
+      { n:"13. สวัสดิการส่วนลดจากพาร์ทเนอร์", d:"โครงการ 7-Eleven" }, { n:"14. สวัสดิการอาหารเบรคทุกเดือน", d:"สำหรับสำนักงานใหญ่" },
       { n:"15. JMT Fitness", d:"สำหรับพนักงานอายุงาน 1 ปีขึ้นไป" }
     ];
       
     let surveyConfig = { engagement: true, welfare: true };
-    let currentSurveyType = ''; // 'engagement' or 'welfare'
+    let currentSurveyType = ''; 
+    let activeDashTab = 'eng';
     let searchTimer;
+
+    // Report Variables
+    let allReportData = [];
+    let allWelfareData = [];
+    let allBranchTotals = {}; 
+    let currentFilteredData = [];
+    let currentFilteredWelfareData = [];
+
+    // Chart Instances
+    let trendChartInstance, gradeChartInstance, branchChartInstance, riskGroupChartInstance, categoryChartInstance, subCategoryChartInstance;
+    let dataTableInstance, welfareTableInstance;
+    let welTopChartInst, welChannelChartInst, welIncSatChartInst;
 
     // --- On Load ---
     document.addEventListener('DOMContentLoaded', () => {
-        // Init Base Setup
-        renderQuestions();
-        renderWelfareShowcase();
+        renderQuestions(); renderWelfareShowcase();
         document.getElementById('inspectDate').valueAsDate = new Date();
 
-        // Check Setup Config from GS
+        const now = new Date();
+        const year = now.getFullYear(); 
+        const todayStr = now.toISOString().split('T')[0];
+        document.getElementById('filterStartDate').value = `${year}-01-01`; 
+        document.getElementById('filterEndDate').value = todayStr;
+
         showLoading(true, 'กำลังเตรียมระบบ...');
         runApi('getSurveyConfig').then(res => {
             showLoading(false);
             if(res.success && res.config) {
                 surveyConfig = res.config;
-                // Update Cards visually
-                if(!surveyConfig.engagement) {
-                    let c = document.getElementById('cardEngagement');
-                    c.classList.add('disabled');
-                    c.querySelector('p').innerText += ' (ปิดรับข้อมูล)';
-                }
-                if(!surveyConfig.welfare) {
-                    let c = document.getElementById('cardWelfare');
-                    c.classList.add('disabled');
-                    c.querySelector('p').innerText += ' (ปิดรับข้อมูล)';
-                }
+                if(!surveyConfig.engagement) { let c = document.getElementById('cardEngagement'); c.classList.add('disabled'); c.querySelector('p').innerText += ' (ปิด)'; }
+                if(!surveyConfig.welfare) { let c = document.getElementById('cardWelfare'); c.classList.add('disabled'); c.querySelector('p').innerText += ' (ปิด)'; }
             }
-            // Show Home
             document.getElementById('view-home').classList.add('active');
-        }).catch(e => {
-            showLoading(false);
-            document.getElementById('view-home').classList.add('active');
-        });
-
-        // Search Input event
-        document.getElementById('searchKey').addEventListener('input', function(e) {
-            clearTimeout(searchTimer);
-            if(this.value.trim().length > 2) searchTimer = setTimeout(() => searchStaff(), 1000); 
-        });
+        }).catch(e => { showLoading(false); document.getElementById('view-home').classList.add('active'); });
     });
 
-    // --- Navigation ---
+    // --- Core Action ---
+    // (Search, Calc, Submit functions... Same as previous working code)
     function openSurvey(type) {
-        if(!surveyConfig[type]) {
-            showGenericAlert('ปิดปรับปรุง', 'แบบสำรวจนี้ถูกปิดใช้งานชั่วคราว', 'warning');
-            return;
-        }
-
+        if(!surveyConfig[type]) { showGenericAlert('ปิดปรับปรุง', 'แบบสำรวจนี้ถูกปิดใช้งานชั่วคราว', 'warning'); return; }
         currentSurveyType = type;
         document.getElementById('view-home').classList.remove('active');
         document.getElementById('view-survey').classList.add('active');
-        
-        // Reset 
         document.forms['mainForm'].reset();
         document.getElementById('employeeInfoCard').style.display = 'none';
         document.getElementById('searchStatusBox').style.display = 'none';
@@ -651,8 +610,7 @@
             document.getElementById('surveySubTitle').innerText = 'แบบสำรวจความผูกพันพนักงาน';
             document.getElementById('engagementContent').style.display = 'block';
             document.getElementById('welfareContent').style.display = 'none';
-            toggleFloatingScore(true);
-            calc();
+            toggleFloatingScore(true); calc();
         } else if(type === 'welfare') {
             document.getElementById('surveyMainTitle').innerText = 'WELFARE SURVEY';
             document.getElementById('surveySubTitle').innerText = 'แบบสำรวจสวัสดิการพนักงาน';
@@ -661,20 +619,10 @@
             toggleFloatingScore(false);
         }
     }
+    function goHome() { document.getElementById('view-survey').classList.remove('active'); document.getElementById('view-dashboard').classList.remove('active'); document.getElementById('view-home').classList.add('active'); }
+    function toggleFloatingScore(show) { const el = document.getElementById('floatingScore'); if(show) el.classList.remove('hidden'); else el.classList.add('hidden'); }
+    function clearError(el) { if(el) el.classList.remove('missing-alert'); }
 
-    function goHome() {
-        document.getElementById('view-survey').classList.remove('active');
-        document.getElementById('view-dashboard').classList.remove('active');
-        document.getElementById('view-home').classList.add('active');
-    }
-
-    function toggleFloatingScore(show) {
-        const el = document.getElementById('floatingScore');
-        if(show) el.classList.remove('hidden');
-        else el.classList.add('hidden');
-    }
-
-    // --- Setup UI elements ---
     function renderQuestions(){ 
         const c = document.getElementById('questionsContainer'); 
         const labels = { 1: 'น้อยมาก', 2: 'น้อย', 3: 'ปานกลาง', 4: 'มาก', 5: 'มากที่สุด' };
@@ -684,312 +632,275 @@
             cat.items.forEach((it, i) => { 
                 const id = `${cat.id}_${i+1}`; 
                 h += `<div class="audit-row" id="row_${id}"><div class="audit-title">${it}</div><div class="score-group">`; 
-                for(let s=1; s<=5; s++){ 
-                    h += `<input type="radio" class="score-radio eng-radio" name="s_${id}" id="${id}_${s}" value="${s}" onchange="calc(); clearError(this.closest('.audit-row'))"><label class="score-btn" for="${id}_${s}"><div class="score-val">${s}</div><div class="score-sub">${labels[s]}</div></label>`; 
-                } 
+                for(let s=1; s<=5; s++) h += `<input type="radio" class="score-radio eng-radio" name="s_${id}" id="${id}_${s}" value="${s}" onchange="calc(); clearError(this.closest('.audit-row'))"><label class="score-btn" for="${id}_${s}"><div class="score-val">${s}</div><div class="score-sub">${labels[s]}</div></label>`; 
                 h += `</div></div>`; 
             }); 
             h += `<div class="mt-3"><label class="form-label small text-muted fw-bold">ข้อเสนอแนะหมวดนี้</label><textarea id="comment_${cat.id}" class="form-control form-control-sm bg-light" rows="2"></textarea></div></div></div>`; 
         }); 
         c.innerHTML = h; 
     }
-
     function renderWelfareShowcase() {
-        // List rendering
         const c = document.getElementById('welfareShowcase');
         let html = '<div class="row g-2">';
-        welfareItemsList.forEach((item, idx) => {
-            html += `<div class="col-md-6 col-sm-12"><div class="welfare-list-item"><i class="bi bi-check-circle-fill"></i><div><b>${item.n}</b><br><span class="text-muted" style="font-size:0.75rem;">${item.d}</span></div></div></div>`;
-        });
-        html += '</div>';
-        c.innerHTML = html;
+        welfareItemsList.forEach(item => { html += `<div class="col-md-6 col-sm-12"><div class="welfare-list-item"><i class="bi bi-check-circle-fill"></i><div><b>${item.n}</b><br><span class="text-muted" style="font-size:0.75rem;">${item.d}</span></div></div></div>`; });
+        c.innerHTML = html + '</div>';
 
-        // Top 3 Checkboxes rendering
         const tb = document.getElementById('welfareTop3Boxes');
         let chHtm = '';
-        welfareItemsList.forEach((item, idx) => {
-            chHtm += `
-                <div class="col-12 col-md-6">
-                    <input type="checkbox" name="w_top" value="${item.n}" id="wtop_${idx}" class="d-none" onchange="checkWelfareTopLimit(this)">
-                    <label for="wtop_${idx}">${item.n}</label>
-                </div>`;
-        });
+        welfareItemsList.forEach((item, idx) => { chHtm += `<div class="col-12 col-md-6"><input type="checkbox" name="w_top" value="${item.n}" id="wtop_${idx}" class="d-none" onchange="checkWelfareTopLimit(this)"><label for="wtop_${idx}">${item.n}</label></div>`; });
         tb.innerHTML = chHtm;
     }
-
     function checkWelfareTopLimit(cb) {
-        let checkedBoxes = document.querySelectorAll('input[name="w_top"]:checked');
-        if(checkedBoxes.length > 3) {
-            cb.checked = false;
-            showGenericAlert('เตือน', 'เลือกได้สูงสุดไม่เกิน 3 ข้อครับ', 'warning');
-        }
+        if(document.querySelectorAll('input[name="w_top"]:checked').length > 3) { cb.checked = false; showGenericAlert('เตือน', 'เลือกได้สูงสุด 3 ข้อครับ', 'warning'); }
         clearError(cb.closest('.audit-row'));
     }
 
-    function clearError(el) {
-        if(el) el.classList.remove('missing-alert');
-    }
-
-    // --- Core Action ---
     async function searchStaff() {
         const key = document.getElementById('searchKey').value.trim();
-        document.getElementById('employeeInfoCard').style.display = 'none';
-        document.getElementById('searchStatusBox').style.display = 'none';
-          
         if(!key) return;
-          
-        showLoading(true, 'กำลังค้นหาข้อมูล...');
+        showLoading(true, 'กำลังค้นหา...');
         try {
             const res = await runApi('searchEmployee', { keyword: key });
             showLoading(false);
             if(res.found) {
-                document.getElementById('empId').value = res.empId;
-                document.getElementById('inspector').value = res.name;
-                document.getElementById('affiliation').value = res.affiliation;
-                document.getElementById('branch').value = res.branch;
-                document.getElementById('position').value = res.position;
-                document.getElementById('department').value = res.department;
-                document.getElementById('startDate').value = res.startDate; 
-                 
+                document.getElementById('empId').value = res.empId; document.getElementById('inspector').value = res.name; document.getElementById('affiliation').value = res.affiliation; document.getElementById('branch').value = res.branch; document.getElementById('position').value = res.position; document.getElementById('department').value = res.department; document.getElementById('startDate').value = res.startDate; 
                 document.getElementById('inspectDate').valueAsDate = new Date();
-
-                document.getElementById('searchStatusBox').style.display = 'flex';
-                document.getElementById('foundNameText').innerText = `พบข้อมูลคุณ: ${res.name}`;
-                document.getElementById('employeeInfoCard').style.display = 'block';
-                document.querySelector('.search-card').classList.remove('missing-alert');
-            } else {
-                showGenericAlert('ไม่พบข้อมูล', 'ไม่พบรหัสพนักงานนี้ในระบบ', 'error');
-            }
-        } catch (err) {
-            showLoading(false);
-            showGenericAlert('Error', 'การเชื่อมต่อขัดข้อง: ' + err, 'error');
-        }
+                document.getElementById('searchStatusBox').style.display = 'flex'; document.getElementById('foundNameText').innerText = `พบข้อมูลคุณ: ${res.name}`; document.getElementById('employeeInfoCard').style.display = 'block'; document.querySelector('.search-card').classList.remove('missing-alert');
+            } else showGenericAlert('ไม่พบข้อมูล', 'ไม่พบรหัสพนักงานนี้ในระบบ', 'error');
+        } catch (err) { showLoading(false); showGenericAlert('Error', err, 'error'); }
     }
 
     function calc(){ 
         if(currentSurveyType !== 'engagement') return;
         let checkedInputs = document.querySelectorAll('.eng-radio:checked'); 
-        let totalScore = 0; 
-        checkedInputs.forEach(r => totalScore += parseInt(r.value)); 
+        let totalScore = 0; checkedInputs.forEach(r => totalScore += parseInt(r.value)); 
         const percent = totalScore; 
-          
-        document.getElementById('scoreNum').innerText = totalScore; 
-        document.getElementById('percentText').innerText = `(${percent}%)`; 
-          
+        document.getElementById('scoreNum').innerText = totalScore; document.getElementById('percentText').innerText = `(${percent}%)`; 
         const scoreResult = document.getElementById('scoreResult');
-        if(percent>=80) { scoreResult.innerText = "ดีเยี่ยม"; scoreResult.className="fw-bold text-success"; }
-        else if(percent>=75) { scoreResult.innerText = "ดี"; scoreResult.className="fw-bold text-primary"; }
-        else if(percent>=65) { scoreResult.innerText = "เฝ้าระวัง"; scoreResult.className="fw-bold text-secondary"; }
-        else if(percent>=55) { scoreResult.innerText = "เสี่ยง"; scoreResult.className="fw-bold text-warning"; }
-        else { scoreResult.innerText = "วิกฤต"; scoreResult.className="fw-bold text-danger"; }
-
+        if(percent>=80) { scoreResult.innerText = "ดีเยี่ยม"; scoreResult.className="fw-bold text-success"; } else if(percent>=75) { scoreResult.innerText = "ดี"; scoreResult.className="fw-bold text-primary"; } else if(percent>=65) { scoreResult.innerText = "เฝ้าระวัง"; scoreResult.className="fw-bold text-secondary"; } else if(percent>=55) { scoreResult.innerText = "เสี่ยง"; scoreResult.className="fw-bold text-warning"; } else { scoreResult.innerText = "วิกฤต"; scoreResult.className="fw-bold text-danger"; }
         document.getElementById('liveScoreDisplay').innerText = totalScore;
-          
-        const progressBar = document.getElementById('progressBar'); 
-        progressBar.style.width = percent + '%'; 
-        
-        let bg = 'bg-danger'; 
-        if(percent>=80) bg='bg-success'; 
-        else if(percent>=75) bg='bg-primary'; 
-        else if(percent>=65) bg='bg-secondary'; 
-        else if(percent>=55) bg='bg-warning'; 
-        
+        const progressBar = document.getElementById('progressBar'); progressBar.style.width = percent + '%'; 
+        let bg = 'bg-danger'; if(percent>=80) bg='bg-success'; else if(percent>=75) bg='bg-primary'; else if(percent>=65) bg='bg-secondary'; else if(percent>=55) bg='bg-warning'; 
         progressBar.className = `progress-bar ${bg}`;
     }
 
     function submitForm(e){ 
         e.preventDefault(); 
-        if(!document.getElementById('empId').value) { 
-            showGenericAlert('ยังไม่มีข้อมูลพนักงาน', 'กรุณาระบุรหัสและค้นหาพนักงานก่อน', 'warning'); 
-            document.querySelector('.search-card').scrollIntoView({behavior: 'smooth', block: 'center'});
-            document.querySelector('.search-card').classList.add('missing-alert');
-            document.getElementById('searchKey').focus();
-            return; 
-        } 
-          
-        let missingCount = 0; 
-        let firstMissing = null; 
-
+        if(!document.getElementById('empId').value) { showGenericAlert('ยังไม่มีข้อมูล', 'กรุณาค้นหาพนักงานก่อน', 'warning'); return; } 
+        let missingCount = 0; let firstMissing = null; 
         if(currentSurveyType === 'engagement') {
-            categories.forEach(cat => { 
-                cat.items.forEach((it, idx) => { 
-                    const id = `${cat.id}_${idx+1}`; 
-                    const checked = document.querySelector(`input[name="s_${id}"]:checked`); 
-                    if(!checked){ 
-                        missingCount++; 
-                        const row = document.getElementById(`row_${id}`); 
-                        row.classList.add('missing-alert'); 
-                        if(!firstMissing) firstMissing = row; 
-                    } 
-                }); 
-            }); 
-            if(missingCount > 0) { 
-                showGenericAlert('ข้อมูลไม่ครบ', `กรุณาตอบคำถามให้ครบถ้วน (ขาด ${missingCount} ข้อ)`, 'warning'); 
-                if(firstMissing) firstMissing.scrollIntoView({behavior: "smooth", block: "center"});
-                return; 
-            }
-        } else if(currentSurveyType === 'welfare') {
-            // Check required fields for Welfare
-            const chkNodes = [
-                { q: document.querySelector('input[name="w_aware"]:checked'), div: document.getElementById('welfarePart1').children[0] },
-                { q: document.querySelector('input[name="w_channel"]:checked'), div: document.getElementById('welfarePart1').children[1] },
-                { q: document.querySelectorAll('input[name="w_top"]:checked').length > 0, div: document.getElementById('welfarePart2').children[0] },
-                { q: document.querySelector('input[name="w_inc_aware"]:checked'), div: document.getElementById('welfarePart3').children[1] },
-                { q: document.querySelector('input[name="w_inc_und"]:checked'), div: document.getElementById('welfarePart3').children[2] },
-                { q: document.querySelector('input[name="w_inc_sat"]:checked'), div: document.getElementById('welfarePart3').children[3] }
-            ];
-
-            chkNodes.forEach(node => {
-                if(!node.q) {
-                    missingCount++;
-                    node.div.classList.add('missing-alert');
-                    if(!firstMissing) firstMissing = node.div;
-                }
-            });
-
-            if(missingCount > 0) {
-                showGenericAlert('ข้อมูลไม่ครบ', 'กรุณาตอบข้อที่มีเครื่องหมาย * ให้ครบถ้วน', 'warning');
-                if(firstMissing) firstMissing.scrollIntoView({behavior: "smooth", block: "center"});
-                return;
-            }
+            categories.forEach(cat => { cat.items.forEach((it, idx) => { const id = `${cat.id}_${idx+1}`; if(!document.querySelector(`input[name="s_${id}"]:checked`)){ missingCount++; const row = document.getElementById(`row_${id}`); row.classList.add('missing-alert'); if(!firstMissing) firstMissing = row; } }); }); 
+            if(missingCount > 0) { showGenericAlert('ข้อมูลไม่ครบ', `ขาด ${missingCount} ข้อ`, 'warning'); if(firstMissing) firstMissing.scrollIntoView({behavior: "smooth", block: "center"}); return; }
+        } else {
+            const chkNodes = [ { q: document.querySelector('input[name="w_aware"]:checked'), div: document.getElementById('welfarePart1').children[0] }, { q: document.querySelector('input[name="w_channel"]:checked'), div: document.getElementById('welfarePart1').children[1] }, { q: document.querySelectorAll('input[name="w_top"]:checked').length > 0, div: document.getElementById('welfarePart2').children[0] }, { q: document.querySelector('input[name="w_inc_aware"]:checked'), div: document.getElementById('welfarePart3').children[1] }, { q: document.querySelector('input[name="w_inc_und"]:checked'), div: document.getElementById('welfarePart3').children[2] }, { q: document.querySelector('input[name="w_inc_sat"]:checked'), div: document.getElementById('welfarePart3').children[3] } ];
+            chkNodes.forEach(node => { if(!node.q) { missingCount++; node.div.classList.add('missing-alert'); if(!firstMissing) firstMissing = node.div; } });
+            if(missingCount > 0) { showGenericAlert('ข้อมูลไม่ครบ', 'กรุณาตอบข้อที่มี * ให้ครบ', 'warning'); if(firstMissing) firstMissing.scrollIntoView({behavior: "smooth", block: "center"}); return; }
         }
-          
         document.getElementById('confirmOverlay').classList.add('active'); 
     }
 
     async function processRealSubmit() {
-       closeConfirmBox();
-       showLoading(true, 'กำลังบันทึกข้อมูล...');
-
-       let payload = {
-         empId: document.getElementById('empId').value,
-         inspector: document.getElementById('inspector').value,
-         affiliation: document.getElementById('affiliation').value,
-         branch: document.getElementById('branch').value,
-         position: document.getElementById('position').value,
-         department: document.getElementById('department').value,
-         inspectDate: document.getElementById('inspectDate').value,
-       };
-
+       closeConfirmBox(); showLoading(true, 'กำลังบันทึก...');
+       let payload = { empId: document.getElementById('empId').value, inspector: document.getElementById('inspector').value, affiliation: document.getElementById('affiliation').value, branch: document.getElementById('branch').value, position: document.getElementById('position').value, department: document.getElementById('department').value, inspectDate: document.getElementById('inspectDate').value };
        let actionApi = '';
-
        if(currentSurveyType === 'engagement') {
-           let scores = {}; 
-           document.querySelectorAll('.eng-radio:checked').forEach(r => scores[r.name] = r.value);
-           
-           let catSuggestions = "";
-           categories.forEach(cat => {
-               const comment = document.getElementById(`comment_${cat.id}`).value.trim();
-               if(comment) catSuggestions += `[${cat.title.split(' ')[1]}]: ${comment}\n`;
-           });
-           const generalNote = document.getElementById('note_improvement').value.trim();
-           if(generalNote) catSuggestions += `[General]: ${generalNote}`;
-
-           payload.totalScore = parseFloat(document.getElementById('scoreNum').innerText); 
-           payload.percent = document.getElementById('percentText').innerText.replace(/[()%]/g,''); 
-           payload.scores = scores;
-           payload.note_improvement = catSuggestions; 
-           actionApi = 'processForm';
+           let scores = {}; document.querySelectorAll('.eng-radio:checked').forEach(r => scores[r.name] = r.value);
+           let catSuggestions = ""; categories.forEach(cat => { const comment = document.getElementById(`comment_${cat.id}`).value.trim(); if(comment) catSuggestions += `[${cat.title.split(' ')[1]}]: ${comment}\n`; });
+           const generalNote = document.getElementById('note_improvement').value.trim(); if(generalNote) catSuggestions += `[General]: ${generalNote}`;
+           payload.totalScore = parseFloat(document.getElementById('scoreNum').innerText); payload.percent = document.getElementById('percentText').innerText.replace(/[()%]/g,''); payload.scores = scores; payload.note_improvement = catSuggestions; actionApi = 'processForm';
        } else {
-           // Welfare mapping
-           payload.w_aware = document.querySelector('input[name="w_aware"]:checked').value;
-           payload.w_channel = document.querySelector('input[name="w_channel"]:checked').value;
-           payload.w_top = Array.from(document.querySelectorAll('input[name="w_top"]:checked')).map(el => el.value);
-           payload.w_inc_aware = document.querySelector('input[name="w_inc_aware"]:checked').value;
-           payload.w_inc_und = document.querySelector('input[name="w_inc_und"]:checked').value;
-           payload.w_inc_sat = document.querySelector('input[name="w_inc_sat"]:checked').value;
-           payload.w_inc_sug = document.getElementById('w_inc_sug').value.trim();
-           actionApi = 'processWelfareForm';
+           payload.w_aware = document.querySelector('input[name="w_aware"]:checked').value; payload.w_channel = document.querySelector('input[name="w_channel"]:checked').value; payload.w_top = Array.from(document.querySelectorAll('input[name="w_top"]:checked')).map(el => el.value); payload.w_inc_aware = document.querySelector('input[name="w_inc_aware"]:checked').value; payload.w_inc_und = document.querySelector('input[name="w_inc_und"]:checked').value; payload.w_inc_sat = document.querySelector('input[name="w_inc_sat"]:checked').value; payload.w_inc_sug = document.getElementById('w_inc_sug').value.trim(); actionApi = 'processWelfareForm';
        }
-
        try {
-           const res = await runApi(actionApi, { data: payload });
-           showLoading(false);
-           if(res.success){
-              showGenericAlert('สำเร็จ!', 'บันทึกข้อมูลเรียบร้อยแล้ว ขอบคุณที่สละเวลาครับ', 'success');
-              // Clear state after OK click
-              document.getElementById('alertCloseBtn').onclick = () => {
-                  closeCustomAlert();
-                  goHome(); 
-              };
-           } else { 
-              showGenericAlert('เกิดข้อผิดพลาด', res.message, 'error'); 
-           }
-       } catch (err) {
-           showLoading(false);
-           showGenericAlert('Error', 'การเชื่อมต่อขัดข้อง: ' + err, 'error');
-       }
+           const res = await runApi(actionApi, { data: payload }); showLoading(false);
+           if(res.success){ showGenericAlert('สำเร็จ!', 'บันทึกเรียบร้อย', 'success'); document.getElementById('alertCloseBtn').onclick = () => { closeCustomAlert(); goHome(); };
+           } else showGenericAlert('ข้อผิดพลาด', res.message, 'error'); 
+       } catch (err) { showLoading(false); showGenericAlert('Error', err, 'error'); }
     }
 
-    // --- Utility / UI Alert ---
-    function showLoading(show, text='กำลังดำเนินการ...') { 
-        document.getElementById('loadingText').innerText = text; 
-        document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; 
-    }
-
+    function showLoading(show, text='...') { document.getElementById('loadingText').innerText = text; document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; }
     function showGenericAlert(title, text, type='success'){ 
-        const box = document.getElementById('customAlertOverlay'); 
-        const iconEl = document.getElementById('alertIcon'); 
-        const closeBtn = document.getElementById('alertCloseBtn'); 
-          
-        document.getElementById('alertTitle').innerText = title; 
-        document.getElementById('alertText').innerText = text; 
-          
-        box.classList.add('active'); 
-          
-        iconEl.className = 'status-circle'; 
-        if(type === 'success'){ 
-            iconEl.classList.add('success-circle'); 
-            iconEl.innerHTML = '<i class="bi bi-check-lg"></i>'; 
-            closeBtn.className = 'btn btn-success rounded-pill w-100 mt-2'; 
-        } else if(type === 'error'){ 
-            iconEl.classList.add('error-circle'); 
-            iconEl.innerHTML = '<i class="bi bi-x-lg"></i>'; 
-            closeBtn.className = 'btn btn-danger rounded-pill w-100 mt-2'; 
-        } else if(type === 'warning') { 
-            iconEl.classList.add('warning-circle'); 
-            iconEl.innerHTML = '<i class="bi bi-exclamation-lg"></i>'; 
-            closeBtn.className = 'btn btn-warning text-dark rounded-pill w-100 mt-2'; 
-        } 
-        
-        // Reset onclick handler just in case it was modified by processRealSubmit
+        const box = document.getElementById('customAlertOverlay'); const iconEl = document.getElementById('alertIcon'); const closeBtn = document.getElementById('alertCloseBtn'); 
+        document.getElementById('alertTitle').innerText = title; document.getElementById('alertText').innerText = text; box.classList.add('active'); 
+        iconEl.className = 'status-circle'; if(type === 'success'){ iconEl.classList.add('success-circle'); iconEl.innerHTML = '<i class="bi bi-check-lg"></i>'; closeBtn.className = 'btn btn-success rounded-pill w-100 mt-2'; } else if(type === 'error'){ iconEl.classList.add('error-circle'); iconEl.innerHTML = '<i class="bi bi-x-lg"></i>'; closeBtn.className = 'btn btn-danger rounded-pill w-100 mt-2'; } else { iconEl.classList.add('warning-circle'); iconEl.innerHTML = '<i class="bi bi-exclamation-lg"></i>'; closeBtn.className = 'btn btn-warning text-dark rounded-pill w-100 mt-2'; } 
         closeBtn.onclick = closeCustomAlert;
     }
-      
     function closeCustomAlert() { document.getElementById('customAlertOverlay').classList.remove('active'); }
     function closeConfirmBox() { document.getElementById('confirmOverlay').classList.remove('active'); }
 
-    // --- Report System Login (HR) ---
-    function openReportLogin(){ 
-        const modal = new bootstrap.Modal(document.getElementById('passwordModal'));
-        modal.show(); 
-        document.getElementById('hrPassword').value = ''; 
-    }
+    // --- DASHBOARD LOGIC ---
+    function openReportLogin(){ const modal = new bootstrap.Modal(document.getElementById('passwordModal')); modal.show(); document.getElementById('hrPassword').value = ''; }
     function checkPassword(){ 
         const pass = document.getElementById('hrPassword').value; 
-        if(pass === 'HRJMT123'){ 
-            bootstrap.Modal.getInstance(document.getElementById('passwordModal')).hide(); 
-            document.getElementById('view-home').classList.remove('active');
-            setTimeout(() => { document.getElementById('view-dashboard').classList.add('active'); fetchReportData(); }, 300); 
-        } else { 
-            showGenericAlert('รหัสผ่านไม่ถูกต้อง', 'กรุณาตรวจสอบรหัสผ่านและลองใหม่อีกครั้ง', 'error');
-            document.getElementById('hrPassword').value = ''; 
-        } 
+        if(pass === 'HRJMT123'){ bootstrap.Modal.getInstance(document.getElementById('passwordModal')).hide(); document.getElementById('view-home').classList.remove('active'); setTimeout(() => { document.getElementById('view-dashboard').classList.add('active'); fetchReportData(); }, 300); } else { showGenericAlert('รหัสผ่านไม่ถูกต้อง', 'ลองใหม่อีกครั้ง', 'error'); document.getElementById('hrPassword').value = ''; } 
     }
 
-    // --- Mock Report Data Fetcher (ฟังก์ชัน Dashboard เดิม ไม่ถูกตัดออก) ---
-    let reportDataInstance;
+    function switchDashTab(tab) {
+        activeDashTab = tab;
+        document.getElementById('tabBtnEng').className = tab === 'eng' ? 'btn tab-btn active flex-fill fs-5' : 'btn tab-btn flex-fill fs-5';
+        document.getElementById('tabBtnWel').className = tab === 'wel' ? 'btn tab-btn active flex-fill fs-5' : 'btn tab-btn flex-fill fs-5';
+        document.getElementById('dashEngContent').style.display = tab === 'eng' ? 'block' : 'none';
+        document.getElementById('dashWelContent').style.display = tab === 'wel' ? 'block' : 'none';
+        applyFilters(); 
+    }
+
     async function fetchReportData() {
-        showLoading(true, 'กำลังโหลด Dashboard...');
+        showLoading(true, 'กำลังดึงข้อมูล...');
         try {
-            // สมมติว่าในระบบจริง มีการดึง getReportData ผ่าน runApi('getReportData') แล้วไป render Dashboard
-            // โค้ดส่วนนี้ไม่ได้ถูกแก้ไขตามคำสั่ง
-            showLoading(false);
-        } catch(e) {
-            showLoading(false);
-            showGenericAlert('Error', e.toString(), 'error');
+            const res = await runApi('getReportData'); showLoading(false);
+            if(res.success) {
+                allReportData = res.data || []; allWelfareData = res.welfareData || []; allBranchTotals = res.branchTotals || {}; 
+                initFilters(); applyFilters(); 
+            } else alert('Error');
+        } catch (err) { showLoading(false); alert('Error: ' + err); }
+    }
+
+    function initFilters() {
+        const renderMultiSelect = (containerId, data) => {
+            const container = document.getElementById(containerId); const uniqueId = containerId + '_Dropdown';
+            let html = `<button class="btn btn-white custom-dropdown-btn w-100 rounded-pill" type="button" id="${uniqueId}" data-bs-toggle="dropdown" aria-expanded="false">ทั้งหมด</button><div class="dropdown-menu dropdown-menu-scrollable shadow" aria-labelledby="${uniqueId}"><div class="px-2 pb-2 mb-2 border-bottom"><input type="text" class="form-control form-control-sm mb-2" placeholder="ค้นหา..." onkeyup="filterDropdownList(this)"><div class="form-check"><input class="form-check-input select-all-chk" type="checkbox" checked id="all_${containerId}" onchange="toggleSelectAll('${containerId}', this.checked)"><label class="form-check-label small fw-bold" for="all_${containerId}">เลือกทั้งหมด</label></div></div><div class="list-container">`;
+            data.forEach((d, idx) => { const itemId = `${containerId}_item_${idx}`; html += `<div class="dropdown-item-text"><div class="form-check"><input class="form-check-input item-chk" type="checkbox" checked value="${d}" id="${itemId}" onchange="updateDropdownLabel('${containerId}')"><label class="form-check-label small" for="${itemId}">${d}</label></div></div>`; });
+            container.innerHTML = html + `</div></div>`;
+            container.addEventListener('click', e => e.stopPropagation());
+        };
+        // Use combined unique values from both sets for filters
+        let combined = [...allReportData, ...allWelfareData];
+        const depts = [...new Set(combined.map(d => d.department))].filter(Boolean).sort();
+        const branches = [...new Set(combined.map(d => d.branch))].filter(Boolean).sort();
+        const positions = [...new Set(combined.map(d => d.position))].filter(Boolean).sort();
+        const affiliations = [...new Set(combined.map(d => d.affiliation))].filter(Boolean).sort();
+        const statuses = [...new Set(combined.map(d => d.statusEmployee))].filter(Boolean).sort();
+
+        renderMultiSelect('filterDeptContainer', depts); renderMultiSelect('filterBranchContainer', branches); renderMultiSelect('filterPositionContainer', positions); renderMultiSelect('filterAffiliationContainer', affiliations); renderMultiSelect('filterStatusContainer', statuses);
+    }
+    function filterDropdownList(input) { const filter = input.value.toLowerCase(); input.closest('.dropdown-menu').querySelectorAll('.dropdown-item-text').forEach(item => { item.style.display = item.textContent.toLowerCase().indexOf(filter) > -1 ? '' : 'none'; }); }
+    function toggleSelectAll(containerId, checked) { document.getElementById(containerId).querySelectorAll('.item-chk').forEach(cb => { if(cb.closest('.dropdown-item-text').style.display !== 'none') cb.checked = checked; }); updateDropdownLabel(containerId); }
+    function updateDropdownLabel(containerId) { const container = document.getElementById(containerId); const allChk = container.querySelector('.select-all-chk'); const checkboxes = container.querySelectorAll('.item-chk'); const checkedCount = container.querySelectorAll('.item-chk:checked').length; const btn = container.querySelector('.custom-dropdown-btn'); if(checkedCount === checkboxes.length) { allChk.checked = true; allChk.indeterminate = false; btn.innerText = "ทั้งหมด"; } else if(checkedCount === 0) { allChk.checked = false; allChk.indeterminate = false; btn.innerText = "ไม่ได้เลือก"; } else { allChk.checked = false; allChk.indeterminate = true; btn.innerText = `เลือก ${checkedCount} รายการ`; } }
+    function getSelectedValues(containerId) { return Array.from(document.getElementById(containerId).querySelectorAll('.item-chk:checked')).map(cb => cb.value); }
+
+    function applyFilters() { 
+        const start = document.getElementById('filterStartDate').value; const end = document.getElementById('filterEndDate').value; 
+        const searchId = document.getElementById('filterEmpId').value.toLowerCase().trim(); const searchName = document.getElementById('filterName').value.toLowerCase().trim(); 
+        const sAffs = getSelectedValues('filterAffiliationContainer'); const sDepts = getSelectedValues('filterDeptContainer'); const sBrs = getSelectedValues('filterBranchContainer'); const sPos = getSelectedValues('filterPositionContainer'); const sStats = getSelectedValues('filterStatusContainer');
+        const unique = document.getElementById('uniqueFilterToggle').checked;
+
+        const doFilter = (dataset) => {
+            let res = dataset.filter(item => {
+                let d = item.inspectDate;
+                return (!start || d >= start) && (!end || d <= end) && sDepts.includes(item.department) && sBrs.includes(item.branch) && sPos.includes(item.position) && sAffs.includes(item.affiliation) && sStats.includes(item.statusEmployee) && item.name.toLowerCase().includes(searchName) && item.empId.toLowerCase().includes(searchId);
+            });
+            if(unique) {
+                const map = new Map();
+                res.forEach(item => {
+                    if(!map.has(item.empId)) map.set(item.empId, item);
+                    else {
+                        // For Engagement: Keep highest score. For Welfare: Keep latest.
+                        if(item.score !== undefined) { if(item.score > map.get(item.empId).score) map.set(item.empId, item); }
+                        else { map.set(item.empId, item); } // Assumes naturally sorted by latest row if we just overwrite
+                    }
+                });
+                res = Array.from(map.values());
+            }
+            return res;
+        };
+
+        if(activeDashTab === 'eng') {
+            currentFilteredData = doFilter(allReportData);
+            renderEngDashboard(currentFilteredData);
+        } else {
+            currentFilteredWelfareData = doFilter(allWelfareData);
+            renderWelDashboard(currentFilteredWelfareData);
         }
     }
+
+    // --- ENGAGEMENT DASHBOARD RENDER ---
+    function renderEngDashboard(data) {
+        document.getElementById('valTotalCount').innerText = data.length; 
+        const avgScore = data.length ? (data.reduce((a,b) => a + b.score, 0) / data.length) : 0; 
+        const avgPercent = data.length ? (data.reduce((a,b) => a + b.percent, 0) / data.length) : 0; 
+        document.getElementById('valAvgScore').innerText = avgScore.toFixed(2); 
+        document.getElementById('valAvgPercent').innerText = avgPercent.toFixed(0) + '%'; 
+          
+        if (dataTableInstance) dataTableInstance.destroy(); 
+        const tbody = document.getElementById('tableBody'); 
+        tbody.innerHTML = data.map(r => `<tr><td>${r.inspectDate}</td><td><div class="fw-bold">${r.name}</div><div class="small text-muted">${r.empId}</div></td><td>${r.branch || '-'}</td><td><span class="fw-bold text-primary">${r.score}</span></td><td><span class="badge rounded-pill ${r.grade.includes('Good')||r.grade.includes('Excellent')?'badge-grade-good':r.grade.includes('Risk')?'bg-warning text-dark':r.grade.includes('Critical')?'badge-grade-urgent':'bg-secondary text-white'}">${r.grade}</span></td><td><span class="d-inline-block text-truncate" style="max-width: 150px;">${r.suggestion || '-'}</span></td></tr>`).join(''); 
+        dataTableInstance = $('#dataTable').DataTable({ language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/th.json" }, order: [[0, 'desc']], pageLength: 5 }); 
+          
+        renderEngCharts(data);
+    }
+    
+    function renderEngCharts(data) {
+        // 1. Grade Chart
+        let counts = [0,0,0,0,0]; // Exc, Good, Watch, Risk, Crit
+        data.forEach(d => { let t=(d.grade||'').toLowerCase(); if(t.includes('exc')||t.includes('ดีเยี่ยม')) counts[0]++; else if(t.includes('good')||t.includes('ดี')) counts[1]++; else if(t.includes('watch')||t.includes('เฝ้า')) counts[2]++; else if(t.includes('risk')||t.includes('เสี่ยง')) counts[3]++; else counts[4]++; });
+        let gLabels = ['ดีเยี่ยม','ดี','เฝ้าระวัง','เสี่ยง','วิกฤต'], gCols = ['#22c55e','#3b82f6','#64748b','#eab308','#ef4444'], finalL=[], finalD=[], finalC=[];
+        counts.forEach((c,i)=>{ if(c>0){ finalL.push(gLabels[i]); finalD.push(c); finalC.push(gCols[i]); }});
+        if(gradeChartInstance) gradeChartInstance.destroy(); 
+        gradeChartInstance = new Chart(document.getElementById('gradeChart'), { type: 'doughnut', data: { labels: finalL, datasets: [{ data: finalD, backgroundColor: finalC }] }, options: { maintainAspectRatio: false, plugins: { legend: { position: 'right', labels:{boxWidth:10, font:{size:10}}} } } });
+
+        // 2. Trend
+        const mData = {}; [...data].sort((a,b)=>new Date(a.inspectDate)-new Date(b.inspectDate)).forEach(d=>{ let k = new Date(d.inspectDate).toLocaleString('th-TH',{month:'short',year:'2-digit'}); if(!mData[k]) mData[k]={sum:0,c:0}; mData[k].sum+=d.percent; mData[k].c++; });
+        let tL=Object.keys(mData), tV=tL.map(k=>(mData[k].sum/mData[k].c).toFixed(2));
+        if(trendChartInstance) trendChartInstance.destroy();
+        trendChartInstance = new Chart(document.getElementById('trendChart'), { type:'line', plugins:[ChartDataLabels], data:{labels:tL, datasets:[{label:'คะแนน (%)', data:tV, borderColor:'#b91c1c', backgroundColor:'rgba(185,28,28,0.1)', fill:true, tension:0.4}]}, options:{maintainAspectRatio:false, plugins:{datalabels:{align:'top', formatter:v=>v+'%'}}} });
+
+        // 3. Category
+        let catSums=[0,0,0,0,0,0], catC=[0,0,0,0,0,0], itemSums={}, itemC={};
+        categories.forEach(c=>c.items.forEach((it,i)=>{ itemSums[`s_${c.id}_${i+1}`]=0; itemC[`s_${c.id}_${i+1}`]=0; }));
+        data.forEach(d=>{ if(d.scores){ for(let k in d.scores){ let v=Number(d.scores[k]); if(k.includes('cat1')) {catSums[0]+=v; catC[0]++;} else if(k.includes('cat2')) {catSums[1]+=v; catC[1]++;} else if(k.includes('cat3')) {catSums[2]+=v; catC[2]++;} else if(k.includes('cat4')) {catSums[3]+=v; catC[3]++;} else if(k.includes('cat5')) {catSums[4]+=v; catC[4]++;} else if(k.includes('cat6')) {catSums[5]+=v; catC[5]++;} if(itemSums[k]!==undefined){itemSums[k]+=v; itemC[k]++;} } } });
+        let catAvg = catSums.map((s,i)=> catC[i]===0?0:((s/catC[i])/5*100).toFixed(1));
+        window.itemAverages = {}; categories.forEach(c=>{ window.itemAverages[c.id]=[]; c.items.forEach((it,i)=>{ let k=`s_${c.id}_${i+1}`; window.itemAverages[c.id].push(itemC[k]===0?0:((itemSums[k]/itemC[k])/5*100).toFixed(1)); }); });
+        if(categoryChartInstance) categoryChartInstance.destroy(); closeSubCategory();
+        categoryChartInstance = new Chart(document.getElementById('categoryChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:['Work&Role','Leadership','Career&Growth','Compensation','Environment','Communication'], datasets:[{data:catAvg, backgroundColor:['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#14b8a6']}]}, options:{indexAxis:'y', maintainAspectRatio:false, plugins:{legend:{display:false}, datalabels:{align:'end',anchor:'end',formatter:v=>v+'%'}}, onClick:(e,act)=>{ if(act.length>0){ let idx=act[0].index; renderSubCategoryChart(categories[idx], window.itemAverages[categories[idx].id]); } }} });
+
+        // 4. Risk
+        if(riskGroupChartInstance) riskGroupChartInstance.destroy();
+        riskGroupChartInstance = new Chart(document.getElementById('riskGroupChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:['ดีเยี่ยม','ดี','เฝ้าระวัง','เสี่ยง','วิกฤต'], datasets:[{data:counts, backgroundColor:['#22c55e','#3b82f6','#64748b','#eab308','#ef4444']}]}, options:{maintainAspectRatio:false, plugins:{legend:{display:false}, datalabels:{anchor:'end',align:'end'}}} });
+
+        // 5. Branch
+        let bD={}; data.forEach(d=>{ let b=d.branch||'Unknown'; if(!bD[b]) bD[b]={s:0,c:0}; bD[b].s+=d.percent; bD[b].c++; });
+        let bL=Object.keys(bD), bC=bL.map(l=>bD[l].c), bA=bL.map(l=>(bD[l].s/bD[l].c).toFixed(1));
+        if(branchChartInstance) branchChartInstance.destroy();
+        branchChartInstance = new Chart(document.getElementById('branchChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:bL, datasets:[{type:'line', label:'%', data:bA, borderColor:'#b91c1c', datalabels:{align:'top',formatter:v=>v+'%'}}, {type:'bar', label:'คน', data:bC, backgroundColor:'#cbd5e1', datalabels:{formatter:v=>v}}]}, options:{maintainAspectRatio:false} });
+    }
+
+    function renderSubCategoryChart(catInfo, avgData) {
+        document.getElementById('subCategoryContainer').style.display = 'block'; document.getElementById('subCategoryTitle').innerText = 'คะแนนรายข้อ: ' + catInfo.title; document.getElementById('subCategoryContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (subCategoryChartInstance) subCategoryChartInstance.destroy();
+        subCategoryChartInstance = new Chart(document.getElementById('subCategoryChart'), { type: 'bar', plugins: [ChartDataLabels], data: { labels: catInfo.items.map(t=>t.length>40?t.substring(0,40)+'...':t), datasets: [{ data: avgData, backgroundColor: '#60a5fa' }] }, options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { align: 'end', anchor: 'end', formatter: v => v+'%' } } } });
+    }
+    function closeSubCategory() { document.getElementById('subCategoryContainer').style.display = 'none'; }
+
+    // --- WELFARE DASHBOARD RENDER ---
+    function renderWelDashboard(data) {
+        document.getElementById('valWelCount').innerText = data.length;
+        if (welfareTableInstance) welfareTableInstance.destroy(); 
+        const tbody = document.getElementById('welTableBody'); 
+        tbody.innerHTML = data.map(r => `<tr><td>${r.inspectDate}</td><td><div class="fw-bold">${r.name}</div><div class="small text-muted">${r.empId}</div></td><td>${r.branch || '-'}</td><td>${r.w_aware}</td><td>${r.w_inc_aware}</td><td><span class="badge bg-info text-dark">ระดับ ${r.w_inc_sat}</span></td></tr>`).join(''); 
+        welfareTableInstance = $('#welfareTable').DataTable({ language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/th.json" }, order: [[0, 'desc']], pageLength: 5 }); 
+
+        // Charts
+        let tops = {}; let chans = {}; let incSats = {'5':0,'4':0,'3':0,'2':0,'1':0};
+        data.forEach(d => {
+            if(d.w_top) d.w_top.split(', ').forEach(t => { if(t) tops[t] = (tops[t]||0)+1; });
+            if(d.w_channel) chans[d.w_channel] = (chans[d.w_channel]||0)+1;
+            if(d.w_inc_sat) incSats[d.w_inc_sat] = (incSats[d.w_inc_sat]||0)+1;
+        });
+
+        // Top 5 Chart
+        let topSorted = Object.entries(tops).sort((a,b)=>b[1]-a[1]).slice(0,5);
+        if(welTopChartInst) welTopChartInst.destroy();
+        welTopChartInst = new Chart(document.getElementById('welTopChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:topSorted.map(x=>x[0].split('.')[0]), datasets:[{data:topSorted.map(x=>x[1]), backgroundColor:'#0284c7'}]}, options:{indexAxis:'y', maintainAspectRatio:false, plugins:{legend:{display:false},datalabels:{align:'end',anchor:'end'}}} });
+
+        // Channel Chart
+        if(welChannelChartInst) welChannelChartInst.destroy();
+        welChannelChartInst = new Chart(document.getElementById('welChannelChart'), { type:'doughnut', data:{labels:Object.keys(chans), datasets:[{data:Object.values(chans), backgroundColor:['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6']}]}, options:{maintainAspectRatio:false, plugins:{legend:{position:'bottom'}}} });
+
+        // Incentive Satisfaction Chart
+        if(welIncSatChartInst) welIncSatChartInst.destroy();
+        welIncSatChartInst = new Chart(document.getElementById('welIncSatChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:['5(มากสุด)','4','3','2','1(น้อยสุด)'], datasets:[{data:[incSats['5'],incSats['4'],incSats['3'],incSats['2'],incSats['1']], backgroundColor:'#eab308'}]}, options:{maintainAspectRatio:false, plugins:{legend:{display:false},datalabels:{align:'top',anchor:'end'}}} });
+    }
+
   </script>
 </body>
 </html>
