@@ -377,22 +377,23 @@
             </div>
 
             <div class="alert alert-info small mt-3 mb-4 rounded-4 shadow-sm border-0" style="background-color: #e0f2fe; color: #0369a1;">
-                <i class="bi bi-info-circle-fill me-2 fs-5 align-middle"></i> <b>หมายเหตุ:</b> ขอความร่วมมือพนักงานตอบข้อมูลให้ครบทุกหัวข้อย่อย เพื่อการพัฒนาสวัสดิการที่ตรงใจยิ่งขึ้น (ท่านสามารถเว้นว่างได้หากไม่ต้องการระบุ)
+                <i class="bi bi-info-circle-fill me-2 fs-5 align-middle"></i> <b>หมายเหตุ:</b> ขอความร่วมมือพนักงานตอบข้อมูลให้ครบทุกหัวข้อย่อย เพื่อการพัฒนาสวัสดิการที่ตรงใจยิ่งขึ้น<br>(ช่อง "หมายเหตุ" เพิ่มเติมสามารถเว้นว่างได้หากไม่ต้องการระบุ)
             </div>
 
             <div class="modern-card">
                 <div class="card-header-clean"><i class="bi bi-megaphone-fill text-warning"></i> ส่วนที่ 1: การรับรู้สวัสดิการ</div>
                 <div class="card-body-clean" id="welfarePart1">
-                    <div class="audit-row border-0">
-                        <div class="audit-title text-primary">1. ท่านเคยทราบหรือไม่ว่าบริษัทมีสวัสดิการข้างต้นครบทั้งหมด?</div>
+                    <div class="audit-row border-0" id="row_w_aware">
+                        <div class="audit-title text-primary">1. ท่านเคยทราบหรือไม่ว่าบริษัทมีสวัสดิการข้างต้นครบทั้งหมด? <span class="text-danger">*</span></div>
                         <div class="custom-radio-group row g-2">
                             <div class="col-12"><input type="radio" name="w_aware" id="aw1" value="ทราบทั้งหมด" class="d-none" onchange="clearError(this)"><label for="aw1">ทราบทั้งหมด</label></div>
                             <div class="col-12"><input type="radio" name="w_aware" id="aw2" value="ทราบเพียงบางอย่าง" class="d-none" onchange="clearError(this)"><label for="aw2">ทราบเพียงบางอย่าง</label></div>
                             <div class="col-12"><input type="radio" name="w_aware" id="aw3" value="ไม่ทราบเลย" class="d-none" onchange="clearError(this)"><label for="aw3">ไม่ทราบเลย</label></div>
                         </div>
+                        <div class="mt-2"><input type="text" class="form-control form-control-sm bg-light text-muted" id="w_aware_remark" placeholder="หมายเหตุเพิ่มเติม (ไม่บังคับ)..."></div>
                     </div>
-                    <div class="audit-row border-0 mt-3">
-                        <div class="audit-title text-primary">2. ท่านได้รับข้อมูลข่าวสารสวัสดิการผ่านช่องทางใดมากที่สุด?</div>
+                    <div class="audit-row border-0 mt-3" id="row_w_channel">
+                        <div class="audit-title text-primary">2. ท่านได้รับข้อมูลข่าวสารสวัสดิการผ่านช่องทางใดมากที่สุด? <span class="text-danger">*</span></div>
                         <div class="custom-radio-group row g-2">
                             <div class="col-6"><input type="radio" name="w_channel" id="ch1" value="Line" class="d-none" onchange="clearError(this)"><label for="ch1">Line</label></div>
                             <div class="col-6"><input type="radio" name="w_channel" id="ch2" value="ประกาศบริษัท" class="d-none" onchange="clearError(this)"><label for="ch2">ประกาศบริษัท</label></div>
@@ -400,32 +401,36 @@
                             <div class="col-6"><input type="radio" name="w_channel" id="ch4" value="เพื่อนร่วมงาน" class="d-none" onchange="clearError(this)"><label for="ch4">เพื่อนร่วมงาน</label></div>
                             <div class="col-12"><input type="radio" name="w_channel" id="ch5" value="ฝ่ายทรัพยากรบุคคล" class="d-none" onchange="clearError(this)"><label for="ch5">ฝ่ายทรัพยากรบุคคล</label></div>
                         </div>
+                        <div class="mt-2"><input type="text" class="form-control form-control-sm bg-light text-muted" id="w_channel_remark" placeholder="หมายเหตุเพิ่มเติม (ไม่บังคับ)..."></div>
                     </div>
                 </div>
             </div>
             <div class="modern-card">
                 <div class="card-header-clean"><i class="bi bi-heart-fill text-danger"></i> ส่วนที่ 2: ความพึงพอใจสวัสดิการ</div>
                 <div class="card-body-clean" id="welfarePart2">
-                    <div class="audit-row border-0">
-                        <div class="audit-title text-primary">สวัสดิการปัจจุบันข้อใดที่ท่านประทับใจที่สุด? (เลือกได้สูงสุด 3 ข้อ)</div>
+                    <div class="audit-row border-0" id="row_w_top">
+                        <div class="audit-title text-primary">สวัสดิการปัจจุบันข้อใดที่ท่านประทับใจที่สุด? (เลือกได้สูงสุด 3 ข้อ) <span class="text-danger">*</span></div>
                         <div class="custom-check-group row g-2" id="welfareTop3Boxes"></div>
+                        <div class="mt-2"><input type="text" class="form-control form-control-sm bg-light text-muted" id="w_top_remark" placeholder="หมายเหตุเพิ่มเติม (ไม่บังคับ)..."></div>
                     </div>
                 </div>
             </div>
             
             <div class="modern-card" style="border: 2px solid #b91c1c; display:none;" id="welfarePart3Container">
-                <div class="card-header-clean bg-danger text-white"><i class="bi bi-cash-coin"></i> หมวดเบี้ยขยัน (Incentive) - เฉพาะสายงานเร่งรัดหนี้สิน</div>
+                <div class="card-header-clean bg-danger text-white"><i class="bi bi-cash-coin"></i> หมวดเบี้ยขยัน - เฉพาะสายงานเร่งรัดหนี้สิน</div>
                 <div class="card-body-clean bg-white" id="welfarePart3">
-                    <div class="audit-row border-0">
-                        <div class="audit-title text-primary">1. ท่านเคยทราบหรือไม่ว่าบริษัทมีสวัสดิการเบี้ยขยัน?</div>
+                    <div class="alert alert-warning small"><i class="bi bi-exclamation-triangle-fill"></i> กรุณาตอบข้อมูลด้านล่าง หากท่านปฏิบัติงานในสายงานที่มีเบี้ยขยัน</div>
+                    <div class="audit-row border-0" id="row_w_inc_aware">
+                        <div class="audit-title text-primary">1. ท่านเคยทราบหรือไม่ว่าบริษัทมีสวัสดิการเบี้ยขยัน? <span class="text-danger">*</span></div>
                         <div class="custom-radio-group row g-2">
                             <div class="col-12"><input type="radio" name="w_inc_aware" id="ia1" value="ทราบทั้งหมด" class="d-none" onchange="clearError(this)"><label for="ia1">ทราบทั้งหมด</label></div>
                             <div class="col-12"><input type="radio" name="w_inc_aware" id="ia2" value="ทราบเพียงบางอย่าง" class="d-none" onchange="clearError(this)"><label for="ia2">ทราบเพียงบางอย่าง</label></div>
                             <div class="col-12"><input type="radio" name="w_inc_aware" id="ia3" value="ไม่ทราบเลย" class="d-none" onchange="clearError(this)"><label for="ia3">ไม่ทราบเลย</label></div>
                         </div>
+                        <div class="mt-2"><input type="text" class="form-control form-control-sm bg-light text-muted" id="w_inc_aware_remark" placeholder="หมายเหตุเพิ่มเติม (ไม่บังคับ)..."></div>
                     </div>
-                    <div class="audit-row border-0 mt-3">
-                        <div class="audit-title text-primary">2. การเข้าถึงข้อมูล: ท่านเข้าใจเกณฑ์การจ่าย "เบี้ยขยัน" ชัดเจนเพียงใด?</div>
+                    <div class="audit-row border-0 mt-3" id="row_w_inc_und">
+                        <div class="audit-title text-primary">2. การเข้าถึงข้อมูล: ท่านเข้าใจเกณฑ์การจ่าย "เบี้ยขยัน" ชัดเจนเพียงใด? <span class="text-danger">*</span></div>
                         <div class="custom-radio-group row g-2">
                             <div class="col-12"><input type="radio" name="w_inc_und" id="iu5" value="5" class="d-none" onchange="clearError(this)"><label for="iu5"><b>5 คะแนน:</b> เข้าใจดีเยี่ยม</label></div>
                             <div class="col-12"><input type="radio" name="w_inc_und" id="iu4" value="4" class="d-none" onchange="clearError(this)"><label for="iu4"><b>4 คะแนน:</b> เข้าใจดี</label></div>
@@ -433,9 +438,10 @@
                             <div class="col-12"><input type="radio" name="w_inc_und" id="iu2" value="2" class="d-none" onchange="clearError(this)"><label for="iu2"><b>2 คะแนน:</b> เข้าใจน้อย</label></div>
                             <div class="col-12"><input type="radio" name="w_inc_und" id="iu1" value="1" class="d-none" onchange="clearError(this)"><label for="iu1"><b>1 คะแนน:</b> ไม่เข้าใจเลย/ไม่เคยทราบ</label></div>
                         </div>
+                        <div class="mt-2"><input type="text" class="form-control form-control-sm bg-light text-muted" id="w_inc_und_remark" placeholder="หมายเหตุเพิ่มเติม (ไม่บังคับ)..."></div>
                     </div>
-                    <div class="audit-row border-0 mt-3">
-                        <div class="audit-title text-primary">3. ความพึงพอใจ: อัตราเบี้ยขยันช่วยกระตุ้นให้อยากทำยอดมากน้อยเพียงใด?</div>
+                    <div class="audit-row border-0 mt-3" id="row_w_inc_sat">
+                        <div class="audit-title text-primary">3. ความพึงพอใจ: อัตราเบี้ยขยันช่วยกระตุ้นให้อยากทำยอดมากน้อยเพียงใด? <span class="text-danger">*</span></div>
                         <div class="custom-radio-group row g-2">
                             <div class="col-12"><input type="radio" name="w_inc_sat" id="is5" value="5" class="d-none" onchange="clearError(this)"><label for="is5"><b>5 คะแนน:</b> มากที่สุด</label></div>
                             <div class="col-12"><input type="radio" name="w_inc_sat" id="is4" value="4" class="d-none" onchange="clearError(this)"><label for="is4"><b>4 คะแนน:</b> มาก</label></div>
@@ -443,6 +449,7 @@
                             <div class="col-12"><input type="radio" name="w_inc_sat" id="is2" value="2" class="d-none" onchange="clearError(this)"><label for="is2"><b>2 คะแนน:</b> น้อย</label></div>
                             <div class="col-12"><input type="radio" name="w_inc_sat" id="is1" value="1" class="d-none" onchange="clearError(this)"><label for="is1"><b>1 คะแนน:</b> น้อยที่สุด</label></div>
                         </div>
+                        <div class="mt-2"><input type="text" class="form-control form-control-sm bg-light text-muted" id="w_inc_sat_remark" placeholder="หมายเหตุเพิ่มเติม (ไม่บังคับ)..."></div>
                     </div>
                     <div class="audit-row border-0 mt-3">
                         <div class="audit-title text-primary">4. ข้อเสนอแนะ: สิ่งที่อยากให้ปรับปรุงในส่วนเบี้ยขยัน</div>
@@ -583,7 +590,7 @@
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyXQPqSzTpHdC_gBHG5K_MbmJN09MpkTXRejGxUu0oLIK-ujHtP53UUV42-1w4RcRnC9w/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxQLeIdF62dtGL__qS2Zyw3-O5ziy6SNSNIkRnuib-aaJghtbU3_llHOHbtSkrOqh2cjQ/exec'; 
 
     async function runApi(action, payload = {}) {
         return new Promise((resolve, reject) => {
@@ -800,7 +807,25 @@
         if(currentSurveyType === 'engagement') {
             categories.forEach(cat => { cat.items.forEach((it, idx) => { const id = `${cat.id}_${idx+1}`; if(!document.querySelector(`input[name="s_${id}"]:checked`)){ missingCount++; const row = document.getElementById(`row_${id}`); row.classList.add('missing-alert'); if(!firstMissing) firstMissing = row; } }); }); 
             if(missingCount > 0) { showGenericAlert('ข้อมูลไม่ครบ', `ขาด ${missingCount} ข้อ`, 'warning'); if(firstMissing) firstMissing.scrollIntoView({behavior: "smooth", block: "center"}); return; }
-        } 
+        } else {
+            let dept = document.getElementById('department').value || '';
+            let isIncEligible = dept.includes('ซื้อหนี้') || dept.includes('รับจ้าง');
+
+            const chkNodes = [ 
+                { q: document.querySelector('input[name="w_aware"]:checked'), div: document.getElementById('row_w_aware') }, 
+                { q: document.querySelector('input[name="w_channel"]:checked'), div: document.getElementById('row_w_channel') }, 
+                { q: document.querySelectorAll('input[name="w_top"]:checked').length > 0, div: document.getElementById('row_w_top') } 
+            ];
+            
+            if (isIncEligible) {
+                chkNodes.push({ q: document.querySelector('input[name="w_inc_aware"]:checked'), div: document.getElementById('row_w_inc_aware') });
+                chkNodes.push({ q: document.querySelector('input[name="w_inc_und"]:checked'), div: document.getElementById('row_w_inc_und') });
+                chkNodes.push({ q: document.querySelector('input[name="w_inc_sat"]:checked'), div: document.getElementById('row_w_inc_sat') });
+            }
+
+            chkNodes.forEach(node => { if(!node.q) { missingCount++; node.div.classList.add('missing-alert'); if(!firstMissing) firstMissing = node.div; } });
+            if(missingCount > 0) { showGenericAlert('ข้อมูลไม่ครบ', 'กรุณาตอบข้อที่มี * ให้ครบ', 'warning'); if(firstMissing) firstMissing.scrollIntoView({behavior: "smooth", block: "center"}); return; }
+        }
         document.getElementById('confirmOverlay').classList.add('active'); 
     }
 
@@ -814,19 +839,26 @@
            const generalNote = document.getElementById('note_improvement').value.trim(); if(generalNote) catSuggestions += `[General]: ${generalNote}`;
            payload.totalScore = parseFloat(document.getElementById('scoreNum').innerText); payload.percent = document.getElementById('percentText').innerText.replace(/[()%]/g,''); payload.scores = scores; payload.note_improvement = catSuggestions; actionApi = 'processForm';
        } else {
-           let w_aware = document.querySelector('input[name="w_aware"]:checked') ? document.querySelector('input[name="w_aware"]:checked').value : '';
-           let w_channel = document.querySelector('input[name="w_channel"]:checked') ? document.querySelector('input[name="w_channel"]:checked').value : '';
            let w_inc_aware = document.querySelector('input[name="w_inc_aware"]:checked') ? document.querySelector('input[name="w_inc_aware"]:checked').value : '';
            let w_inc_und = document.querySelector('input[name="w_inc_und"]:checked') ? document.querySelector('input[name="w_inc_und"]:checked').value : '';
            let w_inc_sat = document.querySelector('input[name="w_inc_sat"]:checked') ? document.querySelector('input[name="w_inc_sat"]:checked').value : '';
 
-           payload.w_aware = w_aware; 
-           payload.w_channel = w_channel; 
+           payload.w_aware = document.querySelector('input[name="w_aware"]:checked').value; 
+           payload.w_channel = document.querySelector('input[name="w_channel"]:checked').value; 
            payload.w_top = Array.from(document.querySelectorAll('input[name="w_top"]:checked')).map(el => el.value); 
            payload.w_inc_aware = w_inc_aware; 
            payload.w_inc_und = w_inc_und; 
            payload.w_inc_sat = w_inc_sat; 
            payload.w_inc_sug = document.getElementById('w_inc_sug').value.trim(); 
+           
+           // ส่งค่าหมายเหตุเพิ่มเติมทั้ง 6 ข้อ
+           payload.w_aware_remark = document.getElementById('w_aware_remark') ? document.getElementById('w_aware_remark').value.trim() : '';
+           payload.w_channel_remark = document.getElementById('w_channel_remark') ? document.getElementById('w_channel_remark').value.trim() : '';
+           payload.w_top_remark = document.getElementById('w_top_remark') ? document.getElementById('w_top_remark').value.trim() : '';
+           payload.w_inc_aware_remark = document.getElementById('w_inc_aware_remark') ? document.getElementById('w_inc_aware_remark').value.trim() : '';
+           payload.w_inc_und_remark = document.getElementById('w_inc_und_remark') ? document.getElementById('w_inc_und_remark').value.trim() : '';
+           payload.w_inc_sat_remark = document.getElementById('w_inc_sat_remark') ? document.getElementById('w_inc_sat_remark').value.trim() : '';
+
            actionApi = 'processWelfareForm';
        }
        try {
@@ -1181,11 +1213,17 @@
                 "สาขา": row.branch,
                 "สถานะทำงาน": row.statusEmployee,
                 "การรับรู้สวัสดิการภาพรวม": row.w_aware,
+                "หมายเหตุ (การรับรู้สวัสดิการ)": row.w_aware_remark,
                 "ช่องทางรับข่าวสารหลัก": row.w_channel,
+                "หมายเหตุ (ช่องทางข่าวสาร)": row.w_channel_remark,
                 "สวัสดิการที่ประทับใจ (Top 3)": row.w_top,
+                "หมายเหตุ (สวัสดิการที่ประทับใจ)": row.w_top_remark,
                 "การรับรู้เบี้ยขยัน": row.w_inc_aware,
+                "หมายเหตุ (การรับรู้เบี้ยขยัน)": row.w_inc_aware_remark,
                 "ความเข้าใจเกณฑ์เบี้ยขยัน (1-5)": row.w_inc_und,
+                "หมายเหตุ (ความเข้าใจเกณฑ์เบี้ยขยัน)": row.w_inc_und_remark,
                 "ความพึงพอใจอัตราเบี้ยขยัน (1-5)": row.w_inc_sat,
+                "หมายเหตุ (ความพึงพอใจเบี้ยขยัน)": row.w_inc_sat_remark,
                 "ข้อเสนอแนะเบี้ยขยัน": row.w_inc_sug
             }));
             const ws = XLSX.utils.json_to_sheet(dataToExport);
