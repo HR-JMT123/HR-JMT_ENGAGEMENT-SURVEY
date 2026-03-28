@@ -195,6 +195,26 @@
     </div>
   </div>
 
+  <div class="modal fade" id="empIdInputModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header border-0 pb-0">
+           <h5 class="modal-title fw-bold text-primary"><i class="bi bi-person-vcard-fill me-2"></i>ระบุรหัสพนักงาน</h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4 pt-3 text-center">
+           <p class="text-muted small mb-3">กรุณากรอกรหัสพนักงานของท่านเพื่อเข้าสู่แบบสำรวจ</p>
+           <div class="mb-4">
+              <input type="text" class="form-control form-control-lg text-center rounded-pill" id="homeSearchKey" placeholder="กรอกรหัสพนักงาน..." onkeydown="if(event.key === 'Enter'){event.preventDefault(); verifyEmpIdAndGo();}">
+           </div>
+           <button class="btn btn-primary w-100 rounded-pill shadow-sm fw-bold py-2" onclick="verifyEmpIdAndGo()">
+             เข้าสู่แบบสำรวจ <i class="bi bi-arrow-right ms-1"></i>
+           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal fade" id="configModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content rounded-4 border-0 shadow-lg">
@@ -286,29 +306,11 @@
 
     <div class="main-container">
       <form id="mainForm" onsubmit="submitForm(event)">
-        <div class="search-card">
-          <div class="d-flex align-items-center mb-3">
-                <i class="bi bi-search text-danger fs-5 me-2"></i>
-                <h5 class="m-0 fw-bold text-secondary">ค้นหาข้อมูลพนักงาน</h5>
-          </div>
-          <div class="custom-search-group">
-              <input type="text" class="search-input" id="searchKey" 
-                     placeholder="ระบุรหัสพนักงาน..." 
-                     onkeydown="if(event.key === 'Enter'){event.preventDefault(); searchStaff();}">
-              <button type="button" class="btn-search-icon" onclick="searchStaff()">
-                  <i class="bi bi-search"></i>
-              </button>
-          </div>
-          <div class="status-box" id="searchStatusBox" style="display:none; margin-top: 15px; background: #d1e7dd; color: #0f5132; padding: 10px; border-radius: 10px; align-items: center; gap: 10px;">
-              <i class="bi bi-check-circle-fill fs-4"></i>
-              <div>
-                  <div class="fw-bold">พบข้อมูลพนักงาน</div>
-                  <div class="small text-success" id="foundNameText">ระบบดึงข้อมูลลงแบบฟอร์มแล้ว</div>
-              </div>
-          </div>
+        <div class="search-card" style="display:none;">
+          <input type="text" class="search-input" id="searchKey" placeholder="ระบุรหัสพนักงาน...">
         </div>
 
-        <div class="modern-card" id="employeeInfoCard" style="display:none;">
+        <div class="modern-card mt-3" id="employeeInfoCard" style="display:none;">
           <div class="card-header-clean"><i class="bi bi-person-circle fs-5"></i> ข้อมูลพนักงาน</div>
           <div class="card-body-clean">
             <div class="row g-3 mb-3">
@@ -373,11 +375,16 @@
                 <div class="card-header-clean bg-primary text-white"><i class="bi bi-gift fs-5"></i> รายการสวัสดิการ (Showcase)</div>
                 <div class="card-body-clean"><div id="welfareShowcase"></div></div>
             </div>
+
+            <div class="alert alert-info small mt-3 mb-4 rounded-4 shadow-sm border-0" style="background-color: #e0f2fe; color: #0369a1;">
+                <i class="bi bi-info-circle-fill me-2 fs-5 align-middle"></i> <b>หมายเหตุ:</b> ขอความร่วมมือพนักงานตอบข้อมูลให้ครบทุกหัวข้อย่อย เพื่อการพัฒนาสวัสดิการที่ตรงใจยิ่งขึ้น (ท่านสามารถเว้นว่างได้หากไม่ต้องการระบุ)
+            </div>
+
             <div class="modern-card">
                 <div class="card-header-clean"><i class="bi bi-megaphone-fill text-warning"></i> ส่วนที่ 1: การรับรู้สวัสดิการ</div>
                 <div class="card-body-clean" id="welfarePart1">
                     <div class="audit-row border-0">
-                        <div class="audit-title text-primary">1. ท่านเคยทราบหรือไม่ว่าบริษัทมีสวัสดิการข้างต้นครบทั้งหมด? <span class="text-danger">*</span></div>
+                        <div class="audit-title text-primary">1. ท่านเคยทราบหรือไม่ว่าบริษัทมีสวัสดิการข้างต้นครบทั้งหมด?</div>
                         <div class="custom-radio-group row g-2">
                             <div class="col-12"><input type="radio" name="w_aware" id="aw1" value="ทราบทั้งหมด" class="d-none" onchange="clearError(this)"><label for="aw1">ทราบทั้งหมด</label></div>
                             <div class="col-12"><input type="radio" name="w_aware" id="aw2" value="ทราบเพียงบางอย่าง" class="d-none" onchange="clearError(this)"><label for="aw2">ทราบเพียงบางอย่าง</label></div>
@@ -385,7 +392,7 @@
                         </div>
                     </div>
                     <div class="audit-row border-0 mt-3">
-                        <div class="audit-title text-primary">2. ท่านได้รับข้อมูลข่าวสารสวัสดิการผ่านช่องทางใดมากที่สุด? <span class="text-danger">*</span></div>
+                        <div class="audit-title text-primary">2. ท่านได้รับข้อมูลข่าวสารสวัสดิการผ่านช่องทางใดมากที่สุด?</div>
                         <div class="custom-radio-group row g-2">
                             <div class="col-6"><input type="radio" name="w_channel" id="ch1" value="Line" class="d-none" onchange="clearError(this)"><label for="ch1">Line</label></div>
                             <div class="col-6"><input type="radio" name="w_channel" id="ch2" value="ประกาศบริษัท" class="d-none" onchange="clearError(this)"><label for="ch2">ประกาศบริษัท</label></div>
@@ -400,7 +407,7 @@
                 <div class="card-header-clean"><i class="bi bi-heart-fill text-danger"></i> ส่วนที่ 2: ความพึงพอใจสวัสดิการ</div>
                 <div class="card-body-clean" id="welfarePart2">
                     <div class="audit-row border-0">
-                        <div class="audit-title text-primary">สวัสดิการปัจจุบันข้อใดที่ท่านประทับใจที่สุด? (เลือกได้สูงสุด 3 ข้อ) <span class="text-danger">*</span></div>
+                        <div class="audit-title text-primary">สวัสดิการปัจจุบันข้อใดที่ท่านประทับใจที่สุด? (เลือกได้สูงสุด 3 ข้อ)</div>
                         <div class="custom-check-group row g-2" id="welfareTop3Boxes"></div>
                     </div>
                 </div>
@@ -409,9 +416,8 @@
             <div class="modern-card" style="border: 2px solid #b91c1c; display:none;" id="welfarePart3Container">
                 <div class="card-header-clean bg-danger text-white"><i class="bi bi-cash-coin"></i> หมวดเบี้ยขยัน (Incentive) - เฉพาะสายงานเร่งรัดหนี้สิน</div>
                 <div class="card-body-clean bg-white" id="welfarePart3">
-                    <div class="alert alert-warning small"><i class="bi bi-exclamation-triangle-fill"></i> กรุณาตอบข้อมูลด้านล่าง หากท่านปฏิบัติงานในสายงานที่มีเบี้ยขยัน</div>
                     <div class="audit-row border-0">
-                        <div class="audit-title text-primary">1. ท่านเคยทราบหรือไม่ว่าบริษัทมีสวัสดิการเบี้ยขยัน? <span class="text-danger">*</span></div>
+                        <div class="audit-title text-primary">1. ท่านเคยทราบหรือไม่ว่าบริษัทมีสวัสดิการเบี้ยขยัน?</div>
                         <div class="custom-radio-group row g-2">
                             <div class="col-12"><input type="radio" name="w_inc_aware" id="ia1" value="ทราบทั้งหมด" class="d-none" onchange="clearError(this)"><label for="ia1">ทราบทั้งหมด</label></div>
                             <div class="col-12"><input type="radio" name="w_inc_aware" id="ia2" value="ทราบเพียงบางอย่าง" class="d-none" onchange="clearError(this)"><label for="ia2">ทราบเพียงบางอย่าง</label></div>
@@ -419,7 +425,7 @@
                         </div>
                     </div>
                     <div class="audit-row border-0 mt-3">
-                        <div class="audit-title text-primary">2. การเข้าถึงข้อมูล: ท่านเข้าใจเกณฑ์การจ่าย "เบี้ยขยัน" ชัดเจนเพียงใด? <span class="text-danger">*</span></div>
+                        <div class="audit-title text-primary">2. การเข้าถึงข้อมูล: ท่านเข้าใจเกณฑ์การจ่าย "เบี้ยขยัน" ชัดเจนเพียงใด?</div>
                         <div class="custom-radio-group row g-2">
                             <div class="col-12"><input type="radio" name="w_inc_und" id="iu5" value="5" class="d-none" onchange="clearError(this)"><label for="iu5"><b>5 คะแนน:</b> เข้าใจดีเยี่ยม</label></div>
                             <div class="col-12"><input type="radio" name="w_inc_und" id="iu4" value="4" class="d-none" onchange="clearError(this)"><label for="iu4"><b>4 คะแนน:</b> เข้าใจดี</label></div>
@@ -429,7 +435,7 @@
                         </div>
                     </div>
                     <div class="audit-row border-0 mt-3">
-                        <div class="audit-title text-primary">3. ความพึงพอใจ: อัตราเบี้ยขยันช่วยกระตุ้นให้อยากทำยอดมากน้อยเพียงใด? <span class="text-danger">*</span></div>
+                        <div class="audit-title text-primary">3. ความพึงพอใจ: อัตราเบี้ยขยันช่วยกระตุ้นให้อยากทำยอดมากน้อยเพียงใด?</div>
                         <div class="custom-radio-group row g-2">
                             <div class="col-12"><input type="radio" name="w_inc_sat" id="is5" value="5" class="d-none" onchange="clearError(this)"><label for="is5"><b>5 คะแนน:</b> มากที่สุด</label></div>
                             <div class="col-12"><input type="radio" name="w_inc_sat" id="is4" value="4" class="d-none" onchange="clearError(this)"><label for="is4"><b>4 คะแนน:</b> มาก</label></div>
@@ -577,7 +583,7 @@
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwjBcKkid5S2Xm5uvp41RjjFKjK6oR--b3Ib94MkSsui2GXyAx_oBimtxab6PjpuJxPTQ/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyXQPqSzTpHdC_gBHG5K_MbmJN09MpkTXRejGxUu0oLIK-ujHtP53UUV42-1w4RcRnC9w/exec'; 
 
     async function runApi(action, payload = {}) {
         return new Promise((resolve, reject) => {
@@ -666,32 +672,76 @@
     function openSurvey(type) {
         if(!surveyConfig[type]) { showGenericAlert('ปิดปรับปรุง', 'แบบสำรวจนี้ถูกปิดใช้งานชั่วคราว', 'warning'); return; }
         currentSurveyType = type;
-        document.getElementById('view-home').classList.remove('active');
-        document.getElementById('view-survey').classList.add('active');
+        
         document.forms['mainForm'].reset();
-        document.getElementById('employeeInfoCard').style.display = 'none';
-        document.getElementById('searchStatusBox').style.display = 'none';
-        document.getElementById('welfarePart3Container').style.display = 'none'; 
-        document.getElementById('inspectDate').valueAsDate = new Date();
-        document.querySelectorAll('.missing-alert').forEach(el => el.classList.remove('missing-alert'));
-        document.getElementById('searchKey').value = '';
+        document.getElementById('homeSearchKey').value = '';
+        
+        new bootstrap.Modal(document.getElementById('empIdInputModal')).show();
+    }
 
-        if(type === 'engagement') {
-            document.getElementById('surveyMainTitle').innerText = 'ENGAGEMENT SURVEY';
-            document.getElementById('surveySubTitle').innerText = 'แบบสำรวจความผูกพันพนักงาน';
-            document.getElementById('engagementContent').style.display = 'block';
-            document.getElementById('welfareContent').style.display = 'none';
-            toggleFloatingScore(true); calc();
-        } else if(type === 'welfare') {
-            document.getElementById('surveyMainTitle').innerText = 'WELFARE SURVEY';
-            document.getElementById('surveySubTitle').innerText = 'แบบสำรวจสวัสดิการพนักงาน';
-            document.getElementById('engagementContent').style.display = 'none';
-            document.getElementById('welfareContent').style.display = 'block';
-            toggleFloatingScore(false);
+    async function verifyEmpIdAndGo() {
+        const key = document.getElementById('homeSearchKey').value.trim();
+        if(!key) { showGenericAlert('แจ้งเตือน', 'กรุณาระบุรหัสพนักงาน', 'warning'); return; }
+        
+        showLoading(true, 'กำลังค้นหาข้อมูลพนักงาน...');
+        try {
+            const res = await runApi('searchEmployee', { keyword: key });
+            showLoading(false);
+            if(res.found) {
+                bootstrap.Modal.getInstance(document.getElementById('empIdInputModal')).hide();
+                
+                document.getElementById('view-home').classList.remove('active');
+                document.getElementById('view-survey').classList.add('active');
+                
+                document.getElementById('empId').value = res.empId; 
+                document.getElementById('inspector').value = res.name; 
+                document.getElementById('affiliation').value = res.affiliation; 
+                document.getElementById('branch').value = res.branch; 
+                document.getElementById('position').value = res.position; 
+                document.getElementById('department').value = res.department; 
+                document.getElementById('startDate').value = res.startDate; 
+                document.getElementById('inspectDate').valueAsDate = new Date();
+                
+                document.getElementById('employeeInfoCard').style.display = 'block';
+
+                document.querySelectorAll('.missing-alert').forEach(el => el.classList.remove('missing-alert'));
+
+                if(currentSurveyType === 'engagement') {
+                    document.getElementById('surveyMainTitle').innerText = 'ENGAGEMENT SURVEY';
+                    document.getElementById('surveySubTitle').innerText = 'แบบสำรวจความผูกพันพนักงาน';
+                    document.getElementById('engagementContent').style.display = 'block';
+                    document.getElementById('welfareContent').style.display = 'none';
+                    toggleFloatingScore(true); calc();
+                } else if(currentSurveyType === 'welfare') {
+                    document.getElementById('surveyMainTitle').innerText = 'WELFARE SURVEY';
+                    document.getElementById('surveySubTitle').innerText = 'แบบสำรวจสวัสดิการพนักงาน';
+                    document.getElementById('engagementContent').style.display = 'none';
+                    document.getElementById('welfareContent').style.display = 'block';
+                    toggleFloatingScore(false);
+
+                    let dept = res.department || '';
+                    if(dept.includes('ซื้อหนี้') || dept.includes('รับจ้าง')) {
+                        document.getElementById('welfarePart3Container').style.display = 'block';
+                    } else {
+                        document.getElementById('welfarePart3Container').style.display = 'none';
+                        document.querySelectorAll('input[name^="w_inc_"]').forEach(el => el.checked = false);
+                        document.getElementById('w_inc_sug').value = '';
+                    }
+                }
+            } else {
+                showGenericAlert('ไม่พบข้อมูล', 'ไม่พบรหัสพนักงานนี้ในระบบ', 'error');
+            }
+        } catch (err) { 
+            showLoading(false); showGenericAlert('Error', err, 'error'); 
         }
     }
+
+    function goHome() { 
+        document.getElementById('view-survey').classList.remove('active'); 
+        document.getElementById('view-dashboard').classList.remove('active'); 
+        document.getElementById('view-home').classList.add('active'); 
+    }
     
-    function goHome() { document.getElementById('view-survey').classList.remove('active'); document.getElementById('view-dashboard').classList.remove('active'); document.getElementById('view-home').classList.add('active'); }
     function toggleFloatingScore(show) { const el = document.getElementById('floatingScore'); if(show) el.classList.remove('hidden'); else el.classList.add('hidden'); }
     function clearError(el) { if(el) el.classList.remove('missing-alert'); }
 
@@ -729,41 +779,6 @@
         clearError(cb.closest('.audit-row'));
     }
 
-    async function searchStaff() {
-        const key = document.getElementById('searchKey').value.trim();
-        if(!key) return;
-        showLoading(true, 'กำลังค้นหา...');
-        try {
-            const res = await runApi('searchEmployee', { keyword: key });
-            showLoading(false);
-            if(res.found) {
-                document.getElementById('empId').value = res.empId; 
-                document.getElementById('inspector').value = res.name; 
-                document.getElementById('affiliation').value = res.affiliation; 
-                document.getElementById('branch').value = res.branch; 
-                document.getElementById('position').value = res.position; 
-                document.getElementById('department').value = res.department; 
-                document.getElementById('startDate').value = res.startDate; 
-                document.getElementById('inspectDate').valueAsDate = new Date();
-                
-                document.getElementById('searchStatusBox').style.display = 'flex'; 
-                document.getElementById('foundNameText').innerText = `พบข้อมูลคุณ: ${res.name}`; 
-                document.getElementById('employeeInfoCard').style.display = 'block'; 
-                document.querySelector('.search-card').classList.remove('missing-alert');
-
-                let dept = res.department || '';
-                if(dept.includes('ซื้อหนี้') || dept.includes('รับจ้าง')) {
-                    document.getElementById('welfarePart3Container').style.display = 'block';
-                } else {
-                    document.getElementById('welfarePart3Container').style.display = 'none';
-                    document.querySelectorAll('input[name^="w_inc_"]').forEach(el => el.checked = false);
-                    document.getElementById('w_inc_sug').value = '';
-                }
-
-            } else showGenericAlert('ไม่พบข้อมูล', 'ไม่พบรหัสพนักงานนี้ในระบบ', 'error');
-        } catch (err) { showLoading(false); showGenericAlert('Error', err, 'error'); }
-    }
-
     function calc(){ 
         if(currentSurveyType !== 'engagement') return;
         let checkedInputs = document.querySelectorAll('.eng-radio:checked'); 
@@ -785,25 +800,7 @@
         if(currentSurveyType === 'engagement') {
             categories.forEach(cat => { cat.items.forEach((it, idx) => { const id = `${cat.id}_${idx+1}`; if(!document.querySelector(`input[name="s_${id}"]:checked`)){ missingCount++; const row = document.getElementById(`row_${id}`); row.classList.add('missing-alert'); if(!firstMissing) firstMissing = row; } }); }); 
             if(missingCount > 0) { showGenericAlert('ข้อมูลไม่ครบ', `ขาด ${missingCount} ข้อ`, 'warning'); if(firstMissing) firstMissing.scrollIntoView({behavior: "smooth", block: "center"}); return; }
-        } else {
-            let dept = document.getElementById('department').value || '';
-            let isIncEligible = dept.includes('ซื้อหนี้') || dept.includes('รับจ้าง');
-
-            const chkNodes = [ 
-                { q: document.querySelector('input[name="w_aware"]:checked'), div: document.getElementById('welfarePart1').children[0] }, 
-                { q: document.querySelector('input[name="w_channel"]:checked'), div: document.getElementById('welfarePart1').children[1] }, 
-                { q: document.querySelectorAll('input[name="w_top"]:checked').length > 0, div: document.getElementById('welfarePart2').children[0] } 
-            ];
-            
-            if (isIncEligible) {
-                chkNodes.push({ q: document.querySelector('input[name="w_inc_aware"]:checked'), div: document.getElementById('welfarePart3').children[1] });
-                chkNodes.push({ q: document.querySelector('input[name="w_inc_und"]:checked'), div: document.getElementById('welfarePart3').children[2] });
-                chkNodes.push({ q: document.querySelector('input[name="w_inc_sat"]:checked'), div: document.getElementById('welfarePart3').children[3] });
-            }
-
-            chkNodes.forEach(node => { if(!node.q) { missingCount++; node.div.classList.add('missing-alert'); if(!firstMissing) firstMissing = node.div; } });
-            if(missingCount > 0) { showGenericAlert('ข้อมูลไม่ครบ', 'กรุณาตอบข้อที่มี * ให้ครบ', 'warning'); if(firstMissing) firstMissing.scrollIntoView({behavior: "smooth", block: "center"}); return; }
-        }
+        } 
         document.getElementById('confirmOverlay').classList.add('active'); 
     }
 
@@ -817,12 +814,14 @@
            const generalNote = document.getElementById('note_improvement').value.trim(); if(generalNote) catSuggestions += `[General]: ${generalNote}`;
            payload.totalScore = parseFloat(document.getElementById('scoreNum').innerText); payload.percent = document.getElementById('percentText').innerText.replace(/[()%]/g,''); payload.scores = scores; payload.note_improvement = catSuggestions; actionApi = 'processForm';
        } else {
+           let w_aware = document.querySelector('input[name="w_aware"]:checked') ? document.querySelector('input[name="w_aware"]:checked').value : '';
+           let w_channel = document.querySelector('input[name="w_channel"]:checked') ? document.querySelector('input[name="w_channel"]:checked').value : '';
            let w_inc_aware = document.querySelector('input[name="w_inc_aware"]:checked') ? document.querySelector('input[name="w_inc_aware"]:checked').value : '';
            let w_inc_und = document.querySelector('input[name="w_inc_und"]:checked') ? document.querySelector('input[name="w_inc_und"]:checked').value : '';
            let w_inc_sat = document.querySelector('input[name="w_inc_sat"]:checked') ? document.querySelector('input[name="w_inc_sat"]:checked').value : '';
 
-           payload.w_aware = document.querySelector('input[name="w_aware"]:checked').value; 
-           payload.w_channel = document.querySelector('input[name="w_channel"]:checked').value; 
+           payload.w_aware = w_aware; 
+           payload.w_channel = w_channel; 
            payload.w_top = Array.from(document.querySelectorAll('input[name="w_top"]:checked')).map(el => el.value); 
            payload.w_inc_aware = w_inc_aware; 
            payload.w_inc_und = w_inc_und; 
@@ -1129,7 +1128,6 @@
         welIncSatChartInst = new Chart(document.getElementById('welIncSatChart'), { type:'bar', plugins:[ChartDataLabels], data:{labels:['5(มากสุด)','4','3','2','1(น้อยสุด)'], datasets:[{data:[incSats['5'],incSats['4'],incSats['3'],incSats['2'],incSats['1']], backgroundColor:'#eab308'}]}, options:{maintainAspectRatio:false, plugins:{legend:{display:false},datalabels:{align:'top',anchor:'end'}}} });
     }
 
-    // --- ฟังก์ชัน EXCEL ที่เพิ่มใหม่ (ดึงข้อมูลทุกคอลัมน์ตาม Tab ปัจจุบัน) ---
     function exportExcel() {
         if (activeDashTab === 'eng') {
             if(currentFilteredData.length === 0) { showGenericAlert('ไม่พบข้อมูล', 'ไม่มีข้อมูลสำหรับ Export', 'warning'); return; }
