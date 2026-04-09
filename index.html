@@ -395,11 +395,12 @@
                     <div class="audit-row border-0 mt-3" id="row_w_channel">
                         <div class="audit-title text-primary">2. ท่านได้รับข้อมูลข่าวสารสวัสดิการผ่านช่องทางใดมากที่สุด? <span class="text-danger">*</span></div>
                         <div class="custom-radio-group row g-2">
-                            <div class="col-6"><input type="radio" name="w_channel" id="ch1" value="Line" class="d-none" onchange="clearError(this)"><label for="ch1">Line</label></div>
-                            <div class="col-6"><input type="radio" name="w_channel" id="ch2" value="ประกาศบริษัท" class="d-none" onchange="clearError(this)"><label for="ch2">ประกาศบริษัท</label></div>
-                            <div class="col-6"><input type="radio" name="w_channel" id="ch3" value="หัวหน้างาน" class="d-none" onchange="clearError(this)"><label for="ch3">หัวหน้างาน</label></div>
+                            <div class="col-6"><input type="radio" name="w_channel" id="ch1" value="Line HR-JMT" class="d-none" onchange="clearError(this)"><label for="ch1">Line HR-JMT</label></div>
+                            <div class="col-6"><input type="radio" name="w_channel" id="ch2" value="ประกาศจาก Email บริษัท" class="d-none" onchange="clearError(this)"><label for="ch2">ประกาศจาก Email บริษัท</label></div>
+                            <div class="col-6"><input type="radio" name="w_channel" id="ch3" value="หัวหน้างาน/ผู้จัดการ" class="d-none" onchange="clearError(this)"><label for="ch3">หัวหน้างาน/ผู้จัดการ</label></div>
                             <div class="col-6"><input type="radio" name="w_channel" id="ch4" value="เพื่อนร่วมงาน" class="d-none" onchange="clearError(this)"><label for="ch4">เพื่อนร่วมงาน</label></div>
-                            <div class="col-12"><input type="radio" name="w_channel" id="ch5" value="ฝ่ายทรัพยากรบุคคล" class="d-none" onchange="clearError(this)"><label for="ch5">ฝ่ายทรัพยากรบุคคล</label></div>
+                            <div class="col-6"><input type="radio" name="w_channel" id="ch5" value="ฝ่ายทรัพยากรบุคคลโดยตรง" class="d-none" onchange="clearError(this)"><label for="ch5">ฝ่ายทรัพยากรบุคคลโดยตรง</label></div>
+                            <div class="col-6"><input type="radio" name="w_channel" id="ch6" value="บอร์ดบริษัท" class="d-none" onchange="clearError(this)"><label for="ch6">บอร์ดบริษัท</label></div>
                         </div>
                         <div class="mt-2"><input type="text" class="form-control form-control-sm bg-light text-muted" id="w_channel_remark" placeholder="หมายเหตุเพิ่มเติม (ไม่บังคับ)..."></div>
                     </div>
@@ -590,7 +591,7 @@
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxQLeIdF62dtGL__qS2Zyw3-O5ziy6SNSNIkRnuib-aaJghtbU3_llHOHbtSkrOqh2cjQ/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx6JRKAEpkvz5oMYnSc1FM-VkV5x2JnnQblpPPvm7_4aeFV1iOZ2STqOn__tcSB1ExlfA/exec'; 
 
     async function runApi(action, payload = {}) {
         return new Promise((resolve, reject) => {
